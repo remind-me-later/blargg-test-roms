@@ -31,24 +31,28 @@ test:
      ; window where corruption occurs, for every
      ; scanline
      ld   b,144
-:    inc  de
+.visible_line:
+     inc  de
      delay 18
      dec  de
      delay 114-22-4
      dec  b
-     jr   nz,:-
+     jr   nz,.visible_line
 
      ; Try to trigger constantly during vblank
      ld   b,10
-     jr   :++
-:    delay 13
-:    ld   c,12
-:    inc  de
+     jr   .vblank_enter
+.vblank_line:
+     delay 13
+.vblank_enter:
+     ld   c,12
+.vblank_inner:
+     inc  de
      dec  c
      dec  de
-     jr   nz,:-
+     jr   nz,.vblank_inner
      dec  b
-     jr   nz,:---
+     jr   nz,.vblank_line
 
      delay 4
 

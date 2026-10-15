@@ -37,10 +37,11 @@ test:
      wreg rAUD3ENA,0
      delay 1000
      ld   hl,AUD3WAVERAM
-:    ld   a,[hli]
+.read:
+     ld   a,[hli]
      call print_a
      bit  6,l
-     jr   z,:-
+     jr   z,.read
      call print_newline
 
      ret

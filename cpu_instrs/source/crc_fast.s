@@ -15,11 +15,12 @@ init_crc_fast:
      ld   e,l
 
      ld   h,8
-:    rra
+.bit:
+     rra
      rr   c
      rr   d
      rr   e
-     jr   nc,:+
+     jr   nc,.next_bit
      xor  $ED
      ld   b,a
      ld   a,c
@@ -33,8 +34,9 @@ init_crc_fast:
      ld   e,a
      ld   a,b
 
-:    dec  h
-     jr   nz,:--
+.next_bit:
+     dec  h
+     jr   nz,.bit
 
      ld   h,HIGH(crc_tables)
      ld   [hl],e

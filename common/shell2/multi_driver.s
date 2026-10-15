@@ -91,10 +91,11 @@ main:
      wreg rAUD1ENV,$F1
      wreg rAUD1LOW,$00
      ld   c,5
-:    wreg rAUD1HIGH,$87
+.beep:
+     wreg rAUD1HIGH,$87
      delay_msec 250
      dec  c
-     jr   nz,:-
+     jr   nz,.beep
 
      ; Exit with the number of the first test that failed
      lda  first_failed
@@ -186,11 +187,12 @@ report_test:
      push af
      lda  first_failed
      or   a
-     jr   nz,:+
+     jr   nz,.keep_first
      lda  test_number
      inc  a
      sta  first_failed
-:    lda  test_number
+.keep_first:
+     lda  test_number
      inc  a
      call play_byte
      ld   a,d

@@ -19,13 +19,14 @@ test:
      call cp_oam
      pop  bc
 
-     jr   z,:+
+     jr   z,.done
      call print_b
      call print_newline
      call print_oam
      call print_newline
 
-:    ret
+.done:
+     ret
 
 corrupt_oam:
      wreg rLCDC,LCDC_ON | LCDC_BG_ON

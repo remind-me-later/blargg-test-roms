@@ -41,11 +41,12 @@ main:
 
      ; Test instructions
      ld   hl,instructions
-:    call .test_instr
+.next_instr:
+     call .test_instr
      inc  hl
      ld   a,l
      cp   LOW(instructions_end)
-     jr   nz,:-
+     jr   nz,.next_instr
 
      jp   tests_done
 
@@ -68,10 +69,11 @@ main:
      dec  hl
      ld   a,[hli]
      cp   $CB
-     jr   nz,:+
+     jr   nz,.opcode
      call print_a
      ld   a,[hl]
-:    call print_hex
+.opcode:
+     call print_hex
      print_str ":"
      ld   a,d
      call print_dec
@@ -123,13 +125,14 @@ main:
 ; A <- new timer result
 .find_next_access:
      ld   c,a
-:    call .time_access
+.again:
+     call .time_access
      cp   c
      ret  nz
      inc  b
      ld   a,b
      cp   10
-     jr   c,:-
+     jr   c,.again
 
      ; Couldn't find time, so return 0/0
      ld   a,c

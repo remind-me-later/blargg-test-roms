@@ -2,11 +2,13 @@
 ; Preserved: BC, DE, HL
 ; Time: A+20 cycles (including CALL)
 delay_a_20_cycles:
-:    sub  5    ; 2
-     jr   nc,:- ;3/2 do multiples of 5
+.loop:
+     sub  5    ; 2
+     jr   nc,.loop ;3/2 do multiples of 5
      rra       ; 1
-     jr   nc,:+ ;3/2 bit 0
-:    adc  1    ; 2
+     jr   nc,.next ;3/2 bit 0
+.next:
+     adc  1    ; 2
      ret  nc   ;5/2 -1: 0 cycles
      ret  z    ;5/2  0: 2 cycles
      nop       ; 1   1: 4 cycles
@@ -19,9 +21,10 @@ delay_256a_12_cycles:
      or   a              ; 1
      ret  z              ; 5/2
 delay_256a_9_cycles_:
-:    delay 256-4
+.loop:
+     delay 256-4
      dec  a              ; 1
-     jr   nz,:-           ;3/2
+     jr   nz,.loop        ;3/2
      ret                 ; 4
 
 ; Delays A*65536 cycles + overhead
@@ -31,9 +34,10 @@ delay_65536a_12_cycles:
      or   a              ; 1
      ret  z              ;5/2
 delay_65536a_9_cycles_:
-:    delay 65536-4
+.loop:
+     delay 65536-4
      dec  a              ; 1
-     jr   nz,:-           ;3/2
+     jr   nz,.loop        ;3/2
      ret                 ; 4
 
 ; Delays H*256+L cycles + overhead

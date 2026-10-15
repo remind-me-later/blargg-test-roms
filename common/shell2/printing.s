@@ -41,10 +41,12 @@ print_str_:
 ; Preserved: AF, BC, DE
 print_str_hl:
      push af
-     jr   :++
-:    call print_char
-:    ld   a,[hli]
+     jr   .next
+.print:
+     call print_char
+.next:
+     ld   a,[hli]
      or   a
-     jr   nz,:--
+     jr   nz,.print
      pop  af
      ret

@@ -23,10 +23,11 @@ init_printing:
 ; Preserved: BC, DE, HL
 hide_printing:
      ld   a,$C9     ; RET
-     jr   :+
+     jr   show_printing.set
 show_printing:
      ld   a,$C3     ; JP (nn)
-:    ld   [print_char_nocrc],a
+.set:
+     ld   [print_char_nocrc],a
      ret
 
 
@@ -89,10 +90,12 @@ print_str_:
 ; Preserved: AF, BC, DE
 print_str_hl:
      push af
-     jr   :++
-:    call print_char
-:    ld   a,[hli]
+     jr   .next
+.print:
+     call print_char
+.next:
+     ld   a,[hli]
      or   a
-     jr   nz,:--
+     jr   nz,.print
      pop  af
      ret

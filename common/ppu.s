@@ -7,8 +7,9 @@ wait_vbl:
      ret  nc
 
      ; Wait for start of vblank
-:    lda  rLY
+.wait:
+     lda  rLY
      cp   144
-     jr   nz,:-
+     jr   nz,.wait
 
      ret

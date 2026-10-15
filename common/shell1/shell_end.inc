@@ -42,7 +42,8 @@ post_exit:
      call play_byte
 forever:
      wreg rAUDENA,AUDENA_OFF    ; sound off
-:    jr   :-
+.loop:
+     jr   .loop
 
 play_byte:
      ret

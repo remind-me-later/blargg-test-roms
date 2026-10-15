@@ -87,10 +87,11 @@ main:
      jp   tests_passed
 
 test_wave:
-:    inc  de             ; 8
+.wait:
+     inc  de             ; 8
      ld   a,[$FF00+c]    ; 8
      or   a              ; 4
-     jr   z,:-            ; 12
+     jr   z,.wait         ; 12
 
      ;call     print_a
      ;call     print_de

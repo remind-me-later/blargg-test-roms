@@ -56,7 +56,7 @@ test_instr:
 
      ; Go through all 16 combinations of flags
      ld   bc,$1200
-:
+.flags:
      ; Fill 4 bytes of new stack
      ld   a,$12
      ld   [$DF80-2],a
@@ -111,7 +111,7 @@ taken:
      ld   a,c
      add  $10
      ld   c,a
-     jr   nz,:-
+     jr   nz,test_instr.flags
 
      ret
 

@@ -10,13 +10,14 @@ console_wait_vbl:
      ; timeout in case LY doesn't work
      ; or LCD is disabled.
      ld   bc,-1250
-:    inc  bc
+.wait:
+     inc  bc
      ld   a,b
      or   c
      jr   z,.timeout
      lda  rLY
      cp   144
-     jr   nz,:-
+     jr   nz,.wait
 .timeout:
 
      pop  bc
@@ -57,19 +58,21 @@ console_init:
 .fill_nametable:
      ld   hl,TILEMAP0
      ld   b,4
-:    ld   [hl],a
+.fill:
+     ld   [hl],a
      inc  l
-     jr   nz,:-
+     jr   nz,.fill
      inc  h
      dec  b
-     jr   nz,:-
+     jr   nz,.fill
      ret
 
 .init_cgb:
      ; Clear palette
      wreg rBGPI,$80
      ld   b,16
-:    wreg rBGPD,$FF
+.palette:
+     wreg rBGPD,$FF
      wreg rBGPD,$7F
      wreg rBGPD,$00
      wreg rBGPD,$00
@@ -78,7 +81,7 @@ console_init:
      wreg rBGPD,$00
      wreg rBGPD,$00
      dec  b
-     jr   nz,:-
+     jr   nz,.palette
 
      ; Clear attributes
      ld   a,1
@@ -93,18 +96,20 @@ console_init:
 .load_tiles:
      ld   de,ASCII
      ld   b,96
-:    push bc
+.char:
+     push bc
      ld   b,8
-:    ld   a,[de]
+.row:
+     ld   a,[de]
      inc  de
      xor  c
      ld   [hli],a
      ld   [hli],a
      dec  b
-     jr   nz,:-
+     jr   nz,.row
      pop  bc
      dec  b
-     jr   nz,:--
+     jr   nz,.char
      ret
 
 
@@ -222,9 +227,10 @@ console_scroll_up_:
      ld   a,' '
      ld   hl,console_buf + console_width - 1
      ld   b,console_width
-:    ld   [hld],a
+.clear:
+     ld   [hld],a
      dec  b
-     jr   nz,:-
+     jr   nz,.clear
      ld   a,LOW((console_buf + console_width))
      ld   [console_pos],a
 
@@ -259,12 +265,13 @@ console_flush_:
 
      ; Copy line
      ld   de,console_buf + console_width
-:    dec  e
+.copy:
+     dec  e
      ld   a,[de]
      ld   [hli],a
      ld   a,e
      cp   LOW(console_buf)
-     jr   nz,:-
+     jr   nz,.copy
 
      pop  hl
      pop  de

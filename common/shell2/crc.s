@@ -35,11 +35,12 @@ update_crc:
      xor  [hl]
 
      ld   h,8
-:    srl  b
+.bit:
+     srl  b
      rr   c
      rr   d
      rra
-     jr   nc,:+
+     jr   nc,.next_bit
      ld   e,a
      ld   a,b
      xor  $ED
@@ -52,8 +53,9 @@ update_crc:
      ld   d,a
      ld   a,e
      xor  $20
-:    dec  h
-     jr   nz,:--
+.next_bit:
+     dec  h
+     jr   nz,.bit
 
      ld   h,HIGH(checksum)
      ld   [hli],a

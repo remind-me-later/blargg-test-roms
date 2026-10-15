@@ -23,9 +23,10 @@ IF DEF(CHECK_GB_ID)
      ; Keep only the values that the boot ROMs of the DMG and CGB leave in A
      ld   b,a
      and  $EA
-     jr   z,:+
+     jr   z,.keep
      ld   b,0
-:    ld   a,b
+.keep:
+     ld   a,b
 ENDC
      ld   [gb_id],a
 
@@ -72,13 +73,14 @@ ENDC
 exit:
      ld   sp,std_stack
      push af
-     call :+
+     call .report
      call console_show
      pop  af
      call play_byte
      jp   post_exit
 
-:    push af
+.report:
+     push af
      call print_newline
      pop  af
 
@@ -89,12 +91,13 @@ exit:
      ret  c
 
      ; 1: "Failed"
-     jr   nz,:+
+     jr   nz,.failed_n
      print_str "Failed",newline
      ret
 
      ; n: "Failed #n"
-:    print_str "Failed #"
+.failed_n:
+     print_str "Failed #"
      call print_dec
      call print_newline
      ret
@@ -108,11 +111,12 @@ clear_mem:
      inc  b
 
      ld   a,0
-:    ld   [hli],a
+.loop:
+     ld   [hli],a
      dec  c
-     jr   nz,:-
+     jr   nz,.loop
      dec  b
-     jr   nz,:-
+     jr   nz,.loop
      ret
 
 
@@ -187,7 +191,8 @@ IF !DEF(CUSTOM_EXIT)
           ld   [final_result],a
      forever:
           wreg rAUDENA,AUDENA_OFF    ; sound off
-:         jr   :-
+.loop:
+          jr   .loop
 ENDC
 
 IF DEF(BUILD_MULTI)

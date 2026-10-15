@@ -39,8 +39,9 @@ sync_apu_coarse:
      ld   hl,rAUDENA
      wreg rAUD2LEN,-1   ; length = 1
      ld   a,$02
-:    and  [hl]      ; wait for length to reach zero
-     jr   nz,:-
+.wait:
+     and  [hl]      ; wait for length to reach zero
+     jr   nz,.wait
      pop  hl
      pop  af
      ret
@@ -60,8 +61,11 @@ sync_apu:
      ld   a,[hl]    ; read status twice in a row
      ld   h,[hl]
      bit  1,a
-     jr   nz,:+
-:    ld   a,h
+     ; The conditional jumps to the next instruction in this routine are
+     ; there for their timing: taken or not, they end up in the same place.
+     jr   nz,.next
+.next:
+     ld   a,h
      rra
      rra
 
@@ -71,13 +75,16 @@ sync_apu:
      ld   hl,rAUDENA
      ld   a,[hl]
      ld   h,[hl]
-     jr   c,:+
-:    bit  1,h
-     jr   nz,:+
-:    rra
+     jr   c,.next2
+.next2:
+     bit  1,h
+     jr   nz,.next3
+.next3:
      rra
-     jr   c,:+
-:    pop  hl
+     rra
+     jr   c,.next4
+.next4:
+     pop  hl
      pop  af
      ret
 
@@ -90,9 +97,10 @@ sync_sweep:
      wreg rAUD1ENV,$08  ; silent without disabling channel
      wreg rAUD1LOW,$FF  ; freq = $3FF
      wreg rAUD1HIGH,$83  ; start
-:    lda  rAUDENA
+.wait:
+     lda  rAUDENA
      and  $01
-     jr   nz,:-
+     jr   nz,.wait
      ret
 
 
@@ -102,11 +110,12 @@ load_wave:
      push bc
      wreg rAUD3ENA,$00  ; disable while writing
      ld   c,$30
-:    ld   a,[hli]
+.copy:
+     ld   a,[hli]
      ld   [$FF00+c],a
      inc  c
      bit  6,c
-     jr   z,:-
+     jr   z,.copy
      pop  bc
      ret
 
@@ -116,10 +125,11 @@ load_wave:
 fill_wave:
      push bc
      ld   bc,$1030
-:    ld   [$FF00+c],a
+.fill:
+     ld   [$FF00+c],a
      inc  c
      dec  b
-     jr   nz,:-
+     jr   nz,.fill
      pop  bc
      ret
 
@@ -129,10 +139,11 @@ fill_wave:
 fill_apu_regs:
      push bc
      ld   bc,$2010
-:    ld   [$FF00+c],a
+.fill:
+     ld   [$FF00+c],a
      inc  c
      dec  b
-     jr   nz,:-
+     jr   nz,.fill
      pop  bc
      ret
 
@@ -145,13 +156,15 @@ get_len_a:
      push bc
      ld   c,a
      ld   b,0
-:    lda  rAUDENA      ; 3
+.count:
+     lda  rAUDENA      ; 3
      and  c         ; 1
-     jr   z,:+      ; 2
+     jr   z,.done   ; 2
      delay 4096-10
      inc  b         ; 1
-     jr   nz,:-     ; 3
-:    ld   a,b
+     jr   nz,.count ; 3
+.done:
+     ld   a,b
      pop  bc
      ret
 
@@ -161,9 +174,10 @@ get_len_a:
 delay_apu_cycles:
      or   a
      ret  z
-:    delay 4096-4
+.loop:
+     delay 4096-4
      dec  a         ; 1
-     jr   nz,:-     ; 3
+     jr   nz,.loop  ; 3
      ret
 
 
@@ -180,10 +194,11 @@ get_len_clocks:
      ld   a,$0F
      ld   c,$80
      inc  h
-:    add  5
+.find_reg:
+     add  5
      rlc  c
      dec  h
-     jr   nz,:-
+     jr   nz,.find_reg
      ld   l,a
      ld   h,$FF
 
@@ -206,9 +221,10 @@ get_len_clocks:
      wreg rAUD3LEN,-4
      wreg rAUD3HIGH,$C0
      wreg rAUD3LEN,-1
-:    lda  rAUDENA
+.wait_wave:
+     lda  rAUDENA
      and  $04
-     jr   nz,:-
+     jr   nz,.wait_wave
 
      ; Clock length until the channel turns off
 .count:
@@ -232,9 +248,10 @@ get_len_clocks:
      wreg rAUD2LEN,-4
      wreg rAUD2HIGH,$C0
      wreg rAUD2LEN,-1
-:    lda  rAUDENA
+.wait_square:
+     lda  rAUDENA
      and  $02
-     jr   nz,:-
+     jr   nz,.wait_square
      ld   c,$40
 .wave_count:
      dec  c

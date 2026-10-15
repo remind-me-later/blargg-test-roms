@@ -96,14 +96,16 @@ print_hex:
 print_hex_nocrc:
      push af
      swap a
-     call :+
+     call .nibble
      pop  af
 
-:    and  $0F
+.nibble:
+     and  $0F
      cp   10
-     jr   c,:+
+     jr   c,.print
      add  7
-:    add  '0'
+.print:
+     add  '0'
      jp   print_char_nocrc
 
 
@@ -140,7 +142,7 @@ ENDM
 print_dec2:
      push af
      push bc
-     jr   :+
+     jr   print_dec.tens
 
 
 ; Prints A as 1-3 digit decimal value
@@ -150,13 +152,15 @@ print_dec:
      push bc
 
      cp   10
-     jr   c,:++
+     jr   c,.ones
      ld   c,100
      cp   c
      call nc,.digit
-:    ld   c,10
+.tens:
+     ld   c,10
      call .digit
-:    add  '0'
+.ones:
+     add  '0'
      call print_char
 
      pop  bc
@@ -165,9 +169,10 @@ print_dec:
 
 .digit:
      ld   b,'0'-1
-:    inc  b
+.subtract:
+     inc  b
      sub  c
-     jr   nc,:-
+     jr   nc,.subtract
      add  c
 
      ld   c,a

@@ -11,12 +11,13 @@ main:
      call fill_oam
      ld   bc,2 * 70224/11 ; a couple of frames
      ld   de,$FE00
-:    inc  de
+.loop:
+     inc  de
      dec  bc
      dec  de
      ld   a,b
      or   c
-     jr   nz,:-
+     jr   nz,.loop
      call end
 
      set_test 3,"LD DE,$FF00 : DEC DE"

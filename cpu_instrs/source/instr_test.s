@@ -32,7 +32,8 @@ main:
      set_test 0
 
      ld   hl,instrs
-:    ; Copy instruction
+.next_instr:
+     ; Copy instruction
      ld   a,[hli]
      ld   [instr],a
      ld   a,[hli]
@@ -53,26 +54,26 @@ main:
      call test_instr
 
      call checksums_compare
-     jr   z,passed
+     jr   z,.passed
 
      set_test 1
      ld   a,[instr]
      call print_a
      cp   $CB
-     jr   nz,:+
+     jr   nz,.one_byte
      ld   a,[instr+1]
      call print_a
-:
+.one_byte:
 
-passed:
+.passed:
      ; Next instruction
      pop  hl
      ld   a,l
      cp   LOW(instrs_end)
-     jr   nz,:--
+     jr   nz,.next_instr
      ld   a,h
      cp   HIGH(instrs_end)
-     jr   nz,:--
+     jr   nz,.next_instr
 
      jp   tests_done
 

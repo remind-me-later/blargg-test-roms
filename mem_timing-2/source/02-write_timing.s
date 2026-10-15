@@ -31,13 +31,14 @@ main:
 
      ; Test instructions
      ld   hl,instructions
-:    call .test_instr
+.next_instr:
+     call .test_instr
      cp   [hl]
      call nz,.print_failed
      inc  hl
      ld   a,l
      cp   LOW(instructions_end)
-     jr   nz,:-
+     jr   nz,.next_instr
 
      jp   tests_done
 
@@ -76,7 +77,8 @@ main:
 
      ; Test for writes on each cycle
      ld   b,0
-:    push bc
+.next_cycle:
+     push bc
      call .time_write
      pop  bc
      cp   LOW(tima_64)
@@ -88,7 +90,7 @@ main:
      inc  b
      ld   a,b
      cp   10
-     jr   nz,:-
+     jr   nz,.next_cycle
      ld   b,0
 
 .found:

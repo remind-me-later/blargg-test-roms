@@ -56,10 +56,10 @@ begin:
 end:
      call disable_lcd
      call cp_oam
-     jr   z,:+
+     jr   z,.unchanged
      call print_oam
      call print_newline
-:
+.unchanged:
      call begin
      ret
 

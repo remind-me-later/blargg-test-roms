@@ -39,11 +39,12 @@ init_timer:
 start_timer:
      push af
 
-:    xor  a         ; 1
+.sync:
+     xor  a         ; 1
      sta  rTIMA      ; 3
      lda  rTIMA      ; 3
      or   a         ; 1
-     jr   nz,:-      ; 3
+     jr   nz,.sync   ; 3
 
      pop  af
      ret
@@ -78,11 +79,12 @@ stop_timer_word:
      ld   e,a
 
      ; One iteration per remaining cycle
-:    xor  a         ; 1
+.count:
+     xor  a         ; 1
      sta  rTIMA      ; 3
      lda  rTIMA      ; 3
      dec  de        ; 2
      or   a         ; 1
-     jr   nz,:-      ; 3
+     jr   nz,.count  ; 3
 
      ret

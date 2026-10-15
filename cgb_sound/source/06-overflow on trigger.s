@@ -16,18 +16,20 @@ shift_loop:
      ld   a,d
      sta  rAUD1SWEEP
      ld   bc,$87FF
-:    ld   a,c
+.search_down:
+     ld   a,c
      sta  rAUD1LOW
      ld   a,b
      sta  rAUD1HIGH
      delay_clocks 40
      lda  rAUDENA
      and  1
-     jr   nz,:+
+     jr   nz,.found_down
      dec  bc
      bit  6,b
-     jr   z,:-
-:    res  7,b
+     jr   z,.search_down
+.found_down:
+     res  7,b
      call print_bc
      inc  d
      bit  3,d
@@ -44,18 +46,20 @@ shift_loop2:
      ld   a,d
      sta  rAUD1SWEEP
      ld   bc,$8000
-:    ld   a,c
+.search_up:
+     ld   a,c
      sta  rAUD1LOW
      ld   a,b
      sta  rAUD1HIGH
      delay_clocks 40
      lda  rAUDENA
      and  1
-     jr   z,:+
+     jr   z,.found_up
      inc  bc
      bit  6,b
-     jr   z,:-
-:    res  7,b
+     jr   z,.search_up
+.found_up:
+     res  7,b
      call print_bc
      inc  d
      bit  3,d

@@ -16,16 +16,18 @@ sync_tima_64:
      ld   hl,rTIMA
      ld   a,0
      ld   [hl],a
-:    or   [hl]
-     jr   z,:-
+.coarse:
+     or   [hl]
+     jr   z,.coarse
 
      ; Fine
-:    delay 65-12
+.fine:
+     delay 65-12
      xor  a
      ld   [hl],a
      or   [hl]
      delay 4
-     jr   z,:-
+     jr   z,.fine
 
      pop  hl
      pop  af

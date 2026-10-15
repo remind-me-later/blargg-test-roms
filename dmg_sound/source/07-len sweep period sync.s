@@ -5,10 +5,11 @@ INCLUDE "apu.s"
 
 test_timing:
      ; Time how long until next length clock
-:    inc  de
+.wait:
+     inc  de
      ld   a,[rAUDENA]
      and  $01
-     jr   nz,:-
+     jr   nz,.wait
 
      ;call     print_de
 

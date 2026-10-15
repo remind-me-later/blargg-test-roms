@@ -35,12 +35,13 @@ test_timer:
 ; Tests main opcodes
 test_main_ops:
      ld   l,0
-:    ld   h,HIGH(op_times)
+.next_op:
+     ld   h,HIGH(op_times)
      ld   a,[hl]
      cp   0
      call nz,.test_op
      inc  l
-     jr   nz,:-
+     jr   nz,.next_op
      ret
 
 .test_op:
@@ -48,11 +49,11 @@ test_main_ops:
      ld   a,l
      cpl
      and  $C7
-     jr   nz,:+
+     jr   nz,.test
      ld   a,[gb_id]
      and  gb_id_devcart
      ret  nz
-:
+.test:
      ; Test with flags set so that branches are
      ; not taken
      ld   a,l  ; e = (l & 0x08 ? 0 : 0xFF)
@@ -62,10 +63,10 @@ test_main_ops:
      call .copy_and_exec
      ld   d,0
      cp   [hl]
-     jr   z,:+
+     jr   z,.ok
      ld   d,a
      call print_failed_opcode
-:
+.ok:
 
      ; Time with branches not taken
      ld   a,e
@@ -115,11 +116,12 @@ test_main_ops:
 ; Tests CB opcodes
 test_cb_ops:
      ld   hl,cb_op_times
-:    ld   a,[hl]
+.next_op:
+     ld   a,[hl]
      cp   0
      call nz,.test_op_cb
      inc  l
-     jr   nz,:-
+     jr   nz,.next_op
      ret
 
 .test_op_cb:
@@ -127,16 +129,17 @@ test_cb_ops:
      ld   e,$00
      call .copy_and_exec_cb
      cp   [hl]
-     jr   nz,:+
+     jr   nz,.failed
 
      ; Test with flags set
      ld   e,$FF
      call .copy_and_exec_cb
      cp   [hl]
-     jr   nz,:+
+     jr   nz,.failed
 
      ret
-:    print_str "CB "
+.failed:
+     print_str "CB "
      call print_failed_opcode
      ret
 

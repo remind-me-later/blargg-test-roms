@@ -39,13 +39,14 @@ copy_to_wram_then_run:
 
      ld   de,$C000
      ld   c,$10
-:    ld   a,[hli]
+.copy:
+     ld   a,[hli]
      ld   [de],a
      inc  e
-     jr   nz,:-
+     jr   nz,.copy
      inc  d
      dec  c
-     jr   nz,:-
+     jr   nz,.copy
 
      ld   a,b
      jp   $C000
@@ -125,11 +126,12 @@ std_reset:
 exit:
      ld   sp,std_stack
      push af
-     call :+
+     call .report
      pop  af
      jp   post_exit
 
-:    push af
+.report:
+     push af
      call print_newline
      call show_printing
      pop  af
@@ -141,12 +143,13 @@ exit:
      ret  c
 
      ; 1: "Failed"
-     jr   nz,:+
+     jr   nz,.failed_n
      print_str "Failed",newline
      ret
 
      ; n: "Failed #n"
-:    print_str "Failed #"
+.failed_n:
+     print_str "Failed #"
      call print_dec
      call print_newline
      ret

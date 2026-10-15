@@ -11,9 +11,10 @@ INCLUDE "apu.s"
 main:
      set_test 2,"NR10-NR51 and wave RAM write/read"
      ld   d,0
-:    call test_rw
+.next_value:
+     call test_rw
      inc  d
-     jr   nz,:-
+     jr   nz,.next_value
 
      set_test 3,"NR52 write/read"
      wreg rAUDENA,AUDENA_OFF
@@ -32,12 +33,13 @@ main:
 
      ; Verify that wave RAM is unchanged
      ld   hl,AUD3WAVERAM
-:    ld   a,[hli]
+.check_wave:
+     ld   a,[hli]
      cp   $37
      jp   nz,test_failed
      ld   a,l
      cp   $40
-     jr   nz,:-
+     jr   nz,.check_wave
      wreg rAUDENA,AUDENA_ON ; on
 
      set_test 5,"Powering APU off should write 0 to all regs"
@@ -65,23 +67,25 @@ main:
 regs_should_be_clear:
      ld   bc,masks
      ld   hl,rAUD1SWEEP
-:    ld   a,[bc]
+.check:
+     ld   a,[bc]
      cp   [hl]
      jp   nz,test_failed
      inc  bc
      inc  l
      ld   a,l
      cp   LOW(rAUDENA)
-     jr   nz,:-
+     jr   nz,.check
      ret
 
 test_rw:
      ld   bc,masks
      ld   hl,rAUD1SWEEP
-:    ; Skip NR52
+.next_reg:
+     ; Skip NR52
      ld   a,l
      cp   LOW(rAUDENA)
-     jr   z,:+
+     jr   z,.mute
 
      ; A = value that should be read back
      ld   a,[bc]
@@ -92,7 +96,8 @@ test_rw:
      cp   [hl]
      jp   nz,test_failed
 
-:    ; Mute channels
+.mute:
+     ; Mute channels
      wreg rAUDTERM,0
 
      ; Disable wave, in case it just got enabled
@@ -103,7 +108,7 @@ test_rw:
      inc  l
      ld   a,l
      cp   LOW(AUD3WAVERAM+AUD3WAVE_SIZE)
-     jr   nz,:--
+     jr   nz,.next_reg
      ret
 
 ; Registers are ORed with this when reading

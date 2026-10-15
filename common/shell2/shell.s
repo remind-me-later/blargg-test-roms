@@ -38,13 +38,14 @@ copy_to_wram_then_run:
      ld   b,a
 
      ld   de,$C000
-:    ld   a,[hli]
+.copy:
+     ld   a,[hli]
      ld   [de],a
      inc  e
-     jr   nz,:-
+     jr   nz,.copy
      inc  d
      dec  c
-     jr   nz,:-
+     jr   nz,.copy
 
      ld   a,b
      jp   $C000

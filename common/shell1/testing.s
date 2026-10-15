@@ -60,11 +60,12 @@ tests_passed:
 tests_done:
      ld   a,[result]
      inc  a
-     jr   z,:+
+     jr   z,.done
      dec  a
      jr   z,tests_passed
      jr   test_failed
-:    print_str "Done"
+.done:
+     print_str "Done"
      ld   a,0
      jp   exit
 
@@ -77,11 +78,11 @@ test_failed:
      ld   h,a
      ld   a,[hl]
      or   a
-     jr   z,:+
+     jr   z,.no_text
      call print_newline
      call print_str_hl
      call print_newline
-:
+.no_text:
      ld   a,[result]
      cp   1         ; if a = 0 then a = 1
      adc  0
@@ -139,23 +140,24 @@ ENDM
 check_crc_:
      lda  checksum+0
      cp   e
-     jr   nz,:+
+     jr   nz,.failed
 
      lda  checksum+1
      cp   d
-     jr   nz,:+
+     jr   nz,.failed
 
      lda  checksum+2
      cp   c
-     jr   nz,:+
+     jr   nz,.failed
 
      lda  checksum+3
      cp   b
-     jr   nz,:+
+     jr   nz,.failed
 
      jp   reset_crc
 
-:    call print_crc
+.failed:
+     call print_crc
      jp   test_failed
 
 
@@ -167,10 +169,11 @@ MACRO checksum_mem
 ENDM
 
 checksum_mem_:
-:    ld   a,[hli]
+.loop:
+     ld   a,[hli]
      call update_crc
      dec  bc
      ld   a,b
      or   c
-     jr   nz,:-
+     jr   nz,.loop
      ret

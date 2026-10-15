@@ -121,10 +121,11 @@ main:
      wreg rAUD1ENV,$F1
      wreg rAUD1LOW,$00
      ld   c,10
-:    wreg rAUD1HIGH,$87
+.beep:
+     wreg rAUD1HIGH,$87
      delay_msec 250
      dec  c
-     jr   nz,:-
+     jr   nz,.beep
 .forever:
      jp   .forever
 

@@ -46,13 +46,14 @@ main:
 
      ; Test instructions
      ld   hl,instructions
-:    call .time_instr
+.next_instr:
+     call .time_instr
      cp   [hl]
      call nz,.print_failed
      inc  hl
      ld   a,l
      cp   LOW(instructions_end)
-     jr   nz,:-
+     jr   nz,.next_instr
 
      jp   tests_done
 
@@ -65,10 +66,11 @@ main:
      dec  hl
      ld   a,[hli]
      cp   $CB
-     jr   nz,:+
+     jr   nz,.opcode
      call print_a
      ld   a,[hl]
-:    call print_hex
+.opcode:
+     call print_hex
      print_str ":"
      ld   a,b
      call print_dec
@@ -100,7 +102,8 @@ main:
 
      ; Test for accesses on each cycle
      ld   b,0
-:    push bc
+.next_cycle:
+     push bc
      call .time_access
      pop  bc
      cp   c
@@ -108,7 +111,7 @@ main:
      inc  b
      ld   a,b
      cp   10
-     jr   nz,:-
+     jr   nz,.next_cycle
      ld   b,0
 
 .found:

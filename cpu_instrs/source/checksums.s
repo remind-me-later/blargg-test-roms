@@ -36,10 +36,11 @@ IF DEF(PRINT_CHECKSUMS)
      sub  LOW(checksums)+1
      and  $03
      ld   a,','
-     jr   nz,:+
+     jr   nz,.print
      print_str newline,'.',"byte"
      ld   a,' '
-:    call print_char
+.print:
+     call print_char
 
      pop  af
      call .print_byte
@@ -75,7 +76,8 @@ ELSE
      ld   h,a
      ld   de,checksum
      ld   b,0
-:    ld   a,[de]
+.compare:
+     ld   a,[de]
      xor  [hl]
      or   b
      ld   b,a
@@ -83,7 +85,7 @@ ELSE
      inc  e
      ld   a,e
      cp   LOW((checksum+4))
-     jr   nz,:-
+     jr   nz,.compare
      ld   a,l
      ld   [next_checksum],a
      ld   a,h

@@ -51,13 +51,14 @@ fill_oam:
      ld   a,$0C
      push hl
      ld   hl,OAM_START
-:    ld   [hl],a
+.fill:
+     ld   [hl],a
      inc  a
      inc  l
      bit  7,l
-     jr   z,:-
+     jr   z,.fill
      bit  5,l
-     jr   z,:-
+     jr   z,.fill
      pop  hl
      ret
 
@@ -68,14 +69,15 @@ fill_oam:
 cp_oam:
      ld   a,$0C
      ld   hl,OAM_START
-:    cp   [hl]
+.compare:
+     cp   [hl]
      ret  nz
      inc  a
      inc  l
      bit  7,l
-     jr   z,:-
+     jr   z,.compare
      bit  5,l
-     jr   z,:-
+     jr   z,.compare
      xor  a
      ret
 

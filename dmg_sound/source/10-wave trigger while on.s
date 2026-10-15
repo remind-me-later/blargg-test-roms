@@ -36,11 +36,12 @@ test:
      ; Print wave RAM
      wreg rAUD3ENA,0
      ld   c,$30
-:    ld   a,[$FF00+c]
+.read:
+     ld   a,[$FF00+c]
      call print_a
      inc  c
      bit  6,c
-     jr   z,:-
+     jr   z,.read
      call print_newline
 
      ret

@@ -51,13 +51,15 @@ get_cpu_speed:
      wreg rAUD1ENV,8
      wreg rAUD1HIGH,$C0
      ld   bc,-$262
-:    inc  bc
+.count:
+     inc  bc
      lda  rAUDENA
      and  1
-     jr   nz,:-
+     jr   nz,.count
      ld   a,0
      bit  7,b
-     jr   nz,:+
+     jr   nz,.done
      inc  a
-:    pop  bc
+.done:
+     pop  bc
      ret
