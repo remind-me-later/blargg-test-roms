@@ -11,18 +11,18 @@ main:
      set_test 2,"Turning LCD on starts too late in scanline"
      call disable_lcd
      ld   a,$81
-     ldh  [LCDC],a ; LCD on
+     ldh  [rLCDC],a ; LCD on
      delay 109
-     ldh  a,[LY]   ; just before LY increments
+     ldh  a,[rLY]   ; just before LY increments
      cp   0
      jp   nz,test_failed
      
      set_test 3,"Turning LCD on starts too early in scanline"
      call disable_lcd
      ld   a,$81
-     ldh  [LCDC],a ; LCD on
+     ldh  [rLCDC],a ; LCD on
      delay 110
-     ldh  a,[LY]   ; just after LY increments
+     ldh  a,[rLY]   ; just after LY increments
      cp   1
      jp   nz,test_failed
      

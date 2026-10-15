@@ -4,7 +4,7 @@ DEF TEST_NAME EQUS "\"02-interrupts\""
 INCLUDE "shell.inc"
 
 main:
-     wreg IE,$04
+     wreg rIE,$04
      
      set_test 2,"EI"
      ei
@@ -42,8 +42,8 @@ interrupt_addr:
      jp   z,test_failed
      
      set_test 4,"Timer doesn't work"
-     wreg TAC,$05
-     wreg TIMA,0
+     wreg rTAC,$05
+     wreg rTIMA,0
      wreg rIF,0
      delay 500
      lda  rIF
@@ -57,8 +57,8 @@ interrupt_addr:
      pop  af
      
      set_test 5,"HALT"
-     wreg TAC,$05
-     wreg TIMA,0
+     wreg rTAC,$05
+     wreg rTIMA,0
      wreg rIF,0
      halt      ; timer interrupt will exit halt
      nop       ; avoids DMG bug

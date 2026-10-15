@@ -47,8 +47,8 @@ ENDM
 
 ; Calls test_chan for every channel
 MACRO test_all_chans
-     test_chan_n 0,LOW(NR10),$01,$40,NR12,$08
-     test_chan_n 1,LOW(NR10)+5,$02,$40,NR22,$08
-     test_chan_n 2,LOW(NR10)+10,$04,$00,NR30,$80
-     test_chan_n 3,LOW(NR10)+15,$08,$40,NR42,$08
+     test_chan_n 0,LOW(rAUD1SWEEP),$01,$40,rAUD1ENV,$08
+     test_chan_n 1,LOW(rAUD1SWEEP)+5,$02,$40,rAUD2ENV,$08
+     test_chan_n 2,LOW(rAUD1SWEEP)+10,$04,$00,rAUD3ENA,$80
+     test_chan_n 3,LOW(rAUD1SWEEP)+15,$08,$40,rAUD4ENV,$08
 ENDM

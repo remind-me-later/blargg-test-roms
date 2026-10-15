@@ -31,8 +31,8 @@ ENDC
 
 std_print:
      push af
-     sta  SB
-     wreg SC,$81
+     sta  rSB
+     wreg rSC,SC_START | SC_INTERNAL
      delay 2304
      pop  af
      jp   console_print
@@ -41,7 +41,7 @@ post_exit:
      call console_show
      call play_byte
 forever:
-     wreg NR52,0    ; sound off
+     wreg rAUDENA,AUDENA_OFF    ; sound off
 :    jr   :-
 
 play_byte:

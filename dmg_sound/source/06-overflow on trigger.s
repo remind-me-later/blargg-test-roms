@@ -10,18 +10,18 @@ main:
      ; DMG-06:
      ; 0555 0666 071C 0787 07C1 07E0 07F0  
      
-     wreg NR12,8
+     wreg rAUD1ENV,8
      ld   d,$01
 shift_loop:
      ld   a,d
-     sta  NR10
+     sta  rAUD1SWEEP
      ld   bc,$87FF
 :    ld   a,c
-     sta  NR13
+     sta  rAUD1LOW
      ld   a,b
-     sta  NR14
+     sta  rAUD1HIGH
      delay_clocks 40
-     lda  NR52
+     lda  rAUDENA
      and  1
      jr   nz,:+
      dec  bc
@@ -38,18 +38,18 @@ shift_loop:
      ; DMG-05, DMG-06, DMG-09,  CGB-04, CGB-05:
      ; 0556 0667 071D 0788 07C2 07E1 07F1
      
-     wreg NR12,8
+     wreg rAUD1ENV,8
      ld   d,$01
 shift_loop2:
      ld   a,d
-     sta  NR10
+     sta  rAUD1SWEEP
      ld   bc,$8000
 :    ld   a,c
-     sta  NR13
+     sta  rAUD1LOW
      ld   a,b
-     sta  NR14
+     sta  rAUD1HIGH
      delay_clocks 40
-     lda  NR52
+     lda  rAUDENA
      and  1
      jr   z,:+
      inc  bc

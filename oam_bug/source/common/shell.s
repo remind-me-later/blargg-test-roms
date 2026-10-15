@@ -78,7 +78,7 @@ LOAD UNION "multi test in WRAM", WRAM0[$C000]
 ENDC
 
 ; Definitions and macros of the libraries
-INCLUDE "gb.inc"
+INCLUDE "hardware.inc"
 INCLUDE "macros.inc"
 INCLUDE "delay.inc"
 INCLUDE "crc.inc"

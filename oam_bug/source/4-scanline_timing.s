@@ -11,7 +11,7 @@ main:
      call begin
      ld   de,$FE00
      ld   a,$81
-     ldh  [LCDC],a ; LCD on
+     ldh  [rLCDC],a ; LCD on
      delay 70224-3
      inc  de
      call should_not_corrupt
@@ -20,7 +20,7 @@ main:
      call begin
      ld   de,$FE00
      ld   a,$81
-     ldh  [LCDC],a ; LCD on
+     ldh  [rLCDC],a ; LCD on
      delay 70224-2
      inc  de
      call should_corrupt
@@ -29,7 +29,7 @@ main:
      call begin
      ld   de,$FE00
      ld   a,$81
-     ldh  [LCDC],a ; LCD on
+     ldh  [rLCDC],a ; LCD on
      delay 70224-2+18
      inc  de
      call should_corrupt
@@ -38,7 +38,7 @@ main:
      call begin
      ld   de,$FE00
      ld   a,$81
-     ldh  [LCDC],a ; LCD on
+     ldh  [rLCDC],a ; LCD on
      delay 70224-2+19
      inc  de
      call should_not_corrupt

@@ -85,12 +85,13 @@ Code is written for the RGBDS assembler (it was converted from WLA-DX,
 and gives the same ROMs). To assemble a particular test, from source/,
 execute
 
-	rgbasm -I common/ -o test.o "source_filename.s"
+	rgbasm -I common/ -I ../../hardware.inc/ -o test.o "source_filename.s"
 	rgblink -o test.gb test.o
 	rgbfix -f hg test.gb
 
 build.sh, in the main directory of the repository, builds all the ROMs
-and compares them with the released ones.
+and compares them with the released ones. The hardware definitions (rLCDC,
+rAUDENA...) come from hardware.inc, a submodule of the repository.
 
 Test code uses a common shell framework contained in common/.
 

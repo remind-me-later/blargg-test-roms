@@ -28,7 +28,7 @@ test:
 :    ret
 
 corrupt_oam:
-     wreg LCDC,$81
+     wreg rLCDC,LCDC_ON | LCDC_BG_ON
      ld   a,b
      call delay_a_20_cycles
      delay 86

@@ -2,12 +2,12 @@
 ; Preserved: BC, DE, HL
 wait_vbl:
      ; Return if off
-     lda  LCDC
+     lda  rLCDC
      rla
      ret  nc
      
      ; Wait for start of vblank
-:    lda  LY
+:    lda  rLY
      cp   144
      jr   nz,:-
      

@@ -22,21 +22,21 @@ test:
      ; each loop iteration
      ld   hl,wave
      call load_wave
-     wreg NR30,$80  ; enable
-     wreg NR32,$00  ; silent
+     wreg rAUD3ENA,$80  ; enable
+     wreg rAUD3LEVEL,$00  ; silent
      ld   a,b
-     sta  NR33      ; period
-     wreg NR34,$87  ; start
+     sta  rAUD3LOW      ; period
+     wreg rAUD3HIGH,$87  ; start
      
      ; Write to wave
-     wreg NR33,-2   ; period = 4
+     wreg rAUD3LOW,-2   ; period = 4
      delay_clocks 168
-     wreg WAVE,$F7
+     wreg rAUD3WAVE_0,$F7
      
      ; Print wave RAM
-     wreg NR30,0
+     wreg rAUD3ENA,0
      delay 1000
-     ld   hl,WAVE
+     ld   hl,AUD3WAVERAM
 :    ld   a,[hli]
      call print_a
      bit  6,l

@@ -75,7 +75,7 @@ LOAD UNION "multi test in WRAM", WRAM0[$C000]
 ENDC
 
 ; Common routines
-INCLUDE "gb.inc"
+INCLUDE "hardware.inc"
 INCLUDE "macros.inc"
 INCLUDE "delay.s"
 INCLUDE "crc.s"
@@ -94,14 +94,14 @@ std_reset:
      ld   [gb_id],a
      
      ; Init hardware
-     wreg TAC,$00
+     wreg rTAC,$00
      wreg rIF,$00
-     wreg IE,$00
+     wreg rIE,$00
      
-     wreg NR52,0    ; sound off
-     wreg NR52,$80  ; sound on
-     wreg NR51,$FF  ; mono
-     wreg NR50,$77  ; volume
+     wreg rAUDENA,AUDENA_OFF    ; sound off
+     wreg rAUDENA,AUDENA_ON  ; sound on
+     wreg rAUDTERM,$FF  ; mono
+     wreg rAUDVOL,$77  ; volume
      
      ; TODO: clear all memory?
      

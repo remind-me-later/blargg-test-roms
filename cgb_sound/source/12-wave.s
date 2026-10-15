@@ -8,78 +8,78 @@ INCLUDE "apu.s"
 main:
      ld   hl,wave
      call load_wave
-     wreg NR32,0
+     wreg rAUD3LEVEL,0
      
      set_test 2,"Timer period or phase resetting is wrong"
-     wreg NR30,$80
-     wreg NR33,$00
-     wreg NR34,$80
+     wreg rAUD3ENA,$80
+     wreg rAUD3LOW,$00
+     wreg rAUD3HIGH,$80
      delay_clocks 1024
-     wreg NR34,$80
+     wreg rAUD3HIGH,$80
      ld   c,$31
      ld   de,-$FE
      call test_wave
      
      set_test 3,"Current byte readable at any wave addr"
-     wreg NR30,$80
-     wreg NR33,$00
-     wreg NR34,$80
+     wreg rAUD3ENA,$80
+     wreg rAUD3LOW,$00
+     wreg rAUD3HIGH,$80
      ld   c,$3C
      ld   de,-$FE
      call test_wave
      
      set_test 5,"Normal access when chan disabled"
-     wreg NR30,$80
-     wreg NR33,$00
-     wreg NR34,$80
-     wreg NR30,$00  ; disable chan
-     wreg NR30,$80  ; DAC on
+     wreg rAUD3ENA,$80
+     wreg rAUD3LOW,$00
+     wreg rAUD3HIGH,$80
+     wreg rAUD3ENA,$00  ; disable chan
+     wreg rAUD3ENA,$80  ; DAC on
      ld   c,$31
      ld   de,0
      call test_wave
      
      set_test 6,"Write test"
-     wreg NR30,$80
-     wreg NR33,$F0
-     wreg NR34,$87
+     wreg rAUD3ENA,$80
+     wreg rAUD3LOW,$F0
+     wreg rAUD3HIGH,$87
      delay_clocks 256
      wreg $FF30,$BC
-     wreg NR30,0
+     wreg rAUD3ENA,0
      ld   a,[$FF34]
      cp   $BC
      jp   nz,test_failed
      
      set_test 7,"Timer period change"
-     wreg NR30,$80
-     wreg NR33,$00
-     wreg NR34,$87
-     wreg NR33,$F0
+     wreg rAUD3ENA,$80
+     wreg rAUD3LOW,$00
+     wreg rAUD3HIGH,$87
+     wreg rAUD3LOW,$F0
      ld   c,$30
      ld   de,-$E
      call test_wave
      
      set_test 8,"Frequency 0 is valid"
-     wreg NR30,$80
-     wreg NR33,$00
-     wreg NR34,$80
+     wreg rAUD3ENA,$80
+     wreg rAUD3LOW,$00
+     wreg rAUD3HIGH,$80
      ld   c,$30
      ld   de,-$FE
      call test_wave
      
      set_test 9,"Maintains phase properly when vol = 0"
-     wreg NR30,$80
-     wreg NR32,0
-     wreg NR33,$00
-     wreg NR34,$87
+     wreg rAUD3ENA,$80
+     wreg rAUD3LEVEL,0
+     wreg rAUD3LOW,$00
+     wreg rAUD3HIGH,$87
      ld   c,$30
      ld   de,-$1E
      call test_wave
      
      set_test 10,"Maintains phase properly when stereo = 0"
-     wreg NR51,$00
-     wreg NR30,$80
-     wreg NR33,$00
-     wreg NR34,$87
+     wreg rAUDTERM,$00
+     wreg rAUD3ENA,$80
+     wreg rAUD3LOW,$00
+     wreg rAUD3HIGH,$87
      ld   c,$30
      ld   de,-$1E
      call test_wave

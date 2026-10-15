@@ -6,7 +6,7 @@ INCLUDE "apu.s"
 test_timing:
      ; Time how long until next length clock
 :    inc  de
-     ld   a,[NR52]
+     ld   a,[rAUDENA]
      and  $01
      jr   nz,:-
      
@@ -25,28 +25,28 @@ main:
      
      set_test 2,"Length period is wrong"
      call sync_apu
-     wreg NR14,$40  ; avoids extra length clock
-     wreg NR11,$3F  ; length = $01
-     wreg NR12,$08  ; silent without disabling channel
-     wreg NR14,$C0  ; start length
+     wreg rAUD1HIGH,$40  ; avoids extra length clock
+     wreg rAUD1LEN,$3F  ; length = $01
+     wreg rAUD1ENV,$08  ; silent without disabling channel
+     wreg rAUD1HIGH,$C0  ; start length
      ld   de,-$170
      call test_timing
      
      set_test 3,"Sweep period is wrong"
      call sync_sweep
-     wreg NR10,$10  ; sweep period = 1
-     wreg NR12,$08  ; silent without disabling channel
-     wreg NR13,$FF  ; max freq
-     wreg NR14,$87  ; start
+     wreg rAUD1SWEEP,$10  ; sweep period = 1
+     wreg rAUD1ENV,$08  ; silent without disabling channel
+     wreg rAUD1LOW,$FF  ; max freq
+     wreg rAUD1HIGH,$87  ; start
      ld   de,-$2E4
      call test_timing
      
      set_test 4,"Sweep clock is synchronized with length"
      call sync_sweep
-     wreg NR14,$40  ; avoids extra length clock
-     wreg NR11,$3F  ; length = $01
-     wreg NR12,$08  ; silent without disabling channel
-     wreg NR14,$C0  ; start length
+     wreg rAUD1HIGH,$40  ; avoids extra length clock
+     wreg rAUD1LEN,$3F  ; length = $01
+     wreg rAUD1ENV,$08  ; silent without disabling channel
+     wreg rAUD1HIGH,$C0  ; start length
      ld   de,-$170
      call test_timing
      
@@ -71,7 +71,7 @@ main:
      
      call sync_apu
      ld   de,-$B5
-     wreg NR52,$00  ; power off
+     wreg rAUDENA,AUDENA_OFF  ; power off
      delay_clocks 8192
      call test_power
      
@@ -88,22 +88,22 @@ main:
      jp   tests_passed
 
 test_power_off:
-     wreg NR52,$00  ; power off
+     wreg rAUDENA,AUDENA_OFF  ; power off
 test_power:
-     wreg NR52,$80  ; power on
-     wreg NR14,$40
-     wreg NR11,-1   ; length = 1
-     wreg NR12,8
-     wreg NR14,$C0
+     wreg rAUDENA,AUDENA_ON  ; power on
+     wreg rAUD1HIGH,$40
+     wreg rAUD1LEN,-1   ; length = 1
+     wreg rAUD1ENV,8
+     wreg rAUD1HIGH,$C0
      jp   test_timing
 
 test_power2:
-     wreg NR52,$00  ; power off
-     wreg NR52,$80  ; power on
-     wreg NR10,$11
-     wreg NR12,8
-     wreg NR13,$00
-     wreg NR14,$84
+     wreg rAUDENA,AUDENA_OFF  ; power off
+     wreg rAUDENA,AUDENA_ON  ; power on
+     wreg rAUD1SWEEP,$11
+     wreg rAUD1ENV,8
+     wreg rAUD1LOW,$00
+     wreg rAUD1HIGH,$84
      jp   test_timing
 
 INCLUDE "shell_end.inc"

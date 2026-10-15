@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Builds Blargg's Game Boy test ROMs with RGBDS (rgbasm, rgblink, rgbfix).
-# Tested with RGBDS 1.0.4.
+# Tested with RGBDS 1.0.4. The hardware definitions come from the hardware.inc
+# submodule (git submodule update --init).
 #
 #   ./build.sh                  build every ROM listed in roms.tsv into build/
 #   ./build.sh --check [DIR]    also compare each ROM, byte for byte, with the one
@@ -38,6 +39,11 @@ while [ $# -gt 0 ]; do
     esac
     shift
 done
+
+if [ ! -f "$here/hardware.inc/hardware.inc" ]; then
+    echo "hardware.inc is missing; run: git submodule update --init" >&2
+    exit 2
+fi
 
 for tool in rgbasm rgblink rgbfix; do
     command -v "$tool" > /dev/null || { echo "$tool not found; install RGBDS" >&2; exit 2; }
@@ -79,14 +85,14 @@ build_rom() {
     IFS='|' read -r -a sources <<< "$files"
     mkdir -p "$(dirname "$out")"
     if [ ${#sources[@]} -eq 1 ]; then
-        (cd "$here/$srcdir" && rgbasm -I common/ -o "$tmp/0.o" "${sources[0]}")
+        (cd "$here/$srcdir" && rgbasm -I common/ -I "$here/hardware.inc/" -o "$tmp/0.o" "${sources[0]}")
         objs=("$tmp/0.o")
     else
         local i
-        (cd "$here/$srcdir" && rgbasm -I common/ -o "$tmp/driver.o" "${sources[0]}")
+        (cd "$here/$srcdir" && rgbasm -I common/ -I "$here/hardware.inc/" -o "$tmp/driver.o" "${sources[0]}")
         objs=("$tmp/driver.o")
         for ((i = 1; i < ${#sources[@]}; i++)); do
-            (cd "$here/$srcdir" && rgbasm -I common/ -D BUILD_MULTI=1 -D MULTI_TEST=$((i - 1)) \
+            (cd "$here/$srcdir" && rgbasm -I common/ -I "$here/hardware.inc/" -D BUILD_MULTI=1 -D MULTI_TEST=$((i - 1)) \
                 -o "$tmp/test$i.o" "${sources[i]}")
             objs+=("$tmp/test$i.o")
         done

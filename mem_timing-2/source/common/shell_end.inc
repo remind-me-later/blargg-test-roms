@@ -35,14 +35,14 @@ std_reset:
      call clear_mem
      
      ; Init hardware
-     wreg TAC,$00
+     wreg rTAC,$00
      wreg rIF,$00
-     wreg IE,$00
+     wreg rIE,$00
      
-     wreg NR52,0    ; sound off
-     wreg NR52,$80  ; sound on
-     wreg NR51,$FF  ; mono
-     wreg NR50,$77  ; volume
+     wreg rAUDENA,AUDENA_OFF    ; sound off
+     wreg rAUDENA,AUDENA_ON  ; sound on
+     wreg rAUDTERM,$FF  ; mono
+     wreg rAUDVOL,$77  ; volume
      
      call init_runtime
      call init_text_out
@@ -126,7 +126,7 @@ IF !DEF(CUSTOM_PRINT)
      ; Initializes text output to cartridge RAM
      init_text_out:
           ; Enable cartridge RAM and set text output pointer
-          setb RAMEN,$0A
+          setb rRAMG,RAMG_SRAM_ENABLE
           setw text_out_addr,text_out_base
           setb text_out_base-3,$DE
           setb text_out_base-2,$B0
@@ -183,7 +183,7 @@ IF !DEF(CUSTOM_EXIT)
      post_exit:
           ld   [final_result],a
      forever:
-          wreg NR52,0    ; sound off
+          wreg rAUDENA,AUDENA_OFF    ; sound off
 :         jr   :-
 ENDC
 

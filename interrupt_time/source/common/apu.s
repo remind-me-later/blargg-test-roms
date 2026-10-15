@@ -14,16 +14,16 @@ ENDM
 ; Turns APU off
 ; Preserved: BC, DE, HL
 sound_off:
-     wreg NR52,0
+     wreg rAUDENA,AUDENA_OFF
      ret
 
 
 ; Turns APU on
 ; Preserved: BC, DE, HL
 sound_on:
-     wreg NR52,$80  ; power
-     wreg NR51,$FF  ; mono
-     wreg NR50,$77  ; volume
+     wreg rAUDENA,AUDENA_ON  ; power
+     wreg rAUDTERM,$FF  ; mono
+     wreg rAUDVOL,$77  ; volume
      ret
 
 
@@ -33,11 +33,11 @@ sound_on:
 sync_apu_coarse:
      push af
      push hl
-     wreg NR22,$08  ; silent without disabling channel
-     wreg NR21,-3   ; length = 3
-     wreg NR24,$C0  ; start length
-     ld   hl,NR52
-     wreg NR21,-1   ; length = 1
+     wreg rAUD2ENV,$08  ; silent without disabling channel
+     wreg rAUD2LEN,-3   ; length = 3
+     wreg rAUD2HIGH,$C0  ; start length
+     ld   hl,rAUDENA
+     wreg rAUD2LEN,-1   ; length = 1
      ld   a,$02
 :    and  [hl]      ; wait for length to reach zero
      jr   nz,:-
@@ -53,10 +53,10 @@ sync_apu:
      push af
      push hl
 
-     wreg NR21,-1   ; length = 1
-     wreg NR24,$C0  ; start length
+     wreg rAUD2LEN,-1   ; length = 1
+     wreg rAUD2HIGH,$C0  ; start length
      delay 4057
-     ld   hl,NR52
+     ld   hl,rAUDENA
      ld   a,[hl]    ; read status twice in a row
      ld   h,[hl]
      bit  1,a
@@ -65,10 +65,10 @@ sync_apu:
      rra
      rra
 
-     wreg NR21,-1   ; length = 1
-     wreg NR24,$C0  ; start length
+     wreg rAUD2LEN,-1   ; length = 1
+     wreg rAUD2HIGH,$C0  ; start length
      delay 4072
-     ld   hl,NR52
+     ld   hl,rAUDENA
      ld   a,[hl]
      ld   h,[hl]
      jr   c,:+
@@ -86,11 +86,11 @@ sync_apu:
 ; tens of clocks. Uses square 1 channel.
 ; Preserved: BC, DE, HL
 sync_sweep:
-     wreg NR10,$11  ; sweep period = 1, shift = 1
-     wreg NR12,$08  ; silent without disabling channel
-     wreg NR13,$FF  ; freq = $3FF
-     wreg NR14,$83  ; start
-:    lda  NR52
+     wreg rAUD1SWEEP,$11  ; sweep period = 1, shift = 1
+     wreg rAUD1ENV,$08  ; silent without disabling channel
+     wreg rAUD1LOW,$FF  ; freq = $3FF
+     wreg rAUD1HIGH,$83  ; start
+:    lda  rAUDENA
      and  $01
      jr   nz,:-
      ret
@@ -100,7 +100,7 @@ sync_sweep:
 ; Preserved: BC, DE
 load_wave:
      push bc
-     wreg NR30,$00  ; disable while writing
+     wreg rAUD3ENA,$00  ; disable while writing
      ld   c,$30
 :    ld   a,[hli]
      ld   [$FF00+c],a
@@ -145,7 +145,7 @@ get_len_a:
      push bc
      ld   c,a
      ld   b,0
-:    lda  NR52      ; 3
+:    lda  rAUDENA      ; 3
      and  c         ; 1
      jr   z,:+      ; 2
      delay 4096-10
@@ -195,18 +195,18 @@ get_len_clocks:
 .disabled:
 
      ; Done if the channel is off
-     lda  NR52
+     lda  rAUDENA
      and  c
      jr   z,.done
      cp   $04
      jp   z,.wave
 
      ; Time with the wave channel: length = 4
-     wreg NR30,$80
-     wreg NR31,-4
-     wreg NR34,$C0
-     wreg NR31,-1
-:    lda  NR52
+     wreg rAUD3ENA,$80
+     wreg rAUD3LEN,-4
+     wreg rAUD3HIGH,$C0
+     wreg rAUD3LEN,-1
+:    lda  rAUDENA
      and  $04
      jr   nz,:-
 
@@ -215,7 +215,7 @@ get_len_clocks:
      ld   [hl],$40  ; enable length, causing an extra clock
      ld   [hl],$00
      inc  b
-     lda  NR52
+     lda  rAUDENA
      and  c
      jr   nz,.count
 .finished:
@@ -228,11 +228,11 @@ get_len_clocks:
 
      ; Time with square 2
 .wave:
-     wreg NR22,$08
-     wreg NR21,-4
-     wreg NR24,$C0
-     wreg NR21,-1
-:    lda  NR52
+     wreg rAUD2ENV,$08
+     wreg rAUD2LEN,-4
+     wreg rAUD2HIGH,$C0
+     wreg rAUD2LEN,-1
+:    lda  rAUDENA
      and  $02
      jr   nz,:-
      ld   c,$40
@@ -242,7 +242,7 @@ get_len_clocks:
      ld   [hl],$40
      ld   [hl],$00
      inc  b
-     lda  NR52
+     lda  rAUDENA
      and  $04
      jr   nz,.wave_count
      jr   .finished

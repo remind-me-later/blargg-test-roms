@@ -79,7 +79,7 @@ ENDC
      wchn 4,$40     ; enable, causing clock to zero
      lda  chan_mask
      ld   b,a
-     lda  NR52      ; channel now disabled
+     lda  rAUDENA      ; channel now disabled
      and  b
      jp   nz,test_failed
      
@@ -190,11 +190,11 @@ ENDC
      call delay_apu_cycles
      lda  chan_mask
      ld   b,a
-     lda  NR52
+     lda  rAUDENA
      and  b
      jp   z,test_failed
      delay_apu 1
-     lda  NR52
+     lda  rAUDENA
      and  b
      jp   nz,test_failed
 

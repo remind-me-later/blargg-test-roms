@@ -8,14 +8,14 @@ INCLUDE "shell.inc"
 INCLUDE "apu.s"
 
 enable_len_ctrs:
-     wreg NR22,8
-     wreg NR24,$C0
-     wreg NR12,8
-     wreg NR14,$C0
-     wreg NR30,$80
-     wreg NR34,$C0
-     wreg NR42,8
-     wreg NR44,$C0
+     wreg rAUD2ENV,8
+     wreg rAUD2HIGH,$C0
+     wreg rAUD1ENV,8
+     wreg rAUD1HIGH,$C0
+     wreg rAUD3ENA,$80
+     wreg rAUD3HIGH,$C0
+     wreg rAUD4ENV,8
+     wreg rAUD4GO,$C0
      ret
 
 main:
@@ -25,17 +25,17 @@ main:
      call fill_apu_regs
      
      ; Load length counters
-     wreg NR41,-$33
-     wreg NR31,-$44
-     wreg NR11,-$11
-     wreg NR21,-$22
+     wreg rAUD4LEN,-$33
+     wreg rAUD3LEN,-$44
+     wreg rAUD1LEN,-$11
+     wreg rAUD2LEN,-$22
      
      delay_clocks 8192
      call enable_len_ctrs
      
      ; Power down. Comment out to see what would
      ; happen if length counters did run.
-     wreg NR52,$00
+     wreg rAUDENA,AUDENA_OFF
      
      ; Try to enable length counters
      call enable_len_ctrs
@@ -44,31 +44,31 @@ main:
      delay_msec 250
      
      ; Power back on and wait a bit longer
-     wreg NR52,$80
+     wreg rAUDENA,AUDENA_ON
      ;call enable_len_ctrs ; can't do this here
      delay_clocks 2048
      
      ; Get values from length counters
-     wreg NR22,8
-     wreg NR24,$C0
+     wreg rAUD2ENV,8
+     wreg rAUD2HIGH,$C0
      ld   a,$02
      call get_len_a
      push af
      
-     wreg NR12,8
-     wreg NR14,$C0
+     wreg rAUD1ENV,8
+     wreg rAUD1HIGH,$C0
      ld   a,$01
      call get_len_a
      push af
      
-     wreg NR30,$80
-     wreg NR34,$C0
+     wreg rAUD3ENA,$80
+     wreg rAUD3HIGH,$C0
      ld   a,$04
      call get_len_a
      push af
      
-     wreg NR42,8
-     wreg NR44,$C0
+     wreg rAUD4ENV,8
+     wreg rAUD4GO,$C0
      ld   a,$08
      call get_len_a
      

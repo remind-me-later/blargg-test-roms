@@ -55,7 +55,7 @@ main:
      srl  a
      srl  a
      inc  a
-     ld   [MBC_BANK],a
+     ld   [rROMB],a
      
      ; DE = address of its block
      lda  test_number
@@ -89,11 +89,11 @@ main:
      ; Beep
      call sound_off
      call sound_on
-     wreg NR11,$80
-     wreg NR12,$F1
-     wreg NR13,$00
+     wreg rAUD1LEN,$80
+     wreg rAUD1ENV,$F1
+     wreg rAUD1LOW,$00
      ld   c,5
-:    wreg NR14,$87
+:    wreg rAUD1HIGH,$87
      delay_msec 250
      dec  c
      jr   nz,:-

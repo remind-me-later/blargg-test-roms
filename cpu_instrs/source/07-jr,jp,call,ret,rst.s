@@ -52,7 +52,7 @@ ENDC
 instrs_end:
 
 test_instr:
-     wreg IE,0 ; disable interrupts, since RETI does EI
+     wreg rIE,0 ; disable interrupts, since RETI does EI
      
      ; Go through all 16 combinations of flags
      ld   bc,$1200

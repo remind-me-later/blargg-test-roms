@@ -16,7 +16,7 @@ main:
      
      ; Needs the LCD on
      call wait_vbl
-     wreg LCDC,$91
+     wreg rLCDC,LCDC_ON | LCDC_BLOCK01 | LCDC_BG_ON
      
      ld   bc,$0110
      call test
@@ -48,13 +48,13 @@ test:
      call print_c
      
      di
-     wreg IE,$01
+     wreg rIE,$01
      wreg rIF,$00
      halt
      nop
      
      ld   a,b
-     ldh  [IE],a
+     ldh  [rIE],a
      ld   de,$1234
      ld   a,c
      ldh  [rIF],a

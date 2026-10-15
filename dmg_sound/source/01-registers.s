@@ -16,71 +16,71 @@ main:
      jr   nz,:-
      
      set_test 3,"NR52 write/read"
-     wreg NR52,$00
-     lda  NR52
+     wreg rAUDENA,AUDENA_OFF
+     lda  rAUDENA
      cp   $70
      jp   nz,test_failed
-     wreg NR52,$FF
-     lda  NR52
+     wreg rAUDENA,$FF
+     lda  rAUDENA
      cp   $F0
      jp   nz,test_failed
      
      set_test 4,"Powering APU shouldn't affect wave"
      ld   a,$37
      call fill_wave
-     wreg NR52,$00
+     wreg rAUDENA,AUDENA_OFF
      
      ; Verify that wave RAM is unchanged
-     ld   hl,WAVE
+     ld   hl,AUD3WAVERAM
 :    ld   a,[hli]
      cp   $37
      jp   nz,test_failed
      ld   a,l
      cp   $40
      jr   nz,:-
-     wreg NR52,$80 ; on
+     wreg rAUDENA,AUDENA_ON ; on
      
      set_test 5,"Powering APU off should write 0 to all regs"
      ld   a,$FF
      call fill_apu_regs
-     wreg NR52,$00
-     wreg NR52,$80
+     wreg rAUDENA,AUDENA_OFF
+     wreg rAUDENA,AUDENA_ON
      call regs_should_be_clear
      
      set_test 6,"When off, should ignore writes to registers"
-     wreg NR52,$00
+     wreg rAUDENA,AUDENA_OFF
      ld   a,$FF
      call fill_apu_regs
-     wreg NR52,$80
+     wreg rAUDENA,AUDENA_ON
      call regs_should_be_clear
-     wreg NR52,$80
+     wreg rAUDENA,AUDENA_ON
 
      set_test 7,"When off, should allow normal register reads"
-     wreg NR52,$00
+     wreg rAUDENA,AUDENA_OFF
      call regs_should_be_clear
-     wreg NR52,$80
+     wreg rAUDENA,AUDENA_ON
 
      jp   tests_passed
 
 regs_should_be_clear:
      ld   bc,masks
-     ld   hl,NR10
+     ld   hl,rAUD1SWEEP
 :    ld   a,[bc]
      cp   [hl]
      jp   nz,test_failed
      inc  bc
      inc  l
      ld   a,l
-     cp   LOW(NR52)
+     cp   LOW(rAUDENA)
      jr   nz,:-
      ret
 
 test_rw:
      ld   bc,masks
-     ld   hl,NR10
+     ld   hl,rAUD1SWEEP
 :    ; Skip NR52
      ld   a,l
-     cp   LOW(NR52)
+     cp   LOW(rAUDENA)
      jr   z,:+
      
      ; A = value that should be read back
@@ -93,16 +93,16 @@ test_rw:
      jp   nz,test_failed
      
 :    ; Mute channels
-     wreg NR51,0
+     wreg rAUDTERM,0
      
      ; Disable wave, in case it just got enabled
      ; while testing register
-     wreg NR30,0
+     wreg rAUD3ENA,0
      
      inc  bc
      inc  l
      ld   a,l
-     cp   LOW(WAVE)+$10
+     cp   LOW(AUD3WAVERAM+AUD3WAVE_SIZE)
      jr   nz,:--
      ret
      

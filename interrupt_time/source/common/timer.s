@@ -12,16 +12,16 @@
 init_timer:
      push af
      di
-     lda  IE        ; disable timer interrupt
+     lda  rIE        ; disable timer interrupt
      and  $04       ; WLA-DX assembled `and ~$04` as `and $04`; kept so the ROM is the same
-     sta  IE
-     wreg TMA,0     ; max period
-     wreg TAC,$05   ; 262144 Hz
+     sta  rIE
+     wreg rTMA,0     ; max period
+     wreg rTAC,$05   ; 262144 Hz
      
      ; Be sure timer doesn't expire
      ; immediately or take too long
      wreg rIF,0
-     wreg TIMA,-20
+     wreg rTIMA,-20
      delay 70
      lda  rIF
      and  $04
@@ -40,8 +40,8 @@ start_timer:
      push af
      
 :    xor  a         ; 1
-     sta  TIMA      ; 3
-     lda  TIMA      ; 3
+     sta  rTIMA      ; 3
+     lda  rTIMA      ; 3
      or   a         ; 1
      jr   nz,:-      ; 3
      
@@ -69,7 +69,7 @@ stop_timer_word:
      ld   d,0
      
      ; Get main count (TIMA*4)
-     lda  TIMA
+     lda  rTIMA
      sub  5
      add  a
      rl   d
@@ -79,8 +79,8 @@ stop_timer_word:
      
      ; One iteration per remaining cycle
 :    xor  a         ; 1
-     sta  TIMA      ; 3
-     lda  TIMA      ; 3
+     sta  rTIMA      ; 3
+     lda  rTIMA      ; 3
      dec  de        ; 2
      or   a         ; 1
      jr   nz,:-      ; 3

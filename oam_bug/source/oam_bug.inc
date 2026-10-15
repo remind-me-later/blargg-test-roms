@@ -7,6 +7,9 @@
 INCLUDE "shell.inc"
 INCLUDE "ppu.s"
 
+; Object attribute memory
+DEF OAM_START = $FE00
+
 ; Stack pointer saved by save_sp
 DEF saved_sp = dp+0
 DEF dp = dp+2
@@ -29,7 +32,7 @@ ENDM
 
 ; Turns LCD on
 enable_lcd:
-     wreg LCDC,$81
+     wreg rLCDC,LCDC_ON | LCDC_BG_ON
      ret
 
 
@@ -37,7 +40,7 @@ enable_lcd:
 ; Preserved: AF
 disable_lcd:
      call wait_vbl
-     wreg LCDC,0
+     wreg rLCDC,0
      delay_msec 20
      ret
 

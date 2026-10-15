@@ -6,12 +6,13 @@ Building with RGBDS
 The tests are assembled with RGBDS (rgbasm, rgblink and rgbfix), tested
 with version 1.0.4. To assemble a test ROM by hand, from this directory:
 
-	rgbasm -I common/ -o test.o source_filename_here.s
+	rgbasm -I common/ -I ../../hardware.inc/ -o test.o source_filename_here.s
 	rgblink -o test.gb test.o
 	rgbfix -f hg test.gb
 
 build.sh, in the main directory of the repository, builds all the ROMs
-that way and compares them with the released ones.
+that way and compares them with the released ones. The hardware definitions
+(rLCDC, rAUDENA...) come from hardware.inc, a submodule of the repository.
 
 The sources were written for WLA-DX and have been converted; the ROMs they
 give are the same, byte for byte. The GBS and devcart builds that WLA-DX

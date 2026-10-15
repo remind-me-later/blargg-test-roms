@@ -18,7 +18,7 @@ main:
 
 test:
      ld   de,$FE00
-     wreg LCDC,$81
+     wreg rLCDC,LCDC_ON | LCDC_BG_ON
      
      ; Have first INC DE at scanline 0 beginning
      delay 70224 - 7

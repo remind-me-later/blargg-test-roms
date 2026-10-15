@@ -49,7 +49,7 @@ main:
 begin:
      call disable_lcd
      call fill_oam
-     wreg LCDC,$81
+     wreg rLCDC,LCDC_ON | LCDC_BG_ON
      delay 70224 - 4
      ret
 

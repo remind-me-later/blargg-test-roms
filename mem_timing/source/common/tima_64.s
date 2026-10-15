@@ -2,8 +2,8 @@
 
 ; Initializes timer for use by sync_tima_64
 init_tima_64:
-     wreg TMA,0
-     wreg TAC,$07
+     wreg rTMA,0
+     wreg rTAC,$07
      ret
 
 ; Synchronizes to timer
@@ -12,7 +12,7 @@ sync_tima_64:
      push hl
      
      ld   a,0
-     ld   hl,TIMA
+     ld   hl,rTIMA
      ld   [hl],a
 :    or   [hl]
      jr   z,:-
@@ -30,4 +30,4 @@ sync_tima_64:
 
 ; Read from this to get count that's incremented
 ; every 64 cycles.
-DEF tima_64 = TIMA
+DEF tima_64 = rTIMA

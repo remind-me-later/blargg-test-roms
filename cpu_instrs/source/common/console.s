@@ -14,7 +14,7 @@ console_wait_vbl:
      ld   a,b
      or   c
      jr   z,.timeout
-     lda  LY
+     lda  rLY
      cp   144
      jr   nz,:-
 .timeout:
@@ -37,10 +37,10 @@ console_init:
      call .fill_nametable
      
      ; Load tiles
-     ld   hl,TILES+$200
+     ld   hl,TILEBLOCK0+$200
      ld   c,0
      call .load_tiles
-     ld   hl,TILES+$A00
+     ld   hl,TILEBLOCK0+$A00
      ld   c,$FF
      call .load_tiles
      
@@ -55,7 +55,7 @@ console_init:
      jr   console_show
 
 .fill_nametable:
-     ld   hl,BGMAP0
+     ld   hl,TILEMAP0
      ld   b,4
 :    ld   [hl],a
      inc  l
@@ -67,27 +67,27 @@ console_init:
 
 .init_cgb:
      ; Clear palette
-     wreg $FF68,$80
+     wreg rBGPI,$80
      ld   b,16
-:    wreg $FF69,$FF
-     wreg $FF69,$7F
-     wreg $FF69,$00
-     wreg $FF69,$00
-     wreg $FF69,$00
-     wreg $FF69,$00
-     wreg $FF69,$00
-     wreg $FF69,$00
+:    wreg rBGPD,$FF
+     wreg rBGPD,$7F
+     wreg rBGPD,$00
+     wreg rBGPD,$00
+     wreg rBGPD,$00
+     wreg rBGPD,$00
+     wreg rBGPD,$00
+     wreg rBGPD,$00
      dec  b
      jr   nz,:-
      
      ; Clear attributes
      ld   a,1
-     ld   [VBK],a
+     ld   [rVBK],a
      ld   a,0
      call .fill_nametable
      
      ld   a,0
-     ld   [VBK],a
+     ld   [rVBK],a
      ret
 
 .load_tiles:
@@ -115,9 +115,9 @@ console_show:
      
      ; Enable LCD
      call console_wait_vbl
-     wreg LCDC,$91
-     wreg SCX,0
-     wreg BGP,$E4
+     wreg rLCDC,LCDC_ON | LCDC_BLOCK01 | LCDC_BG_ON
+     wreg rSCX,0
+     wreg rBGP,$E4
      
      jp   console_apply_scroll_
 
@@ -129,7 +129,7 @@ console_hide:
      
      ; LCD off
      call console_wait_vbl
-     wreg LCDC,$11
+     wreg rLCDC,LCDC_OFF | LCDC_BLOCK01 | LCDC_BG_ON
      
      pop  af
      ret
@@ -242,7 +242,7 @@ console_flush:
 console_apply_scroll_:
      ld   a,[console_scroll]
      sub  136
-     sta  SCY
+     sta  rSCY
      pop  af
      ret
      
@@ -253,7 +253,7 @@ console_flush_:
      ; Address of row in nametable
      ld   a,[console_scroll]
      ld   l,a
-     ld   h,(HIGH(BGMAP0)) >> 2
+     ld   h,(HIGH(TILEMAP0)) >> 2
      add  hl,hl
      add  hl,hl
      

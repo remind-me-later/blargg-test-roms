@@ -39,7 +39,7 @@ test_interrupt:
      ld   a,$C9     ; RET
      ld   [sint],a
      
-     wreg IE,$08
+     wreg rIE,$08
      wreg rIF,$00
      call start_timer
      ei

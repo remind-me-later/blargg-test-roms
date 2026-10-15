@@ -19,7 +19,7 @@ begin:
 should_be_on:
      lda  chan_mask
      ld   b,a
-     lda  NR52
+     lda  rAUDENA
      and  b
      jp   z,test_failed
      ret
@@ -30,7 +30,7 @@ should_be_almost_off:
 should_be_off:
      lda  chan_mask
      ld   b,a
-     lda  NR52
+     lda  rAUDENA
      and  b
      jp   nz,test_failed
      ret

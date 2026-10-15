@@ -8,7 +8,7 @@ cpu_norm:
      and  gb_id_cgb
      ret  z
      
-     lda  KEY1
+     lda  rSPD
      rlca
      ret  nc
      jr   cpu_speed_toggle
@@ -22,21 +22,21 @@ cpu_fast:
      and  gb_id_cgb
      ret  z
      
-     lda  KEY1
+     lda  rSPD
      rlca
      ret  c
 cpu_speed_toggle:
      di
-     lda  IE
+     lda  rIE
      push af
      xor  a
-     sta  IE
+     sta  rIE
      sta  rIF
-     wreg P1,$30
-     wreg KEY1,1
+     wreg rJOYP,$30
+     wreg rSPD,1
      stop    ; RGBDS assembles this as $10 $00, the old stop + nop
      pop  af
-     sta  IE
+     sta  rIE
      ret
 
 
@@ -46,13 +46,13 @@ cpu_speed_toggle:
 get_cpu_speed:
      push bc
      call sync_apu
-     wreg NR14,$C0
-     wreg NR11,-1
-     wreg NR12,8
-     wreg NR14,$C0
+     wreg rAUD1HIGH,$C0
+     wreg rAUD1LEN,-1
+     wreg rAUD1ENV,8
+     wreg rAUD1HIGH,$C0
      ld   bc,-$262
 :    inc  bc
-     lda  NR52
+     lda  rAUDENA
      and  1
      jr   nz,:-
      ld   a,0

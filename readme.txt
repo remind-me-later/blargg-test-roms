@@ -17,6 +17,12 @@ ones, byte for byte.
 	                            of the release, found at the same paths in DIR
 	./build.sh --only PREFIX    only the ROMs whose path starts with PREFIX
 
+The names of the hardware registers and memory areas (rLCDC, rAUDENA,
+TILEMAP0...) are the ones of hardware.inc, which is a submodule: after
+cloning, run
+
+	git submodule update --init
+
 roms.tsv lists the ROMs and their sources. CI (.github/workflows) builds
 them all and compares them with the ones of the gameboy-test-roms release.
 

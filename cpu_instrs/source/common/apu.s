@@ -3,16 +3,16 @@
 ; Turns APU off
 ; Preserved: BC, DE, HL
 sound_off:
-     wreg NR52,0
+     wreg rAUDENA,AUDENA_OFF
      ret
 
 
 ; Turns APU on
 ; Preserved: BC, DE, HL
 sound_on:
-     wreg NR52,$80  ; power
-     wreg NR51,$FF  ; mono
-     wreg NR50,$77  ; volume
+     wreg rAUDENA,AUDENA_ON  ; power
+     wreg rAUDTERM,$FF  ; mono
+     wreg rAUDVOL,$77  ; volume
      ret
 
 
@@ -20,11 +20,11 @@ sound_on:
 ; tens of clocks. Uses square 2 channel.
 ; Preserved: BC, DE, HL
 sync_apu:
-     wreg NR24,$00  ; disable length
-     wreg NR21,$3E  ; length = 2 (in case of extra len clk)
-     wreg NR22,$08  ; silent without disabling channel
-     wreg NR24,$C0  ; start length
-:    lda  NR52      ; wait for length to reach zero
+     wreg rAUD2HIGH,$00  ; disable length
+     wreg rAUD2LEN,$3E  ; length = 2 (in case of extra len clk)
+     wreg rAUD2ENV,$08  ; silent without disabling channel
+     wreg rAUD2HIGH,$C0  ; start length
+:    lda  rAUDENA      ; wait for length to reach zero
      and  $02
      jr   nz,:-
      ret
@@ -34,11 +34,11 @@ sync_apu:
 ; tens of clocks. Uses square 1 channel.
 ; Preserved: BC, DE, HL
 sync_sweep:
-     wreg NR10,$11  ; sweep period = 1, shift = 1
-     wreg NR12,$08  ; silent without disabling channel
-     wreg NR13,$FF  ; freq = $3FF
-     wreg NR14,$83  ; start
-:    lda  NR52
+     wreg rAUD1SWEEP,$11  ; sweep period = 1, shift = 1
+     wreg rAUD1ENV,$08  ; silent without disabling channel
+     wreg rAUD1LOW,$FF  ; freq = $3FF
+     wreg rAUD1HIGH,$83  ; start
+:    lda  rAUDENA
      and  $01
      jr   nz,:-
      ret
@@ -48,7 +48,7 @@ sync_sweep:
 ; Preserved: BC, DE
 load_wave:
      push bc
-     wreg NR30,$00  ; disable while writing
+     wreg rAUD3ENA,$00  ; disable while writing
      ld   c,$30
 :    ld   a,[hli]
      ld   [$FF00+c],a
@@ -63,13 +63,13 @@ load_wave:
 ; Preserved: BC, DE, HL
 beep:
      xor  a         ; sound off
-     sta  NR52
+     sta  rAUDENA
      dec  a
-     sta  NR52      ; sound on
-     sta  NR51      ; mono
-     sta  NR50      ; volume
-     wreg NR12,$F1  ; volume, envelope rate
-     wreg NR14,$86  ; note on, pitch
+     sta  rAUDENA      ; sound on
+     sta  rAUDTERM      ; mono
+     sta  rAUDVOL      ; volume
+     wreg rAUD1ENV,$F1  ; volume, envelope rate
+     wreg rAUD1HIGH,$86  ; note on, pitch
      delay_msec 250
      ret
 
@@ -80,17 +80,17 @@ mark_sound:
      push bc
      ld   c,a
      ld   b,8
-     wreg NR10,0
-     wreg NR11,$80
-     wreg NR13,$F8
+     wreg rAUD1SWEEP,0
+     wreg rAUD1LEN,$80
+     wreg rAUD1LOW,$F8
 :    ld   a,$60
      rl   c
      jr   nc,:+
      ld   a,$A0
-:    sta  NR12
-     wreg NR14,$87
+:    sta  rAUD1ENV
+     wreg rAUD1HIGH,$87
      delay_usec 300
-     wreg NR12,0
+     wreg rAUD1ENV,0
      delay_usec 100
      dec  b
      jr   nz,:--
@@ -119,7 +119,7 @@ get_len_a:
      push bc
      ld   c,a
      ld   b,0
-:    lda  NR52      ; 3
+:    lda  rAUDENA      ; 3
      and  c         ; 1
      jr   z,:+       ; 2
      delay 4096-10
@@ -137,11 +137,11 @@ sync_length:
      push af
      push hl
      
-     ld   hl,NR52
-     wreg NR22,$08  ; silent without disabling channel
-     wreg NR24,$40  ; avoids extra length clock on trigger
-     wreg NR21,-2   ; length = 2, in case clock occurs immediately
-     wreg NR24,$C0  ; start length
+     ld   hl,rAUDENA
+     wreg rAUD2ENV,$08  ; silent without disabling channel
+     wreg rAUD2HIGH,$40  ; avoids extra length clock on trigger
+     wreg rAUD2LEN,-2   ; length = 2, in case clock occurs immediately
+     wreg rAUD2HIGH,$C0  ; start length
      
      ; Coarse sync
      ld   a,$02
@@ -151,9 +151,9 @@ sync_length:
      ; Fine sync. Slowly moves "forward" until
      ; length clock occurs just before reading NR52.
 :    delay 4097-20
-     wreg NR21,-1   ; 5
-     wreg NR24,$C0  ; 5
-     lda  NR52      ; 3
+     wreg rAUD2LEN,-1   ; 5
+     wreg rAUD2HIGH,$C0  ; 5
+     lda  rAUDENA      ; 3
      delay 2        ; 2
      and  $02       ; 2
      jr   nz,:-      ; 3
@@ -200,7 +200,7 @@ MACRO test_chan_timing ; chan, iter
      call print_space
      ld   a,\2
 :    push af
-     test_chan 1<<\1, \1*5+NR10
+     test_chan 1<<\1, \1*5+rAUD1SWEEP
      pop  af
      dec  a
      jr   nz,:-

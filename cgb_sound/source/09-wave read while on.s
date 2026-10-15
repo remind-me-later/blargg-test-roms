@@ -8,7 +8,7 @@ INCLUDE "shell.inc"
 INCLUDE "apu.s"
 
 main:
-     wreg NR51,0    ; mute sound
+     wreg rAUDTERM,0    ; mute sound
      loop_n_times test,69
      check_crc_dmg_cgb $118A3620,$270DA9A3
      jp   tests_passed
@@ -22,16 +22,16 @@ test:
      ; each loop iteration
      ld   hl,wave
      call load_wave
-     wreg NR30,$80  ; enable
-     wreg NR32,$00  ; silent
+     wreg rAUD3ENA,$80  ; enable
+     wreg rAUD3LEVEL,$00  ; silent
      ld   a,b
-     sta  NR33      ; period
-     wreg NR34,$87  ; start
+     sta  rAUD3LOW      ; period
+     wreg rAUD3HIGH,$87  ; start
      
      ; Read from wave
-     wreg NR33,-2   ; period = 4
+     wreg rAUD3LOW,-2   ; period = 4
      delay_clocks 176
-     lda  WAVE
+     lda  rAUD3WAVE_0
      
      call print_a
      
