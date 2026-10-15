@@ -7,22 +7,11 @@
 ; post_exit:        ; called at end of std_exit
 ; report_byte:      ; report A to user
 
-IF !DEF(bss)
-     ; address of next normal variable
-     DEF bss = $D800
-ENDC
+INCLUDE "variables.inc"
 
-IF !DEF(dp)
-     ; address of next direct-page ($FFxx) variable
-     DEF dp = $FF80
-ENDC
-
-; DMG/CGB hardware identifier
+; DMG/CGB hardware identifier, wGbId
 DEF GB_ID_CGB EQU $10  ; mask for testing CGB bit
 DEF GB_ID_DEVCART EQU $04 ; mask for testing "on devcart" bit
-
-DEF gb_id = bss
-DEF bss = bss+1
 
 ; Stack is normally here
 DEF STD_STACK EQU $DFFF
@@ -90,7 +79,7 @@ std_reset:
      ld   sp,STD_STACK
 
      ; Save DMG/CGB id
-     ld   [gb_id],a
+     ld   [wGbId],a
 
      ; Init hardware
      wreg rTAC,$00

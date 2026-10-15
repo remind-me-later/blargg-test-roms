@@ -12,7 +12,9 @@ INCLUDE "apu.s"
 
 ; $58: JP $DEC3
 ; $DEC3: RET
-DEF sint EQU $DEC3
+PUSHS UNION "Serial interrupt handler", WRAMX[$DEC3], BANK[1]
+wSerialHandler: db
+POPS
 
 main:
      call init_timer
@@ -37,7 +39,7 @@ test_interrupt:
      call print_d
 
      ld   a,$C9     ; RET
-     ld   [sint],a
+     ld   [wSerialHandler],a
 
      wreg rIE,$08
      wreg rIF,$00

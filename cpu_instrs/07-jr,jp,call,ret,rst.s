@@ -72,28 +72,28 @@ test_instr:
      pop  af
 
      ; Switch to new stack
-     ld   [temp],sp
+     ld   [wTemp],sp
      ld   sp,$DF80
 
      ; Set return address
-     ld   de,instr+3
+     ld   de,wInstr+3
      push de
 
-     jp   instr
+     jp   wInstr
 instr_done:
      inc  a
 taken:
      di             ; RETI enables interrupts
 
      ; Save new SP and switch to yet another stack
-     ld   [temp+2],sp
+     ld   [wTemp+2],sp
      ld   sp,$DF70
 
      ; Checksum A and SP
      call update_crc_fast
-     ld   a,[temp+2]
+     ld   a,[wTemp+2]
      call update_crc_fast
-     ld   a,[temp+3]
+     ld   a,[wTemp+3]
      call update_crc_fast
 
      ; Checksum 4 bytes of stack
@@ -106,7 +106,7 @@ taken:
      ld   a,[$DF80-5]
      call update_crc_fast
 
-     ldsp temp
+     ldsp wTemp
 
      ld   a,c
      add  $10

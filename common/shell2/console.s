@@ -25,7 +25,7 @@ console_init:
      call console_hide
 
      ; CGB-specific inits
-     ld   a,[gb_id]
+     ld   a,[wGbId]
      and  GB_ID_CGB
      call nz,.init_cgb
 
@@ -42,9 +42,9 @@ console_init:
      call .load_tiles
 
      ; Init state
-     setb console_pos,CONSOLE_WIDTH
-     setb console_mode,0
-     setb console_scroll,-8
+     setb wConsolePos,CONSOLE_WIDTH
+     setb wConsoleMode,0
+     setb wConsoleScroll,-8
      call console_scroll_up_
      jr   console_show
 
@@ -144,7 +144,7 @@ console_inverse:
 ; Preserved: BC, DE, HL
 console_set_mode:
      and  $80
-     ld   [console_mode],a
+     ld   [wConsoleMode],a
      ret
 
 ; Prints char A to console. Will not appear until
@@ -158,9 +158,9 @@ console_print:
 
      push hl
      push af
-     ld   hl,console_pos
+     ld   hl,wConsolePos
      ld   a,[hli]
-     cp   LOW(console_buf)
+     cp   LOW(wConsoleBuf)
      jr   nz,.not_at_end
 
      ; Newline if at end of current line. If this
@@ -178,8 +178,8 @@ console_print:
 .not_at_end:
      pop  af
      or   [hl]      ; apply current attributes
-     dec  l         ; hl = console_pos
-     dec  [hl]      ; console_pos = console_pos - 1
+     dec  l         ; hl = wConsolePos
+     dec  [hl]      ; wConsolePos = wConsolePos - 1
      ld   l,[hl]    ; hl = position in buffer
      ld   [hl],a
 
@@ -204,19 +204,19 @@ console_scroll_up_:
      push hl
 
      ; Scroll up 8 pixels
-     ld   a,[console_scroll]
+     ld   a,[wConsoleScroll]
      add  8
-     ld   [console_scroll],a
+     ld   [wConsoleScroll],a
 
      ; Start new clear line
      ld   a,' '
-     ld   hl,console_buf + CONSOLE_WIDTH - 1
+     ld   hl,wConsoleBuf + CONSOLE_WIDTH - 1
      ld   b,CONSOLE_WIDTH
 .clear:
      ld   [hld],a
      dec  b
      jr   nz,.clear
-     setb console_pos,LOW((console_buf + CONSOLE_WIDTH))
+     setb wConsolePos,LOW((wConsoleBuf + CONSOLE_WIDTH))
 
      pop  hl
      pop  bc
@@ -229,7 +229,7 @@ console_flush:
      call console_wait_vbl
      call console_flush_
 console_apply_scroll_:
-     ld   a,[console_scroll]
+     ld   a,[wConsoleScroll]
      sub  136
      sta  rSCY
      pop  af
@@ -240,20 +240,20 @@ console_flush_:
      push hl
 
      ; Address of row in nametable
-     ld   a,[console_scroll]
+     ld   a,[wConsoleScroll]
      ld   l,a
      ld   h,(HIGH(TILEMAP0)) >> 2
      add  hl,hl
      add  hl,hl
 
      ; Copy line
-     ld   de,console_buf + CONSOLE_WIDTH
+     ld   de,wConsoleBuf + CONSOLE_WIDTH
 .copy:
      dec  e
      ld   a,[de]
      ld   [hli],a
      ld   a,e
-     cp   LOW(console_buf)
+     cp   LOW(wConsoleBuf)
      jr   nz,.copy
 
      pop  hl

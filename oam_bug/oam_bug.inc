@@ -11,20 +11,23 @@ INCLUDE "ppu.s"
 DEF OAM_START EQU $FE00
 
 ; Stack pointer saved by save_sp
-DEF saved_sp = dp+0
-DEF dp = dp+2
+; The variables of the tests, and of the driver of a multi-test ROM, share
+; this section (and so, this RAM): the driver saves its own while a test runs.
+PUSHS UNION "Test HRAM variables", HRAM[hShellVariablesEnd]
+hSavedSp:       dw
+POPS
 
 ; Saves SP, for tests that change it
 MACRO save_sp
-     ld   [saved_sp],sp
+     ld   [hSavedSp],sp
 ENDM
 
 ; Restores SP saved by save_sp
 ; Preserved: AF, BC, DE
 MACRO restore_sp
-     lda  saved_sp
+     lda  hSavedSp
      ld   l,a
-     lda  saved_sp+1
+     lda  hSavedSp+1
      ld   h,a
      ld   sp,hl
 ENDM

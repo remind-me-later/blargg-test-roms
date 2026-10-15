@@ -10,17 +10,20 @@
 INCLUDE "apu.s"
 
 ; Variables of the channel being tested
-DEF chan = dp+0         ; 0 to 3
-DEF chan_regs = dp+1    ; low byte of the address of its NRx0
-DEF chan_mask = dp+2    ; its bit in NR52
-DEF chan_maxlen = dp+3  ; its maximum length, mod 256
-DEF dp = dp+4
+; The variables of the tests, and of the driver of a multi-test ROM, share
+; this section (and so, this RAM): the driver saves its own while a test runs.
+PUSHS UNION "Test HRAM variables", HRAM[hShellVariablesEnd]
+hChan:          db      ; 0 to 3
+hChanRegs:      db      ; low byte of the address of its NRx0
+hChanMask:      db      ; its bit in NR52
+hChanMaxlen:    db      ; its maximum length, mod 256
+POPS
 
 
 ; Writes data to register reg (0 to 4) of the channel being tested
 ; Preserved: BC, DE, HL
 MACRO wchn ; reg, data
-     lda  chan_regs
+     lda  hChanRegs
      add  \1
      ld   c,a
      ld   a,\2
@@ -33,12 +36,12 @@ ENDM
 ; channel off.
 MACRO test_chan_n ; n, regs, mask, maxlen, dac register, dac value
      ld   a,\1
-     sta  chan
+     sta  hChan
      call print_dec
      call print_space
-     wreg chan_regs,\2
-     wreg chan_mask,\3
-     wreg chan_maxlen,\4
+     wreg hChanRegs,\2
+     wreg hChanMask,\3
+     wreg hChanMaxlen,\4
      call console_flush
      wreg \5,\6
      call test_chan

@@ -94,20 +94,20 @@ test:
      ld   b,$BC
      push bc
      ld   a,$DE
-     ld   [rp_temp],a
+     ld   [wRpTemp],a
      ld   a,$12
      ld   bc,$3456
      ld   de,$789A
-     ld   hl,rp_temp ; (HL) points to RAM
+     ld   hl,wRpTemp ; (HL) points to RAM
      pop  af
 
 ;    call print_regs
-     jp   instr
+     jp   wInstr
 instr_done:
 
      ; Checksum registers and (HL)
      call checksum_af_bc_de_hl
-     ld   a,[rp_temp]
+     ld   a,[wRpTemp]
      call update_crc_fast
 
      ret

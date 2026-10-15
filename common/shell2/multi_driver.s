@@ -19,16 +19,22 @@ INCLUDE "apu.s"
 INCLUDE "cpu_speed.s"
 
 ; Variables
-DEF first_failed = dp+0     ; number of the first test that failed, or 0
-DEF test_number = dp+1      ; number of the running test, from 0
-DEF dp = dp+2
+; In the same RAM as the variables of the tests: the driver saves them
+; around each test (see below).
+PUSHS UNION "Test HRAM variables", HRAM[hShellVariablesEnd]
+hFirstFailed:   db      ; number of the first test that failed, or 0
+hTestNumber:    db      ; number of the running test, from 0
+POPS
 
 ; Cartridge RAM, where the state of the driver is kept while a test runs: SP,
-; then the RAM from nv_ram_base and the direct page, which the tests clear.
-DEF saved_sp EQU $BC00
-DEF saved_state EQU $BC02
+; then the RAM from NV_RAM_START and HRAM, which the tests clear.
 DEF STATE_SIZE EQU $9C
 DEF DP_STATE_SIZE EQU 6
+
+PUSHS "Saved state", SRAM[SAVED_STATE_START]
+sSavedSp:       dw
+sSavedState:    ds STATE_SIZE + DP_STATE_SIZE
+POPS
 
 ; The way back from the tests, at a fixed address
 PUSHS
@@ -41,13 +47,13 @@ reset:
 
 main:
      ld   sp,$C000
-     setb first_failed,0
-     setb test_number,-1
+     setb hFirstFailed,0
+     setb hTestNumber,-1
 
 .next_test:
-     lda  test_number
+     lda  hTestNumber
      inc  a
-     sta  test_number
+     sta  hTestNumber
 
      ; Select the bank of the test, four to a bank
      srl  a
@@ -56,7 +62,7 @@ main:
      ld   [rROMB],a
 
      ; DE = address of its block
-     lda  test_number
+     lda  hTestNumber
      swap a
      and  $30
      or   $40
@@ -75,7 +81,7 @@ main:
 
 .finished:
      call print_newline
-     lda  first_failed
+     lda  hFirstFailed
      or   a
      jr   z,.all_passed
      call print_newline
@@ -98,8 +104,8 @@ main:
      jr   nz,.beep
 
      ; Exit with the number of the first test that failed
-     lda  first_failed
-     ld   [test_code],a
+     lda  hFirstFailed
+     ld   [wTestCode],a
      jp   tests_done
 
 
@@ -108,18 +114,18 @@ run_test:
      ; Save SP, as the test will use its own stack
      ld   hl,sp+0
      ld   a,l
-     ld   [saved_sp],a
+     ld   [sSavedSp],a
      ld   a,h
-     ld   [saved_sp+1],a
+     ld   [sSavedSp+1],a
 
      ; Save the variables of the driver
      push de
-     ld   hl,saved_state
+     ld   hl,sSavedState
      ld   bc,STATE_SIZE
-     ld   de,nv_ram_base
+     ld   de,NV_RAM_START
      call copy_bytes
      ld   bc,DP_STATE_SIZE
-     ld   de,dp_base
+     ld   de,HRAM_START
      call copy_bytes
      pop  hl
 
@@ -130,21 +136,21 @@ run_test:
      ; Back from the test at $3F00, with its result in A
 test_exited:
      ld   d,a
-     ld   a,[saved_sp]
+     ld   a,[sSavedSp]
      ld   l,a
-     ld   a,[saved_sp+1]
+     ld   a,[sSavedSp+1]
      ld   h,a
      ld   sp,hl
      ld   a,d
      push af
 
      ; Restore the variables of the driver
-     ld   de,saved_state
+     ld   de,sSavedState
      ld   bc,STATE_SIZE
-     ld   hl,nv_ram_base
+     ld   hl,NV_RAM_START
      call copy_bytes
      ld   bc,DP_STATE_SIZE
-     ld   hl,dp_base
+     ld   hl,HRAM_START
      call copy_bytes
 
      call cpu_norm
@@ -166,7 +172,7 @@ copy_bytes:
 
 ; Prints the number of the test
 print_test_number:
-     lda  test_number
+     lda  hTestNumber
      inc  a
      call print_dec2
      call console_flush
@@ -185,14 +191,14 @@ report_test:
 
 .failed:
      push af
-     lda  first_failed
+     lda  hFirstFailed
      or   a
      jr   nz,.keep_first
-     lda  test_number
+     lda  hTestNumber
      inc  a
-     sta  first_failed
+     sta  hFirstFailed
 .keep_first:
-     lda  test_number
+     lda  hTestNumber
      inc  a
      call play_byte
      ld   a,d

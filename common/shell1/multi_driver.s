@@ -15,8 +15,8 @@ DEF MULTI_DRIVER EQU 1
 
 ; The tests use the RAM at $D800 and $FF80: the driver keeps its variables
 ; below them.
-DEF bss = $D600
-DEF dp = $FFC0
+DEF BSS_START EQU $D600
+DEF HRAM_START EQU $FFC0
 
 INCLUDE "shell.inc"
 INCLUDE "apu.s"
@@ -25,11 +25,12 @@ INCLUDE "cpu_speed.s"
 ; The tests can leave SP anywhere, so the driver has a stack of its own and
 ; saves SP while a test runs.
 DEF STACK_SIZE EQU $40
-DEF stack_bottom = bss
-DEF bss = bss+STACK_SIZE
-DEF stack_top = bss
-DEF saved_sp = bss+0
-DEF bss = bss+2
+
+PUSHS "Driver variables", WRAMX[wShellVariablesEnd], BANK[1]
+wStackBottom:   ds STACK_SIZE
+wStackTop:
+wSavedSp:       dw
+POPS
 
 ; The tests' way back, at a fixed address
 PUSHS
@@ -44,7 +45,7 @@ report_byte:
      ret
 
 main:
-     ld   sp,stack_top
+     ld   sp,wStackTop
      ld   b,0       ; test number
      ld   c,0       ; failed tests
 
@@ -75,9 +76,9 @@ main:
      ; Run it
      ld   hl,sp+0
      ld   a,l
-     ld   [saved_sp],a
+     ld   [wSavedSp],a
      ld   a,h
-     ld   [saved_sp+1],a
+     ld   [wSavedSp+1],a
      ld   h,d
      ld   l,e
      jp   copy_to_wram_then_run
@@ -85,9 +86,9 @@ main:
      ; Back from the test at $3FFD, with its result in A
 .test_exited:
      ld   d,a
-     ld   a,[saved_sp]
+     ld   a,[wSavedSp]
      ld   l,a
-     ld   a,[saved_sp+1]
+     ld   a,[wSavedSp+1]
      ld   h,a
      ld   sp,hl
      ld   a,d

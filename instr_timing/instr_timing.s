@@ -8,10 +8,11 @@ DEF KEEP_PROGRAM_OPEN EQU 1
 INCLUDE "shell.inc"
 INCLUDE "timer.s"
 
-DEF saved_sp = bss+0
-DEF instr = bss+2 ; 3-byte instr + JP instr_end
-DEF instr_addr = bss+8 ; JP instr_end
-DEF bss = bss+11
+PUSHS UNION "Test variables", WRAMX[wShellVariablesEnd], BANK[1]
+wSavedSp:       dw
+wInstr:         ds 6    ; 3-byte instr + JP instr_end
+wInstrAddr:     ds 3    ; JP instr_end
+POPS
 
 main:
      call init_timer
@@ -50,7 +51,7 @@ test_main_ops:
      cpl
      and  $C7
      jr   nz,.test
-     ld   a,[gb_id]
+     ld   a,[wGbId]
      and  GB_ID_DEVCART
      ret  nz
 .test:
@@ -92,16 +93,16 @@ test_main_ops:
      ld   h,HIGH(op_lens)
      ld   c,[hl]
      ld   a,l
-     ld   hl,instr
+     ld   hl,wInstr
      ld   [hli],a
      dec  c
      jr   z,.one_byte
      ld   a,0
      dec  c
      jr   z,.two_bytes
-     ld   a,LOW(instr_addr)
+     ld   a,LOW(wInstrAddr)
      ld   [hli],a
-     ld   a,HIGH(instr_addr)
+     ld   a,HIGH(wInstrAddr)
 .two_bytes:
      ld   [hli],a
 .one_byte:
@@ -148,10 +149,10 @@ test_cb_ops:
 
      ; Copy instr to exec space
      ld   a,l
-     ld   hl,instr+1
+     ld   hl,wInstr+1
      ld   [hli],a
      ld   a,$CB
-     ld   [instr],a
+     ld   [wInstr],a
      call time_instruction
 
      pop  hl
@@ -194,27 +195,27 @@ print_failed_opcode:
 time_instruction:
      ld   c,a
 
-     ; Write JP instr_end to HL and instr_addr
+     ; Write JP instr_end to HL and wInstrAddr
      ld   a,$C3     ; JP
      ld   [hli],a
-     ld   [instr_addr],a
+     ld   [wInstrAddr],a
 
      ld   a,LOW(instr_end)
-     ld   [instr_addr+1],a
+     ld   [wInstrAddr+1],a
      ld   [hli],a
 
      ld   a,HIGH(instr_end)
-     ld   [instr_addr+2],a
+     ld   [wInstrAddr+2],a
      ld   [hl],a
 
      ; Save sp
-     ld   [saved_sp],sp
+     ld   [wSavedSp],sp
 
      ; Set regs and stack contents
      push bc
-     ld   bc,instr_addr
-     ld   de,instr_addr
-     ld   hl,instr_addr
+     ld   bc,wInstrAddr
+     ld   de,wInstrAddr
+     ld   hl,wInstrAddr
      call start_timer
      pop  af
      push hl
@@ -222,20 +223,20 @@ time_instruction:
      ; Environment instruction executes in:
      ; 1 byte: OP
      ; 2 byte: OP 00
-     ; 3 byte: OP instr_addr
-     ; BC,DE,HL = instr_addr
-     ; Stack has instr_addr pushed on it.
+     ; 3 byte: OP wInstrAddr
+     ; BC,DE,HL = wInstrAddr
+     ; Stack has wInstrAddr pushed on it.
      ; Stack pointer can be trashed by instr.
-     ; instr_addr contains JP instr_end, that
+     ; wInstrAddr contains JP instr_end, that
      ; can be trashed. Instructions which trash
      ; this don't execute it.
 
-     jp   instr
+     jp   wInstr
 instr_end:     ; instruction jumps here when done
      di
 
      ; Restore sp
-     ld   sp,saved_sp
+     ld   sp,wSavedSp
      pop  hl
      ld   sp,hl
 

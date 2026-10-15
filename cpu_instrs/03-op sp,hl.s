@@ -45,7 +45,7 @@ values_loop:
      pop  af
 
      ; Switch stack
-     ld   [temp],sp
+     ld   [wTemp],sp
      ld   a,[hli]
      ld   h,[hl]
      ld   l,a
@@ -59,21 +59,21 @@ values_loop:
      ld   bc,$5691
      ld   de,$9ABC
 
-     jp   instr
+     jp   wInstr
 instr_done:
      ; Save new SP and switch to yet another stack
-     ld   [temp+2],sp
+     ld   [wTemp+2],sp
      ld   sp,$DF70
 
      call checksum_af_bc_de_hl
 
      ; Checksum SP
-     ld   a,[temp+2]
+     ld   a,[wTemp+2]
      call update_crc_fast
-     ld   a,[temp+3]
+     ld   a,[wTemp+3]
      call update_crc_fast
 
-     ldsp temp
+     ldsp wTemp
 
      pop  hl
      pop  de

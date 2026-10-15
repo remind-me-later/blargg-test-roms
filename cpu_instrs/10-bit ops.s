@@ -245,7 +245,7 @@ values_loop:
      pop  af
 
 ;    call print_regs
-     jp   instr
+     jp   wInstr
 instr_done:
 
      ; Checksum registers

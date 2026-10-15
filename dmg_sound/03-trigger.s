@@ -23,7 +23,7 @@ end_nodelay:
      ld   a,b
 end_passive:
      ld   b,a
-     lda  chan_mask
+     lda  hChanMask
      call get_len_a
      cp   b
      jp   nz,test_failed
@@ -77,7 +77,7 @@ ENDC
      call begin
      wchn 1,-1      ; length = 1
      wchn 4,$40     ; enable, causing clock to zero
-     lda  chan_mask
+     lda  hChanMask
      ld   b,a
      lda  rAUDENA      ; channel now disabled
      and  b
@@ -91,7 +91,7 @@ ENDC
      wchn 4,$40     ; no clock; length still 0
      wchn 4,0
      wchn 4,$40     ; no clock; length still 0
-     lda  chan_maxlen ; end triggers channel, which loads it with max length
+     lda  hChanMaxlen ; end triggers channel, which loads it with max length
      call end
 
      set_test 7,"Trigger should un-freeze length that reached zero"
@@ -103,7 +103,7 @@ ENDC
      delay_clocks 8192
      wchn 4,$40     ; enable
      delay_apu 2    ; clock length by 2
-     lda  chan_maxlen
+     lda  hChanMaxlen
      sub  2
      call end_nodelay
 
@@ -113,7 +113,7 @@ ENDC
      wchn 4,$40     ; enable, causing clock to zero
      wchn 4,$00     ; disable
      wchn 4,$C0     ; trigger unfreezes length, and since enabled, clocks it
-     lda  chan_maxlen
+     lda  hChanMaxlen
      dec  a
      call end_nodelay
 
@@ -121,7 +121,7 @@ ENDC
      wchn 1,-1      ; length = 1
      wchn 4,$40     ; enable, causing clock to zero
      wchn 4,$C0     ; trigger unfreezes length, and since enabled, clocks it
-     lda  chan_maxlen
+     lda  hChanMaxlen
      dec  a
      call end_nodelay
 
@@ -132,7 +132,7 @@ ENDC
                     ; First length counter is enabled, which clocks it to 0 and freezes it
                     ; Trigger unfreezes length counter, which clocks it AGAIN
                     ; The result is the same as the previous test, which enables separately
-     lda  chan_maxlen
+     lda  hChanMaxlen
      dec  a
      call end_nodelay
 
@@ -141,14 +141,14 @@ ENDC
      wchn 1,0       ; length = max
      delay_clocks 8192
      wchn 4,$80     ; trigger
-     lda  chan_maxlen
+     lda  hChanMaxlen
      call end_nodelay
 
 IF !DEF(CGB_02)
      call begin
      wchn 1,0       ; length = max
      wchn 4,$80     ; trigger
-     lda  chan_maxlen
+     lda  hChanMaxlen
      call end
 
      call begin
@@ -167,7 +167,7 @@ ENDC
      wchn 0,$80     ; enable wave DAC
      wchn 2,$08     ; enable square/noise DAC
      wchn 4,$80     ; trigger
-     lda  chan_maxlen
+     lda  hChanMaxlen
      dec  a
      call end
 
@@ -185,10 +185,10 @@ ENDC
      wchn 4,$40     ; len = max-2
      wchn 0,$80     ; enable now
      wchn 4,$C0
-     lda  chan_maxlen
+     lda  hChanMaxlen
      sub  3
      call delay_apu_cycles
-     lda  chan_mask
+     lda  hChanMask
      ld   b,a
      lda  rAUDENA
      and  b

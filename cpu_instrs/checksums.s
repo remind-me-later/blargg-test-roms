@@ -1,7 +1,9 @@
 ; Multiple checksum table handling
 
-DEF next_checksum = bss+0
-DEF bss = bss+2
+PUSHS UNION "Checksum variables", WRAMX[wShellVariablesEnd], BANK[1]
+wNextChecksum:  dw
+wChecksumVariablesEnd:
+POPS
 
 ; If PRINT_CHECKSUMS is defined, checksums are printed
 ; rather than compared.
@@ -11,9 +13,9 @@ DEF bss = bss+2
 ; Preserved: BC, DE, HL
 checksums_init:
      ld   a,LOW(checksums)
-     ld   [next_checksum],a
+     ld   [wNextChecksum],a
      ld   a,HIGH(checksums)
-     ld   [next_checksum+1],a
+     ld   [wNextChecksum+1],a
      ret
 
 ; Compares current checksum with next checksum in
@@ -21,18 +23,18 @@ checksums_init:
 ; Preserved: BC, DE, HL
 checksums_compare:
 IF DEF(PRINT_CHECKSUMS)
-     lda  checksum+3
+     lda  hChecksum+3
      push af
-     lda  checksum+2
+     lda  hChecksum+2
      push af
-     lda  checksum+1
+     lda  hChecksum+1
      push af
-     lda  checksum+0
+     lda  hChecksum+0
      push af
 
-     ld   a,[next_checksum]
+     ld   a,[wNextChecksum]
      inc  a
-     ld   [next_checksum],a
+     ld   [wNextChecksum],a
      sub  LOW(checksums)+1
      and  $03
      ld   a,','
@@ -70,11 +72,11 @@ ELSE
      push bc
      push de
      push hl
-     ld   a,[next_checksum]
+     ld   a,[wNextChecksum]
      ld   l,a
-     ld   a,[next_checksum+1]
+     ld   a,[wNextChecksum+1]
      ld   h,a
-     ld   de,checksum
+     ld   de,hChecksum
      ld   b,0
 .compare:
      ld   a,[de]
@@ -84,12 +86,12 @@ ELSE
      inc  hl
      inc  e
      ld   a,e
-     cp   LOW((checksum+4))
+     cp   LOW((hChecksum+4))
      jr   nz,.compare
      ld   a,l
-     ld   [next_checksum],a
+     ld   [wNextChecksum],a
      ld   a,h
-     ld   [next_checksum+1],a
+     ld   [wNextChecksum+1],a
 
      ld   a,b
      cp   0

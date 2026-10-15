@@ -45,5 +45,5 @@ ENDC
 
 ;;;; Shell
 
-INCLUDE "runtime.s"
 INCLUDE "console.inc"
+INCLUDE "runtime.s"

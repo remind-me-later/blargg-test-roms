@@ -66,7 +66,7 @@ values_loop:
      pop  hl
 
 ;    call print_regs
-     jp   instr
+     jp   wInstr
 instr_done:
 
      ; Checksum registers

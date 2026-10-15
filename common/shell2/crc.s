@@ -7,10 +7,10 @@ init_crc:
 ; Preserved: BC, DE, HL
 reset_crc:
      ld   a,$FF
-     sta  checksum+0
-     sta  checksum+1
-     sta  checksum+2
-     sta  checksum+3
+     sta  hChecksum+0
+     sta  hChecksum+1
+     sta  hChecksum+2
+     sta  hChecksum+3
      ret
 
 ; Updates current checksum with byte A
@@ -25,7 +25,7 @@ update_crc:
      push de
      push hl
 
-     ld   hl,checksum+3
+     ld   hl,hChecksum+3
      ld   b,[hl]
      dec  l
      ld   c,[hl]
@@ -57,7 +57,7 @@ update_crc:
      dec  h
      jr   nz,.bit
 
-     ld   h,HIGH(checksum)
+     ld   h,HIGH(hChecksum)
      ld   [hli],a
      ld   [hl],d
      inc  l

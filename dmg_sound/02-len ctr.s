@@ -17,7 +17,7 @@ begin:
      ret
 
 should_be_on:
-     lda  chan_mask
+     lda  hChanMask
      ld   b,a
      lda  rAUDENA
      and  b
@@ -28,7 +28,7 @@ should_be_almost_off:
      call should_be_on
      delay_apu 1
 should_be_off:
-     lda  chan_mask
+     lda  hChanMask
      ld   b,a
      lda  rAUDENA
      and  b
@@ -50,7 +50,7 @@ test_chan:
      set_test 4,"Attempting to load length with 0 should load with maximum"
      call begin
      wchn 1,0       ; length = maximum
-     lda  chan_maxlen
+     lda  hChanMaxlen
      dec  a
      call delay_apu_cycles
      call should_be_almost_off
@@ -66,7 +66,7 @@ test_chan:
      call begin
      delay_apu 4    ; clocks length to 0
      wchn 4,$C0     ; trigger converts 0 to maximum
-     lda  chan_maxlen
+     lda  hChanMaxlen
      dec  a
      call delay_apu_cycles
      call should_be_almost_off
@@ -77,7 +77,7 @@ test_chan:
      wchn 4,$00     ; disable length
      wchn 4,$80     ; trigger converts 0 to maximum
      wchn 4,$40     ; enable length
-     lda  chan_maxlen
+     lda  hChanMaxlen
      dec  a
      call delay_apu_cycles
      call should_be_almost_off
@@ -119,7 +119,7 @@ test_chan:
      wchn 1,0       ; length = maximum
      delay_apu 32   ; clock length 32 times
      wchn 4,$C0
-     lda  chan_maxlen
+     lda  hChanMaxlen
      sub  33
      call delay_apu_cycles
      call should_be_almost_off

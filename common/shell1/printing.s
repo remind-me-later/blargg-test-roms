@@ -6,16 +6,15 @@ DEF NEWLINE EQU 10
 
 ; Prints char without updating checksum
 ; Preserved: BC, DE, HL
-DEF print_char_nocrc = bss
-DEF bss = bss+3
+; (wPrintCharNoCrc, in RAM, is a JP to the print routine)
 
 
 ; Initializes printing. HL = print routine
 init_printing:
      ld   a,l
-     ld   [print_char_nocrc+1],a
+     ld   [wPrintCharNoCrc+1],a
      ld   a,h
-     ld   [print_char_nocrc+2],a
+     ld   [wPrintCharNoCrc+2],a
      jr   show_printing
 
 
@@ -27,7 +26,7 @@ hide_printing:
 show_printing:
      ld   a,$C3     ; JP (nn)
 .set:
-     ld   [print_char_nocrc],a
+     ld   [wPrintCharNoCrc],a
      ret
 
 
@@ -38,7 +37,7 @@ print_char:
      push af
      cp   NEWLINE
      call nz,update_crc
-     call print_char_nocrc
+     call wPrintCharNoCrc
      pop  af
      ret
 
@@ -48,7 +47,7 @@ print_char:
 print_space:
      push af
      ld   a,' '
-     call print_char_nocrc
+     call wPrintCharNoCrc
      pop  af
      ret
 
@@ -58,7 +57,7 @@ print_space:
 print_newline:
      push af
      ld   a,NEWLINE
-     call print_char_nocrc
+     call wPrintCharNoCrc
      pop  af
      ret
 

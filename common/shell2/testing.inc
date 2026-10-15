@@ -1,9 +1,5 @@
 ; Diagnostic and testing utilities
 
-DEF test_code = bss+0
-DEF test_name = bss+1
-DEF bss = bss+3
-
 ; Sets test code and optional error text.
 ; The text can be given as several strings, which are stored one after another.
 ; Preserved: AF, BC, DE, HL

@@ -10,10 +10,16 @@ INCLUDE "cpu_speed.s"
 INCLUDE "apu.s"
 INCLUDE "crc_fast.s"
 
-DEF instr EQU $DEF8
-DEF rp_temp = (instr-4)
+; Where the instruction under test is copied, and a place for the registers
+; it uses
+PUSHS UNION "Instruction under test", WRAMX[$DEF8 - 4], BANK[1]
+wRpTemp:        ds 4
+wInstr:         ds 6    ; the instruction, then JP instr_done
+POPS
 
-DEF temp = bss
+PUSHS UNION "Test variables", WRAMX[wCrcTablesEnd], BANK[1]
+wTemp:          ds 4
+POPS
 
 ; Sets SP to word at addr
 ; Preserved: BC, DE
@@ -35,20 +41,20 @@ main:
 .next_instr:
      ; Copy instruction
      ld   a,[hli]
-     ld   [instr],a
+     ld   [wInstr],a
      ld   a,[hli]
-     ld   [instr+1],a
+     ld   [wInstr+1],a
      ld   a,[hli]
-     ld   [instr+2],a
+     ld   [wInstr+2],a
      push hl
 
      ; Put JP instr_done after it
      ld   a,$C3
-     ld   [instr+3],a
+     ld   [wInstr+3],a
      ld   a,LOW(instr_done)
-     ld   [instr+4],a
+     ld   [wInstr+4],a
      ld   a,HIGH(instr_done)
-     ld   [instr+5],a
+     ld   [wInstr+5],a
 
      call reset_crc
      call test_instr
@@ -57,11 +63,11 @@ main:
      jr   z,.passed
 
      set_test 1
-     ld   a,[instr]
+     ld   a,[wInstr]
      call print_a
      cp   $CB
      jr   nz,.one_byte
-     ld   a,[instr+1]
+     ld   a,[wInstr+1]
      call print_a
 .one_byte:
 

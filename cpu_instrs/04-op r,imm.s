@@ -51,19 +51,19 @@ values_loop:
      ; Set registers
      push bc
      ld   a,[hl]
-     ld   [instr+1],a
+     ld   [wInstr+1],a
      ld   bc,$1234
      ld   de,$5678
-     ld   hl,rp_temp
+     ld   hl,wRpTemp
      pop  af
 
 ;    call print_regs
-     jp   instr
+     jp   wInstr
 instr_done:
 
      ; Checksum registers and (hl)
      call checksum_af_bc_de_hl
-     ld   a,[rp_temp]
+     ld   a,[wRpTemp]
      call update_crc_fast
 
      pop  hl

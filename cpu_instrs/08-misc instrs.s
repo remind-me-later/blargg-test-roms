@@ -67,21 +67,21 @@ test:
      pop  af
 
      ; Switch stack
-     ld   [temp],sp
+     ld   [wTemp],sp
      ld   sp,$DF80-2
 
-     jp   instr
+     jp   wInstr
 instr_done:
      ; Save new SP and switch to another stack
-     ld   [temp+2],sp
+     ld   [wTemp+2],sp
      ld   sp,$DF70
 
      call checksum_af_bc_de_hl
 
      ; Checksum SP
-     ld   a,[temp+2]
+     ld   a,[wTemp+2]
      call update_crc_fast
-     ld   a,[temp+3]
+     ld   a,[wTemp+3]
      call update_crc_fast
 
      ; Checksum RAM
@@ -103,7 +103,7 @@ instr_done:
      call update_crc_fast
 
      ; Restore SP
-     ldsp temp
+     ldsp wTemp
 
      ret
 

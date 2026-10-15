@@ -5,11 +5,11 @@ set_test_:
      inc  hl
      inc  hl
      ld   a,[hli]
-     ld   [test_code],a
+     ld   [wTestCode],a
      ld   a,l
-     ld   [test_name],a
+     ld   [wTestName],a
      ld   a,h
-     ld   [test_name+1],a
+     ld   [wTestName+1],a
      pop  af
      ret
 
@@ -30,7 +30,7 @@ tests_passed:
 ; "Passed" if set_test 0 was last used, or
 ; failure if set_test n was last used.
 tests_done:
-     ld   a,[test_code]
+     ld   a,[wTestCode]
      inc  a
      jr   z,.done
      dec  a
@@ -43,9 +43,9 @@ tests_done:
 
 ; Reports current error text and exits with result code
 test_failed:
-     ld   a,[test_name]
+     ld   a,[wTestName]
      ld   l,a
-     ld   a,[test_name+1]
+     ld   a,[wTestName+1]
      ld   h,a
      ld   a,[hl]
      or   a
@@ -54,7 +54,7 @@ test_failed:
      call print_str_hl
      call print_newline
 .no_text:
-     ld   a,[test_code]
+     ld   a,[wTestCode]
      cp   $FF       ; if a = $FF then a = 1
      jr   nz,.exit
      ld   a,1
@@ -68,19 +68,19 @@ print_crc:
 
      ; Must read checksum entirely before printing,
      ; since printing updates it.
-     lda  checksum
+     lda  hChecksum
      cpl
      push af
 
-     lda  checksum+1
+     lda  hChecksum+1
      cpl
      push af
 
-     lda  checksum+2
+     lda  hChecksum+2
      cpl
      push af
 
-     lda  checksum+3
+     lda  hChecksum+3
      cpl
 
      call print_hex
@@ -95,19 +95,19 @@ print_crc:
      ret
 
 check_crc_:
-     lda  checksum+0
+     lda  hChecksum+0
      cp   e
      jr   nz,.failed
 
-     lda  checksum+1
+     lda  hChecksum+1
      cp   d
      jr   nz,.failed
 
-     lda  checksum+2
+     lda  hChecksum+2
      cp   c
      jr   nz,.failed
 
-     lda  checksum+3
+     lda  hChecksum+3
      cp   b
      jr   nz,.failed
 

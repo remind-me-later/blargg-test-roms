@@ -28,14 +28,14 @@ IF DEF(CHECK_GB_ID)
 .keep:
      ld   a,b
 ENDC
-     ld   [gb_id],a
+     ld   [wGbId],a
 
      ; Clear memory except very top of stack
-     ld   bc,STD_STACK-bss_base - 2
-     ld   hl,bss_base
+     ld   bc,STD_STACK-BSS_START - 2
+     ld   hl,BSS_START
      call clear_mem
-     ld   bc,$FFFF-dp_base
-     ld   hl,dp_base
+     ld   bc,$FFFF-HRAM_START
+     ld   hl,HRAM_START
      call clear_mem
 
      ; Init hardware
@@ -134,12 +134,12 @@ IF !DEF(CUSTOM_PRINT)
      init_text_out:
           ; Enable cartridge RAM and set text output pointer
           setb rRAMG,RAMG_SRAM_ENABLE
-          setw text_out_addr,text_out_base
-          setb text_out_base-3,$DE
-          setb text_out_base-2,$B0
-          setb text_out_base-1,$61
-          setb text_out_base,0
-          setb final_result,$80
+          setw wTextOutAddr,sTextOutput
+          setb sSignature+0,$DE
+          setb sSignature+1,$B0
+          setb sSignature+2,$61
+          setb sTextOutput,0
+          setb sFinalResult,$80
           ret
 
 
@@ -148,16 +148,16 @@ IF !DEF(CUSTOM_PRINT)
      write_text_out:
           push hl
           push af
-          ld   a,[text_out_addr]
+          ld   a,[wTextOutAddr]
           ld   l,a
-          ld   a,[text_out_addr+1]
+          ld   a,[wTextOutAddr+1]
           ld   h,a
           inc  hl
           ld   [hl],0
           ld   a,l
-          ld   [text_out_addr],a
+          ld   [wTextOutAddr],a
           ld   a,h
-          ld   [text_out_addr+1],a
+          ld   [wTextOutAddr+1],a
           dec  hl
           pop  af
           ld   [hl],a
@@ -188,7 +188,7 @@ ENDC
 ; build_devcart and build_multi need to customize this
 IF !DEF(CUSTOM_EXIT)
      post_exit:
-          ld   [final_result],a
+          ld   [sFinalResult],a
      forever:
           wreg rAUDENA,AUDENA_OFF    ; sound off
 .loop:

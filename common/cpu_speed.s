@@ -4,7 +4,7 @@
 ; Preserved: BC, DE, HL
 cpu_norm:
      ; Do nothing if not CGB
-     ld   a,[gb_id]
+     ld   a,[wGbId]
      and  GB_ID_CGB
      ret  z
 
@@ -18,7 +18,7 @@ cpu_norm:
 ; Preserved: BC, DE, HL
 cpu_fast:
      ; Do nothing if not CGB
-     ld   a,[gb_id]
+     ld   a,[wGbId]
      and  GB_ID_CGB
      ret  z
 

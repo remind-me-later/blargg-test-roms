@@ -21,6 +21,14 @@ type, RAM size and so on). Include paths, in this order:
 
 	-I ../common/shellN/ -I ../common/ -I ../hardware.inc/
 
+RAM. The variables of the shell are listed in variables.inc of each shell,
+as labels in sections with fixed addresses (the ROMs have to be the released
+ones), named as the style guide of gbdev.io says: w for WRAM, h for HRAM, s
+for cartridge RAM (wTestCode, hChecksum, sFinalResult). A test that has
+variables of its own declares a section that starts at wShellVariablesEnd or
+hShellVariablesEnd. The sections are unionized, so that the tests of a
+multi-test ROM, each assembled on its own, use the same RAM.
+
 multi_driver.s is the driver of the multi-test ROMs. It was reconstructed
 from the released ROMs, like apu.s and test_chan.s of shell2 (see readme.txt
 in the main directory).

@@ -10,8 +10,4 @@
 
 DEF CONSOLE_WIDTH EQU 20
 
-DEF console_buf = bss+0
-DEF console_pos = bss+CONSOLE_WIDTH
-DEF console_mode = bss+CONSOLE_WIDTH+1
-DEF console_scroll = bss+CONSOLE_WIDTH+2
-DEF bss = bss+CONSOLE_WIDTH+3
+; Its variables, wConsoleBuf and the following, are in variables.inc

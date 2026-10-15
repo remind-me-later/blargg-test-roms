@@ -18,7 +18,7 @@ print_a:
 print_a_:
      call print_hex
      ld   a,' '
-     call print_char_nocrc
+     call wPrintCharNoCrc
      pop  af
      ret
 
@@ -106,7 +106,7 @@ print_hex_nocrc:
      add  7
 .print:
      add  '0'
-     jp   print_char_nocrc
+     jp   wPrintCharNoCrc
 
 
 ; Prints char_nz if Z flag is clear,

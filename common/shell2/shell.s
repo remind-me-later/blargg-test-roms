@@ -1,31 +1,16 @@
 ; Common routines and runtime
 
-; A few bytes of RAM that aren't cleared
-DEF nv_ram_base EQU $D800
-DEF nv_ram = nv_ram_base
-
-; Address of next normal variable
-DEF bss_base = nv_ram_base+$80
-DEF bss = bss_base
-
-; Address of next direct-page ($FFxx) variable
-DEF dp_base EQU $FF80
-DEF dp = dp_base
+; Where the variables are, see variables.inc
+DEF NV_RAM_START EQU $D800              ; a few bytes of RAM that aren't cleared
+DEF BSS_START EQU NV_RAM_START+$80      ; normal variables, cleared at reset
+DEF HRAM_START EQU $FF80                ; HRAM ($FFxx) variables, cleared at reset
 
 ; Top of stack
 DEF STD_STACK EQU $DFFF+1
 
-; Final exit result byte is written here
-DEF final_result EQU $A000
-
-; Text output is written here as zero-terminated string
-DEF text_out_base EQU $A004
-
-; DMG/CGB hardware identifier
+; DMG/CGB hardware identifier (wGbId)
 DEF GB_ID_CGB EQU $10 ; mask for testing CGB bit
 DEF GB_ID_DEVCART EQU $04 ; mask for testing "on devcart" bit
-DEF gb_id = nv_ram
-DEF nv_ram = nv_ram+1
 
 ; The program is stored in ROM bank 1 and run from $C000, as is done on devcart.
 ; Bank 0 holds the header, the vectors and this routine, which copies it.
@@ -87,10 +72,5 @@ INCLUDE "printing.inc"
 INCLUDE "numbers.inc"
 INCLUDE "testing.inc"
 
-; build_devcart and build_multi customize this
-IF !DEF(CUSTOM_PRINT)
-DEF text_out_addr = bss+0
-DEF bss = bss+2
-ENDC
-
 INCLUDE "console.inc"
+INCLUDE "variables.inc"

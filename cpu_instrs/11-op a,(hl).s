@@ -88,24 +88,24 @@ values_loop:
 
      ; BC
      ld   a,[hli]
-     ld   bc,rp_temp
-     ld   [rp_temp],a
+     ld   bc,wRpTemp
+     ld   [wRpTemp],a
 
      ; DE
      ld   a,[hli]
-     ld   de,rp_temp+1
-     ld   [rp_temp+1],a
+     ld   de,wRpTemp+1
+     ld   [wRpTemp+1],a
 
      ; HL
      ld   a,[hl]
-     ld   hl,rp_temp+2
-     ld   [rp_temp+2],a
+     ld   hl,wRpTemp+2
+     ld   [wRpTemp+2],a
 
      ; AF
      pop  af
 
 ;    call print_regs
-     jp   instr
+     jp   wInstr
 instr_done:
 
      ; Checksum AF, HL, and (HL)
@@ -120,11 +120,11 @@ instr_done:
      call update_crc_fast
      ld   a,c
      call update_crc_fast
-     ld   a,[rp_temp]
+     ld   a,[wRpTemp]
      call update_crc_fast
-     ld   a,[rp_temp+1]
+     ld   a,[wRpTemp+1]
      call update_crc_fast
-     ld   a,[rp_temp+2]
+     ld   a,[wRpTemp+2]
      call update_crc_fast
 
      pop  hl
