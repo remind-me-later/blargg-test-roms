@@ -12,11 +12,10 @@ the suite:
 	rgblink -o test.gb test.o
 	rgbfix -f hg test.gb
 
-build.sh, in the main directory of the repository, builds all the ROMs
-that way and, with --check, compares them with the ones of the
-gameboy-test-roms release (fetch-reference.sh downloads them). The hardware
-definitions (rLCDC, rAUDENA...) come from hardware.inc, a submodule of the
-repository.
+make, in the main directory of the repository, builds all the ROMs that way
+and, with make check, compares them with the ones of the gameboy-test-roms
+release (fetch-reference.sh downloads them). The hardware definitions
+(rLCDC, rAUDENA...) come from hardware.inc, a submodule of the repository.
 
 The sources were written for WLA-DX and have been converted; the ROMs they
 give are the same, byte for byte. The GBS and devcart builds that WLA-DX
@@ -24,7 +23,7 @@ had are not supported.
 
 The multi-test ROM is built from multi.s, the driver, and one block per
 test (built with BUILD_MULTI and MULTI_TEST defined). Its source was not
-released: multi.s is a reconstruction, so build.sh does it.
+released: multi.s is a reconstruction, so the Makefile does it.
 
 Tests include "shell.inc" at the beginning and "shell_end.inc" at the end.
 The code of the libraries that goes after the test is in shell_end.inc,

@@ -90,10 +90,10 @@ execute
 	rgblink -o test.gb test.o
 	rgbfix -f hg test.gb
 
-build.sh, in the main directory of the repository, builds all the ROMs
-and, with --check, compares them with the ones of the gameboy-test-roms
-release (fetch-reference.sh downloads them). The hardware definitions
-(rLCDC, rAUDENA...) come from hardware.inc, a submodule of the repository.
+make, in the main directory of the repository, builds all the ROMs and, with
+make check, compares them with the ones of the gameboy-test-roms release
+(fetch-reference.sh downloads them). The hardware definitions (rLCDC,
+rAUDENA...) come from hardware.inc, a submodule of the repository.
 
 Test code uses a common shell framework contained in common/shell1/ and
 common/ (see readme.txt there).

@@ -36,4 +36,4 @@ jobs:
       - name: Build and compare with the release
         run: |
           rgbasm --version
-          ./build.sh --check
+          make -j4 check

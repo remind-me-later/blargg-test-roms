@@ -10,15 +10,18 @@ The sources of the tests were written for the WLA-DX assembler. They have
 been converted to RGBDS (rgbasm, rgblink and rgbfix; tested with version
 1.0.4), and give the same ROMs as the released ones, byte for byte. The
 ROMs are not kept in the repository: they are built, and compared with the
-ones of the gameboy-test-roms release.
+ones of the gameboy-test-roms release. It needs GNU make.
 
-	./build.sh                  builds all the ROMs into build/
+	make                        builds all the ROMs into build/
 	./fetch-reference.sh        downloads the ROMs of the release into
 	                            reference/ (the check needs them)
-	./build.sh --check          also compares the ROMs with those
-	./build.sh --check DIR      compares them with the ROMs of another copy
+	make check                  also compares the ROMs with those
+	make check REFERENCE=DIR    compares them with the ROMs of another copy
 	                            of the release, found at the same paths in DIR
-	./build.sh --only PREFIX    only the ROMs whose path starts with PREFIX
+	make cpu_instrs             only the ROMs of a suite
+	make -j                     builds in parallel; only what changed is
+	                            built again
+	make clean
 
 The names of the hardware registers and memory areas (rLCDC, rAUDENA,
 TILEMAP0...) are the ones of hardware.inc, which is a submodule: after
@@ -26,8 +29,8 @@ cloning, run
 
 	git submodule update --init
 
-roms.tsv lists the ROMs and their sources. CI (.github/workflows) builds
-them all and compares them with the ones of the gameboy-test-roms release.
+The Makefile has the list of the suites. CI (.github/workflows) builds the ROMs
+and compares them with the ones of the gameboy-test-roms release.
 
 The tools run with -Weverything, and the sources give no warnings. To add
 options, set RGBASMFLAGS, RGBLINKFLAGS or RGBFIXFLAGS (CI sets -Werror).
@@ -50,7 +53,7 @@ common/:
 	                 of the console and the check of the RGBDS version
 
 A test is assembled from the directory of its suite, with the directories
-of its shell and of common/ on the include path (build.sh does it; roms.tsv
+of its shell and of common/ on the include path (the Makefile does it, and
 says which shell each suite uses). common/shell2/readme.txt and the readme
 of each suite say how to do it by hand.
 
@@ -84,3 +87,11 @@ WLA-DX assembled two things differently from what the sources say, and the
 ROMs have what it assembled: `stop` was one byte (the sources follow it with
 a nop, and now have the two-byte RGBDS stop), and the unary ~ of
 `and ~$04` in instr_timing and interrupt_time did nothing.
+
+
+Names of the files
+------------------
+The sources have no spaces, commas or parentheses in their names, which make
+cannot take: the test that the release has as "03-op sp,hl.gb" is
+cpu_instrs/03-op_sp_hl.s here, and builds build/cpu_instrs/individual/
+03-op_sp_hl.gb. make check finds the ROM of the release for each of them.

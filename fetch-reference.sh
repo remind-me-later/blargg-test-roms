@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Downloads the Blargg ROMs of the gameboy-test-roms release, which
-# `build.sh --check` compares the built ROMs with. They are not kept in this
+# `make check` compares the built ROMs with. They are not kept in this
 # repository.
 #
 #   ./fetch-reference.sh [DIR]    default DIR: reference/ (ignored by git)
