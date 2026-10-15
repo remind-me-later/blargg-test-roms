@@ -5,18 +5,18 @@ DEF TEST_NAME EQUS "06-overflow on trigger"
 INCLUDE "shell.inc"
 INCLUDE "apu.s"
 
-main:
+Main:
 
      ; DMG-06:
      ; 0555 0666 071C 0787 07C1 07E0 07F0
 
      wreg rAUD1ENV,8
      ld   d,$01
-shift_loop:
+ShiftLoop:
      ld   a,d
      sta  rAUD1SWEEP
      ld   bc,$87FF
-.search_down:
+.searchDown:
      ld   a,c
      sta  rAUD1LOW
      ld   a,b
@@ -24,17 +24,17 @@ shift_loop:
      delay_clocks 40
      lda  rAUDENA
      and  1
-     jr   nz,.found_down
+     jr   nz,.foundDown
      dec  bc
      bit  6,b
-     jr   z,.search_down
-.found_down:
+     jr   z,.searchDown
+.foundDown:
      res  7,b
-     call print_bc
+     call PrintBC
      inc  d
      bit  3,d
-     jr   z,shift_loop
-     call print_newline
+     jr   z,ShiftLoop
+     call PrintNewline
      check_crc $F604603B
 
      ; DMG-05, DMG-06, DMG-09,  CGB-04, CGB-05:
@@ -42,11 +42,11 @@ shift_loop:
 
      wreg rAUD1ENV,8
      ld   d,$01
-shift_loop2:
+ShiftLoop2:
      ld   a,d
      sta  rAUD1SWEEP
      ld   bc,$8000
-.search_up:
+.searchUp:
      ld   a,c
      sta  rAUD1LOW
      ld   a,b
@@ -54,18 +54,18 @@ shift_loop2:
      delay_clocks 40
      lda  rAUDENA
      and  1
-     jr   z,.found_up
+     jr   z,.foundUp
      inc  bc
      bit  6,b
-     jr   z,.search_up
-.found_up:
+     jr   z,.searchUp
+.foundUp:
      res  7,b
-     call print_bc
+     call PrintBC
      inc  d
      bit  3,d
-     jr   z,shift_loop2
+     jr   z,ShiftLoop2
      check_crc $5A1697EE
 
-     jp   tests_passed
+     jp   TestsPassed
 
 INCLUDE "shell_end.inc"

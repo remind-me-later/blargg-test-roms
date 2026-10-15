@@ -11,17 +11,17 @@ POPS
 ; Initializes multiple checksum handler to use checksums
 ; table (defined by user).
 ; Preserved: BC, DE, HL
-checksums_init:
-     ld   a,LOW(checksums)
+ChecksumsInit:
+     ld   a,LOW(Checksums)
      ld   [wNextChecksum],a
-     ld   a,HIGH(checksums)
+     ld   a,HIGH(Checksums)
      ld   [wNextChecksum+1],a
      ret
 
 ; Compares current checksum with next checksum in
 ; list. Z if they match, NZ if not.
 ; Preserved: BC, DE, HL
-checksums_compare:
+ChecksumsCompare:
 IF DEF(PRINT_CHECKSUMS)
      lda  hChecksum+3
      push af
@@ -35,37 +35,37 @@ IF DEF(PRINT_CHECKSUMS)
      ld   a,[wNextChecksum]
      inc  a
      ld   [wNextChecksum],a
-     sub  LOW(checksums)+1
+     sub  LOW(Checksums)+1
      and  $03
      ld   a,','
      jr   nz,.print
      print_str NEWLINE,'.',"byte"
      ld   a,' '
 .print:
-     call print_char
+     call PrintChar
 
      pop  af
-     call .print_byte
+     call .printByte
      pop  af
-     call .print_byte
+     call .printByte
      pop  af
-     call .print_byte
+     call .printByte
      ld   a,'$'
-     call print_char
+     call PrintChar
      pop  af
-     call print_hex
+     call PrintHex
 
      xor  a
      ret
 
-.print_byte:
+.printByte:
      push af
      ld   a,'$'
-     call print_char
+     call PrintChar
      pop  af
-     call print_hex
+     call PrintHex
      ld   a,','
-     call print_char
+     call PrintChar
      ret
 ELSE
 

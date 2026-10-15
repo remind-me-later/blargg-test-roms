@@ -1,7 +1,7 @@
 ; Delays A cycles + overhead
 ; Preserved: BC, DE, HL
 ; Time: A+20 cycles (including CALL)
-delay_a_20_cycles:
+DelayA20Cycles:
 .loop:
      sub  5    ; 2
      jr   nc,.loop ;3/2 do multiples of 5
@@ -17,10 +17,10 @@ delay_a_20_cycles:
 ; Delays A*256 cycles + overhead
 ; Preserved: BC, DE, HL
 ; Time: A*256+12 cycles (including CALL)
-delay_256a_12_cycles:
+Delay256A12Cycles:
      or   a              ; 1
      ret  z              ; 5/2
-delay_256a_9_cycles_:
+Delay256A9Cycles_:
 .loop:
      delay 256-4
      dec  a              ; 1
@@ -30,10 +30,10 @@ delay_256a_9_cycles_:
 ; Delays A*65536 cycles + overhead
 ; Preserved: BC, DE, HL
 ; Time: A*65536+12 cycles (including CALL)
-delay_65536a_12_cycles:
+Delay65536A12Cycles:
      or   a              ; 1
      ret  z              ;5/2
-delay_65536a_9_cycles_:
+Delay65536A9Cycles_:
 .loop:
      delay 65536-4
      dec  a              ; 1
@@ -43,16 +43,16 @@ delay_65536a_9_cycles_:
 ; Delays H*256+L cycles + overhead
 ; Preserved: AF, BC, DE, HL
 ; Time: H*256+L+51 cycles
-delay_hl_51_cycles:
+DelayHL51Cycles:
      push af
      ld   a,h
-     call delay_256a_12_cycles
+     call Delay256A12Cycles
      ld   a,l
-     call delay_a_20_cycles
+     call DelayA20Cycles
      pop  af
      ret
 
      ; delay_short_ macro calls into these
      ds MAX_SHORT_DELAY-10, $00 ; NOP repeated several times
-delay_unrolled_:
+DelayUnrolled_:
      ret

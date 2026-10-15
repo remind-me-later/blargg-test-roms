@@ -6,60 +6,60 @@
 DEF TEST_NAME EQUS "4-scanline_timing"
 INCLUDE "oam_bug.inc"
 
-main:
+Main:
      set_test 2,"INC DE just before first corruption"
-     call begin
+     call Begin
      ld   de,$FE00
      ld   a,$81
      ldh  [rLCDC],a ; LCD on
      delay 70224-3
      inc  de
-     call should_not_corrupt
+     call ShouldNotCorrupt
 
      set_test 3,"INC DE at first corruption"
-     call begin
+     call Begin
      ld   de,$FE00
      ld   a,$81
      ldh  [rLCDC],a ; LCD on
      delay 70224-2
      inc  de
-     call should_corrupt
+     call ShouldCorrupt
 
      set_test 4,"INC DE at last corruption"
-     call begin
+     call Begin
      ld   de,$FE00
      ld   a,$81
      ldh  [rLCDC],a ; LCD on
      delay 70224-2+18
      inc  de
-     call should_corrupt
+     call ShouldCorrupt
 
      set_test 5,"INC DE just after last corruption"
-     call begin
+     call Begin
      ld   de,$FE00
      ld   a,$81
      ldh  [rLCDC],a ; LCD on
      delay 70224-2+19
      inc  de
-     call should_not_corrupt
+     call ShouldNotCorrupt
 
-     jp   tests_passed
+     jp   TestsPassed
 
-begin:
-     call disable_lcd
-     call fill_oam
+Begin:
+     call DisableLCD
+     call FillOAM
      ret
 
-should_not_corrupt:
-     call disable_lcd
-     call cp_oam
-     jp   nz,test_failed
+ShouldNotCorrupt:
+     call DisableLCD
+     call CpOAM
+     jp   nz,TestFailed
      ret
 
-should_corrupt:
-     call disable_lcd
-     call cp_oam
-     jp   z,test_failed
+ShouldCorrupt:
+     call DisableLCD
+     call CpOAM
+     jp   z,TestFailed
      ret
 
 INCLUDE "shell_end.inc"

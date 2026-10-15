@@ -1,14 +1,14 @@
 ; Main printing routine that checksums and
 ; prints to output device
 
-; Character that does equivalent of print_newline
+; Character that does equivalent of PrintNewline
 DEF NEWLINE EQU 10
 
 ; Prints immediate string
 ; Preserved: AF, BC, DE, HL
 MACRO print_str ; string,string2
      push hl
-     call print_str_
+     call PrintStr_
      db \1
      IF _NARG > 1
           db \2

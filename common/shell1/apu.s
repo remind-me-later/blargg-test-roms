@@ -2,14 +2,14 @@
 
 ; Turns APU off
 ; Preserved: BC, DE, HL
-sound_off:
+SoundOff:
      wreg rAUDENA,AUDENA_OFF
      ret
 
 
 ; Turns APU on
 ; Preserved: BC, DE, HL
-sound_on:
+SoundOn:
      wreg rAUDENA,AUDENA_ON  ; power
      wreg rAUDTERM,$FF  ; mono
      wreg rAUDVOL,$77  ; volume
@@ -19,7 +19,7 @@ sound_on:
 ; Synchronizes to APU length counter within
 ; tens of clocks. Uses square 2 channel.
 ; Preserved: BC, DE, HL
-sync_apu:
+SyncAPU:
      wreg rAUD2HIGH,$00  ; disable length
      wreg rAUD2LEN,$3E  ; length = 2 (in case of extra len clk)
      wreg rAUD2ENV,$08  ; silent without disabling channel
@@ -34,7 +34,7 @@ sync_apu:
 ; Synchronizes to first square sweep within
 ; tens of clocks. Uses square 1 channel.
 ; Preserved: BC, DE, HL
-sync_sweep:
+SyncSweep:
      wreg rAUD1SWEEP,$11  ; sweep period = 1, shift = 1
      wreg rAUD1ENV,$08  ; silent without disabling channel
      wreg rAUD1LOW,$FF  ; freq = $3FF
@@ -48,7 +48,7 @@ sync_sweep:
 
 ; Copies 16-byte wave from (HL) to wave RAM
 ; Preserved: BC, DE
-load_wave:
+LoadWave:
      push bc
      wreg rAUD3ENA,$00  ; disable while writing
      ld   c,$30
@@ -64,7 +64,7 @@ load_wave:
 
 ; Makes short beep
 ; Preserved: BC, DE, HL
-beep:
+Beep:
      xor  a         ; sound off
      sta  rAUDENA
      dec  a
@@ -79,33 +79,33 @@ beep:
 
 ; Marks sound with bits of A encoded into volume
 ; Preserved: BC, DE, HL
-mark_sound:
+MarkSound:
      push bc
      ld   c,a
      ld   b,8
      wreg rAUD1SWEEP,0
      wreg rAUD1LEN,$80
      wreg rAUD1LOW,$F8
-.next_bit:
+.nextBit:
      ld   a,$60
      rl   c
-     jr   nc,.set_volume
+     jr   nc,.setVolume
      ld   a,$A0
-.set_volume:
+.setVolume:
      sta  rAUD1ENV
      wreg rAUD1HIGH,$87
      delay_usec 300
      wreg rAUD1ENV,0
      delay_usec 100
      dec  b
-     jr   nz,.next_bit
+     jr   nz,.nextBit
      pop  bc
      ret
 
 
 ; Fills wave RAM with A
 ; Preserved: BC, DE, HL
-fill_wave:
+FillWave:
      push bc
      ld   c,$30
 .fill:
@@ -121,7 +121,7 @@ fill_wave:
 ; channel with mask A into A. Length counter
 ; must be enabled for that channel.
 ; Preserved: BC, DE, HL
-get_len_a:
+GetLenA:
      push bc
      ld   c,a
      ld   b,0
@@ -141,7 +141,7 @@ get_len_a:
 ; Synchronizes exactly to length clock. Next length clock
 ; occurs by 4079 clocks after this returns. Uses NR2x.
 ; Preserved: AF, BC, DE, HL
-sync_length:
+SyncLength:
      push af
      push hl
 
@@ -177,18 +177,18 @@ sync_length:
 ; Preserved: BC, DE, HL
 MACRO delay_frames ; n
      ld   a,\1
-     call delay_frames_
+     call DelayFrames_
 ENDM
 
 
 ; Delays A*4096+13 cycles (including CALL)
 ; Preserved: BC, DE, HL
-delay_a_frames:
+DelayAFrames:
      or   a              ; 1
-     jr   nz,delay_frames_.loop ; 3
+     jr   nz,DelayFrames_.loop ; 3
                          ; -1
      ret
-delay_frames_:           ; delays 4096*A-2 cycles (including CALL)
+DelayFrames_:           ; delays 4096*A-2 cycles (including CALL)
      push af             ; 4
      ld   a,256-13-20-12 ; 2
      jr   .delay           ; 3
@@ -196,7 +196,7 @@ delay_frames_:           ; delays 4096*A-2 cycles (including CALL)
      push af             ; 4
      ld   a,256-13-20    ; 2
 .delay:
-     call delay_a_20_cycles
+     call DelayA20Cycles
      delay 4096-256
      pop  af             ; 3
      dec  a              ; 1
@@ -207,16 +207,16 @@ delay_frames_:           ; delays 4096*A-2 cycles (including CALL)
 
 MACRO test_chan_timing ; chan, iter
      ld   a,\1
-     call print_dec
-     call print_space
+     call PrintDec
+     call PrintSpace
      ld   a,\2
 .loop\@:
      push af
-     test_chan 1<<\1, \1*5+rAUD1SWEEP
+     TestChan 1<<\1, \1*5+rAUD1SWEEP
      pop  af
      dec  a
      jr   nz,.loop\@
-     call print_newline
+     call PrintNewline
 ENDM
 
 MACRO test_chans

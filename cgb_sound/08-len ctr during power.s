@@ -7,7 +7,7 @@ DEF TEST_NAME EQUS "08-len ctr during power"
 INCLUDE "shell.inc"
 INCLUDE "apu.s"
 
-enable_len_ctrs:
+EnableLenCtrs:
      wreg rAUD2ENV,8
      wreg rAUD2HIGH,$C0
      wreg rAUD1ENV,8
@@ -18,11 +18,11 @@ enable_len_ctrs:
      wreg rAUD4GO,$C0
      ret
 
-main:
-     call sync_apu
+Main:
+     call SyncAPU
 
      ld   a,0
-     call fill_apu_regs
+     call FillAPURegs
 
      ; Load length counters
      wreg rAUD4LEN,-$33
@@ -31,57 +31,57 @@ main:
      wreg rAUD2LEN,-$22
 
      delay_clocks 8192
-     call enable_len_ctrs
+     call EnableLenCtrs
 
      ; Power down. Comment out to see what would
      ; happen if length counters did run.
      wreg rAUDENA,AUDENA_OFF
 
      ; Try to enable length counters
-     call enable_len_ctrs
+     call EnableLenCtrs
 
      ; Give plenty of time for them to be clocked
      delay_msec 250
 
      ; Power back on and wait a bit longer
      wreg rAUDENA,AUDENA_ON
-     ;call enable_len_ctrs ; can't do this here
+     ;call EnableLenCtrs ; can't do this here
      delay_clocks 2048
 
      ; Get values from length counters
      wreg rAUD2ENV,8
      wreg rAUD2HIGH,$C0
      ld   a,$02
-     call get_len_a
+     call GetLenA
      push af
 
      wreg rAUD1ENV,8
      wreg rAUD1HIGH,$C0
      ld   a,$01
-     call get_len_a
+     call GetLenA
      push af
 
      wreg rAUD3ENA,$80
      wreg rAUD3HIGH,$C0
      ld   a,$04
-     call get_len_a
+     call GetLenA
      push af
 
      wreg rAUD4ENV,8
      wreg rAUD4GO,$C0
      ld   a,$08
-     call get_len_a
+     call GetLenA
 
      ; Print them
-     call print_a
+     call PrintA
      pop  af
-     call print_a
+     call PrintA
      pop  af
-     call print_a
+     call PrintA
      pop  af
-     call print_a
+     call PrintA
 
      check_crc_dmg_cgb $32F0CFBB,$3CF589B4
-     jp tests_passed
+     jp TestsPassed
 
 INCLUDE "shell_end.inc"

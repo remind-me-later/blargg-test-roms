@@ -5,7 +5,7 @@ DEF TEST_NAME EQUS "08-misc instrs"
 INCLUDE "shell.inc"
 INCLUDE "instr_test.s"
 
-instrs:
+Instrs:
      db $F0, $91, 0   ; LDH  A,($91)
      db $E0, $91, 0   ; LDH  ($91),A
      db $F2, $00, 0   ; LDH  A,(C)
@@ -25,21 +25,21 @@ instrs:
      db $C1, 0, 0     ; POP  BC
      db $D1, 0, 0     ; POP  DE
      db $E1, 0, 0     ; POP  HL
-instrs_end:
+InstrsEnd:
 
-test_instr:
+TestInstr:
      ; C = flags register
      ld   c,$00
-     call test
+     call Test
      ld   c,$10
-     call test
+     call Test
      ld   c,$E0
-     call test
+     call Test
      ld   c,$F0
-     call test
+     call Test
      ret
 
-test:
+Test:
      ; Fill RAM
      ld   a,$FE
      ld   [$FF90],a
@@ -71,43 +71,43 @@ test:
      ld   sp,$DF80-2
 
      jp   wInstr
-instr_done:
+InstrDone:
      ; Save new SP and switch to another stack
      ld   [wTemp+2],sp
      ld   sp,$DF70
 
-     call checksum_af_bc_de_hl
+     call ChecksumAFBCDEHL
 
      ; Checksum SP
      ld   a,[wTemp+2]
-     call update_crc_fast
+     call UpdateCRCFast
      ld   a,[wTemp+3]
-     call update_crc_fast
+     call UpdateCRCFast
 
      ; Checksum RAM
      ld   a,[$FF90]
-     call update_crc_fast
+     call UpdateCRCFast
      ld   a,[$FF91]
-     call update_crc_fast
+     call UpdateCRCFast
      ld   a,[$FF92]
-     call update_crc_fast
+     call UpdateCRCFast
 
      ; Checksum stack
      ld   a,[$DF80]
-     call update_crc_fast
+     call UpdateCRCFast
      ld   a,[$DF80-1]
-     call update_crc_fast
+     call UpdateCRCFast
      ld   a,[$DF80-2]
-     call update_crc_fast
+     call UpdateCRCFast
      ld   a,[$DF80-3]
-     call update_crc_fast
+     call UpdateCRCFast
 
      ; Restore SP
      ldsp wTemp
 
      ret
 
-checksums:
+Checksums:
      db $4D, $FF, $15, $97, $6D, $A7, $35, $65, $4D, $FF, $15, $97, $6D, $A7, $35, $65, $4D, $FF, $15, $97, $6D, $A7, $35, $65, $AD, $FA, $5E, $41, $D0, $78, $79, $C1, $AF, $66, $99, $34, $0D, $E1, $97, $99, $6F, $D0, $6F, $5D, $C3, $1F, $A3, $8A, $C2, $F1, $9C, $F3, $C1, $C3, $DC, $78, $C0, $2D, $E3, $01, $8F, $C4, $0F, $44, $95, $22, $6A, $39, $61, $C5, $AB, $55, $FB, $DF, $2C, $52,
 
 INCLUDE "shell_end.inc"

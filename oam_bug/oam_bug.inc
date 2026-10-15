@@ -34,15 +34,15 @@ ENDM
 
 
 ; Turns LCD on
-enable_lcd:
+EnableLCD:
      wreg rLCDC,LCDC_ON | LCDC_BG_ON
      ret
 
 
 ; Turns LCD off, in vblank, and waits for it to settle
 ; Preserved: AF
-disable_lcd:
-     call wait_vbl
+DisableLCD:
+     call WaitVBL
      wreg rLCDC,0
      delay_msec 20
      ret
@@ -50,7 +50,7 @@ disable_lcd:
 
 ; Fills OAM with the sequence $0C, $0D, ...
 ; Preserved: BC, DE, HL
-fill_oam:
+FillOAM:
      ld   a,$0C
      push hl
      ld   hl,OAM_START
@@ -66,10 +66,10 @@ fill_oam:
      ret
 
 
-; Compares OAM with the sequence written by fill_oam.
+; Compares OAM with the sequence written by FillOAM.
 ; Returns Z set if it's unchanged.
 ; Preserved: BC, DE
-cp_oam:
+CpOAM:
      ld   a,$0C
      ld   hl,OAM_START
 .compare:
@@ -86,8 +86,8 @@ cp_oam:
 
 
 ; Prints OAM, 16 bytes per line with the address at the beginning, as the
-; difference from the sequence written by fill_oam, or -- if unchanged.
-print_oam:
+; difference from the sequence written by FillOAM, or -- if unchanged.
+PrintOAM:
      ld   a,$0C
      ld   hl,OAM_START
 .next:
@@ -97,10 +97,10 @@ print_oam:
      jr   nz,.value
      or   l
      jr   z,.address
-     call print_newline
+     call PrintNewline
 .address:
      ld   a,l
-     call print_a
+     call PrintA
 .value:
      pop  af
      push af
@@ -108,7 +108,7 @@ print_oam:
      jr   z,.unchanged
      ld   a,[hl]
      sub  $0C
-     call print_a
+     call PrintA
      jr   .step
 .unchanged:
      push hl
@@ -122,5 +122,5 @@ print_oam:
      jr   z,.next
      bit  5,l
      jr   z,.next
-     call print_newline
+     call PrintNewline
      ret

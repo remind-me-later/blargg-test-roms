@@ -3,47 +3,47 @@
 DEF TEST_NAME EQUS "01-special"
 INCLUDE "shell.inc"
 
-main:
+Main:
      set_test 2,"JR negative"
      ld   a,0
-     jp   .jr_neg
+     jp   .jrNeg
      inc  a
-.neg_target:
+.negTarget:
      inc  a
      inc  a
      cp   2
-     jp   nz,test_failed
-     jp   .neg_done
-.jr_neg:
-     jr   .neg_target
-.neg_done:
+     jp   nz,TestFailed
+     jp   .negDone
+.jrNeg:
+     jr   .negTarget
+.negDone:
 
      set_test 3,"JR positive"
      ld   a,0
-     jr   .pos_target
+     jr   .posTarget
      inc  a
-.pos_target:
+.posTarget:
      inc  a
      inc  a
      cp   2
-     jp   nz,test_failed
+     jp   nz,TestFailed
 
 
      set_test 4,"LD PC,HL"
-     ld   hl,.hl_target
+     ld   hl,.hlTarget
      ld   a,0
      jp   hl
      inc  a
-.hl_target:
+.hlTarget:
      inc  a
      inc  a
      cp   2
-     jp   nz,test_failed
+     jp   nz,TestFailed
 
 
      set_test 5,"POP AF"
      ld   bc,$1200
-.pop_af:
+.popAF:
      push bc
      pop  af
      push af
@@ -51,10 +51,10 @@ main:
      ld   a,c
      and  $F0
      cp   e
-     jp   nz,test_failed
+     jp   nz,TestFailed
      inc  b
      inc  c
-     jr   nz,.pop_af
+     jr   nz,.popAF
 
 
      set_test 6,"DAA"
@@ -66,10 +66,10 @@ main:
      daa
 
      push af
-     call update_crc
+     call UpdateCRC
      pop  hl
      ld   a,l
-     call update_crc
+     call UpdateCRC
 
      inc  d
      jr   nz,.daa
@@ -81,6 +81,6 @@ main:
 
      check_crc $6A9F8D8A
 
-     jp   tests_passed
+     jp   TestsPassed
 
 INCLUDE "shell_end.inc"

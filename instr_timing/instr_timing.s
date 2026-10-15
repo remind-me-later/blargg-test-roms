@@ -10,42 +10,42 @@ INCLUDE "timer.s"
 
 PUSHS UNION "Test variables", WRAMX[wShellVariablesEnd], BANK[1]
 wSavedSp:       dw
-wInstr:         ds 6    ; 3-byte instr + JP instr_end
-wInstrAddr:     ds 3    ; JP instr_end
+wInstr:         ds 6    ; 3-byte instr + JP InstrEnd
+wInstrAddr:     ds 3    ; JP InstrEnd
 POPS
 
-main:
-     call init_timer
-     call test_timer
+Main:
+     call InitTimer
+     call TestTimer
      set_test 0
-     call test_main_ops
-     call test_cb_ops
-     jp   tests_done
+     call TestMainOps
+     call TestCBOps
+     jp   TestsDone
 
 
 ; Ensures timer works
-test_timer:
-     call start_timer
-     call stop_timer
+TestTimer:
+     call StartTimer
+     call StopTimer
      or   a
      ret  z
      set_test 2,"Timer doesn't  work properly"
-     jp   test_failed
+     jp   TestFailed
 
 
 ; Tests main opcodes
-test_main_ops:
+TestMainOps:
      ld   l,0
-.next_op:
-     ld   h,HIGH(op_times)
+.nextOp:
+     ld   h,HIGH(OpTimes)
      ld   a,[hl]
      cp   0
-     call nz,.test_op
+     call nz,.testOp
      inc  l
-     jr   nz,.next_op
+     jr   nz,.nextOp
      ret
 
-.test_op:
+.testOp:
      ; Can't test the 8 RST instructions on devcart
      ld   a,l
      cpl
@@ -61,20 +61,20 @@ test_main_ops:
      and  $08
      add  $F8
      ld   e,a
-     call .copy_and_exec
+     call .copyAndExec
      ld   d,0
      cp   [hl]
      jr   z,.ok
      ld   d,a
-     call print_failed_opcode
+     call PrintFailedOpcode
 .ok:
 
      ; Time with branches not taken
      ld   a,e
      cpl
      ld   e,a
-     call .copy_and_exec
-     ld   h,HIGH(op_times_taken)
+     call .copyAndExec
+     ld   h,HIGH(OpTimesTaken)
      cp   [hl]
      ret  z
 
@@ -83,31 +83,31 @@ test_main_ops:
      cp   d
      ret  z
 
-     call print_failed_opcode
+     call PrintFailedOpcode
      ret
 
-.copy_and_exec:
+.copyAndExec:
      push de
      push hl
 
-     ld   h,HIGH(op_lens)
+     ld   h,HIGH(OpLens)
      ld   c,[hl]
      ld   a,l
      ld   hl,wInstr
      ld   [hli],a
      dec  c
-     jr   z,.one_byte
+     jr   z,.oneByte
      ld   a,0
      dec  c
-     jr   z,.two_bytes
+     jr   z,.twoBytes
      ld   a,LOW(wInstrAddr)
      ld   [hli],a
      ld   a,HIGH(wInstrAddr)
-.two_bytes:
+.twoBytes:
      ld   [hli],a
-.one_byte:
+.oneByte:
      ld   a,e
-     call time_instruction
+     call TimeInstruction
 
      pop  hl
      pop  de
@@ -115,36 +115,36 @@ test_main_ops:
 
 
 ; Tests CB opcodes
-test_cb_ops:
-     ld   hl,cb_op_times
-.next_op:
+TestCBOps:
+     ld   hl,CBOpTimes
+.nextOp:
      ld   a,[hl]
      cp   0
-     call nz,.test_op_cb
+     call nz,.testOpCB
      inc  l
-     jr   nz,.next_op
+     jr   nz,.nextOp
      ret
 
-.test_op_cb:
+.testOpCB:
      ; Test with flags clear
      ld   e,$00
-     call .copy_and_exec_cb
+     call .copyAndExecCB
      cp   [hl]
      jr   nz,.failed
 
      ; Test with flags set
      ld   e,$FF
-     call .copy_and_exec_cb
+     call .copyAndExecCB
      cp   [hl]
      jr   nz,.failed
 
      ret
 .failed:
      print_str "CB "
-     call print_failed_opcode
+     call PrintFailedOpcode
      ret
 
-.copy_and_exec_cb:
+.copyAndExecCB:
      push hl
 
      ; Copy instr to exec space
@@ -153,7 +153,7 @@ test_cb_ops:
      ld   [hli],a
      ld   a,$CB
      ld   [wInstr],a
-     call time_instruction
+     call TimeInstruction
 
      pop  hl
      ret
@@ -164,23 +164,23 @@ test_cb_ops:
 ; A    -> cycles it took
 ; (HL) -> cycles it should have taken
 ; Preserved: HL
-print_failed_opcode:
+PrintFailedOpcode:
      ; Print opcode
      push af
      ld   a,l
-     call print_hex
+     call PrintHex
      ld   a,':'
-     call print_char
+     call PrintChar
      pop  af
 
      ; Print actual and correct times
-     call print_dec
+     call PrintDec
      ld   a,'-'
-     call print_char
+     call PrintChar
      ld   a,[hl]
-     call print_dec
+     call PrintDec
      ld   a,' '
-     call print_char
+     call PrintChar
 
      ; Remember that failure occurred
      set_test 1
@@ -192,19 +192,19 @@ print_failed_opcode:
 ; HL -> address of byte just after instruction
 ; A  -> flags when executing instruction
 ; A  <- number of cycles instruction took
-time_instruction:
+TimeInstruction:
      ld   c,a
 
-     ; Write JP instr_end to HL and wInstrAddr
+     ; Write JP InstrEnd to HL and wInstrAddr
      ld   a,$C3     ; JP
      ld   [hli],a
      ld   [wInstrAddr],a
 
-     ld   a,LOW(instr_end)
+     ld   a,LOW(InstrEnd)
      ld   [wInstrAddr+1],a
      ld   [hli],a
 
-     ld   a,HIGH(instr_end)
+     ld   a,HIGH(InstrEnd)
      ld   [wInstrAddr+2],a
      ld   [hl],a
 
@@ -216,7 +216,7 @@ time_instruction:
      ld   bc,wInstrAddr
      ld   de,wInstrAddr
      ld   hl,wInstrAddr
-     call start_timer
+     call StartTimer
      pop  af
      push hl
 
@@ -227,12 +227,12 @@ time_instruction:
      ; BC,DE,HL = wInstrAddr
      ; Stack has wInstrAddr pushed on it.
      ; Stack pointer can be trashed by instr.
-     ; wInstrAddr contains JP instr_end, that
+     ; wInstrAddr contains JP InstrEnd, that
      ; can be trashed. Instructions which trash
      ; this don't execute it.
 
      jp   wInstr
-instr_end:     ; instruction jumps here when done
+InstrEnd:     ; instruction jumps here when done
      di
 
      ; Restore sp
@@ -240,28 +240,28 @@ instr_end:     ; instruction jumps here when done
      pop  hl
      ld   sp,hl
 
-     call stop_timer
+     call StopTimer
      sub  24
      ret
 
 ; RST handlers
 PUSHS
 SECTION "vector 1", ROM0[$00]
-     jp   instr_end
+     jp   InstrEnd
 SECTION "vector 2", ROM0[$08]
-     jp   instr_end
+     jp   InstrEnd
 SECTION "vector 3", ROM0[$10]
-     jp   instr_end
+     jp   InstrEnd
 SECTION "vector 4", ROM0[$18]
-     jp   instr_end
+     jp   InstrEnd
 SECTION "vector 5", ROM0[$20]
-     jp   instr_end
+     jp   InstrEnd
 SECTION "vector 6", ROM0[$28]
-     jp   instr_end
+     jp   InstrEnd
 SECTION "vector 7", ROM0[$30]
-     jp   instr_end
+     jp   InstrEnd
 SECTION "vector 8", ROM0[$38]
-     jp   instr_end
+     jp   InstrEnd
 POPS
 
 INCLUDE "shell_end.inc"
@@ -271,7 +271,7 @@ DS ALIGN[8]
 
 ; Instruction lengths of opcodes.
 ; 0 for instructions not timed.
-op_lens:
+OpLens:
      db 1, 3, 1, 1, 1, 1, 2, 1, 3, 1, 1, 1, 1, 1, 2, 1 ; 0
      db 0, 3, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1 ; 1
      db 2, 3, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1 ; 2
@@ -290,7 +290,7 @@ op_lens:
      db 2, 1, 1, 1, 0, 1, 2, 1, 2, 1, 3, 1, 0, 0, 2, 1 ; F
 
 ; Timings for main opcodes
-op_times:
+OpTimes:
      db 1, 3, 2, 2, 1, 1, 2, 1, 5, 2, 2, 2, 1, 1, 2, 1
      db 0, 3, 2, 2, 1, 1, 2, 1, 3, 2, 2, 2, 1, 1, 2, 1
      db 2, 3, 2, 2, 1, 1, 2, 1, 2, 2, 2, 2, 1, 1, 2, 1
@@ -309,7 +309,7 @@ op_times:
      db 3, 3, 2, 1, 0, 4, 2, 4, 3, 2, 4, 1, 0, 0, 2, 4
 
 ; Timings when conditionals are taken
-op_times_taken:
+OpTimesTaken:
      db 1, 3, 2, 2, 1, 1, 2, 1, 5, 2, 2, 2, 1, 1, 2, 1
      db 0, 3, 2, 2, 1, 1, 2, 1, 3, 2, 2, 2, 1, 1, 2, 1
      db 3, 3, 2, 2, 1, 1, 2, 1, 3, 2, 2, 2, 1, 1, 2, 1
@@ -328,7 +328,7 @@ op_times_taken:
      db 3, 3, 2, 1, 0, 4, 2, 4, 3, 2, 4, 1, 0, 0, 2, 4
 
 ; Timings for CB-prefixed opcodes
-cb_op_times:
+CBOpTimes:
      db 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 4, 2
      db 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 4, 2
      db 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 4, 2

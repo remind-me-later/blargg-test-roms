@@ -1,7 +1,7 @@
 ; Main printing routine that checksums and
 ; prints to output device
 
-; Character that does equivalent of print_newline
+; Character that does equivalent of PrintNewline
 DEF NEWLINE EQU 10
 
 ; Prints char without updating checksum
@@ -10,20 +10,20 @@ DEF NEWLINE EQU 10
 
 
 ; Initializes printing. HL = print routine
-init_printing:
+InitPrinting:
      ld   a,l
      ld   [wPrintCharNoCrc+1],a
      ld   a,h
      ld   [wPrintCharNoCrc+2],a
-     jr   show_printing
+     jr   ShowPrinting
 
 
 ; Hides/shows further printing
 ; Preserved: BC, DE, HL
-hide_printing:
+HidePrinting:
      ld   a,$C9     ; RET
-     jr   show_printing.set
-show_printing:
+     jr   ShowPrinting.set
+ShowPrinting:
      ld   a,$C3     ; JP (nn)
 .set:
      ld   [wPrintCharNoCrc],a
@@ -33,10 +33,10 @@ show_printing:
 ; Prints character and updates checksum UNLESS
 ; it's a newline.
 ; Preserved: AF, BC, DE, HL
-print_char:
+PrintChar:
      push af
      cp   NEWLINE
-     call nz,update_crc
+     call nz,UpdateCRC
      call wPrintCharNoCrc
      pop  af
      ret
@@ -44,7 +44,7 @@ print_char:
 
 ; Prints space. Does NOT update checksum.
 ; Preserved: AF, BC, DE, HL
-print_space:
+PrintSpace:
      push af
      ld   a,' '
      call wPrintCharNoCrc
@@ -54,7 +54,7 @@ print_space:
 
 ; Advances to next line. Does NOT update checksum.
 ; Preserved: AF, BC, DE, HL
-print_newline:
+PrintNewline:
      push af
      ld   a,NEWLINE
      call wPrintCharNoCrc
@@ -66,7 +66,7 @@ print_newline:
 ; Preserved: AF, BC, DE, HL
 MACRO print_str ; string,string2
      push hl
-     call print_str_
+     call PrintStr_
      db \1
      IF _NARG > 1
           db \2
@@ -78,20 +78,20 @@ MACRO print_str ; string,string2
      pop  hl
 ENDM
 
-print_str_:
+PrintStr_:
      pop  hl
-     call print_str_hl
+     call PrintStrHL
      jp   hl
 
 
 ; Prints zero-terminated string pointed to by HL.
 ; On return, HL points to byte AFTER zero terminator.
 ; Preserved: AF, BC, DE
-print_str_hl:
+PrintStrHL:
      push af
      jr   .next
 .print:
-     call print_char
+     call PrintChar
 .next:
      ld   a,[hli]
      or   a

@@ -3,35 +3,35 @@
 DEF TEST_NAME EQUS "7-timing_effect"
 INCLUDE "oam_bug.inc"
 
-main:
-     loop_n_times test,116
+Main:
+     loop_n_times Test,116
      check_crc $7D792E7C
-     jp   tests_passed
+     jp   TestsPassed
 
-test:
+Test:
      inc  a
      ld   b,a
      push bc
-     call disable_lcd
-     call fill_oam
-     call corrupt_oam
-     call disable_lcd
-     call cp_oam
+     call DisableLCD
+     call FillOAM
+     call CorruptOAM
+     call DisableLCD
+     call CpOAM
      pop  bc
 
      jr   z,.done
-     call print_b
-     call print_newline
-     call print_oam
-     call print_newline
+     call PrintB
+     call PrintNewline
+     call PrintOAM
+     call PrintNewline
 
 .done:
      ret
 
-corrupt_oam:
+CorruptOAM:
      wreg rLCDC,LCDC_ON | LCDC_BG_ON
      ld   a,b
-     call delay_a_20_cycles
+     call DelayA20Cycles
      delay 86
 
      ld   de,$FE00

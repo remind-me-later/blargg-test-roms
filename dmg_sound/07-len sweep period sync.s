@@ -3,7 +3,7 @@ DEF TEST_NAME EQUS "07-len sweep period sync"
 INCLUDE "shell.inc"
 INCLUDE "apu.s"
 
-test_timing:
+TestTiming:
      ; Time how long until next length clock
 .wait:
      inc  de
@@ -11,100 +11,100 @@ test_timing:
      and  $01
      jr   nz,.wait
 
-     ;call     print_de
+     ;call     PrintDE
 
      ; Error if not in 0...4 range
      ld   a,d
      cp   0
-     jp   nz,test_failed
+     jp   nz,TestFailed
      ld   a,e
      cp   5
-     jp   nc,test_failed
+     jp   nc,TestFailed
      ret
 
-main:
+Main:
 
      set_test 2,"Length period is wrong"
-     call sync_apu
+     call SyncAPU
      wreg rAUD1HIGH,$40  ; avoids extra length clock
      wreg rAUD1LEN,$3F  ; length = $01
      wreg rAUD1ENV,$08  ; silent without disabling channel
      wreg rAUD1HIGH,$C0  ; start length
      ld   de,-$170
-     call test_timing
+     call TestTiming
 
      set_test 3,"Sweep period is wrong"
-     call sync_sweep
+     call SyncSweep
      wreg rAUD1SWEEP,$10  ; sweep period = 1
      wreg rAUD1ENV,$08  ; silent without disabling channel
      wreg rAUD1LOW,$FF  ; max freq
      wreg rAUD1HIGH,$87  ; start
      ld   de,-$2E4
-     call test_timing
+     call TestTiming
 
      set_test 4,"Sweep clock is synchronized with length"
-     call sync_sweep
+     call SyncSweep
      wreg rAUD1HIGH,$40  ; avoids extra length clock
      wreg rAUD1LEN,$3F  ; length = $01
      wreg rAUD1ENV,$08  ; silent without disabling channel
      wreg rAUD1HIGH,$C0  ; start length
      ld   de,-$170
-     call test_timing
+     call TestTiming
 
      set_test 5,"Powering up APU MODs next frame time with 8192"
-     call sync_apu
+     call SyncAPU
      ld   de,-$16F
-     call test_power
+     call TestPower
 
-     call sync_apu
+     call SyncAPU
      ld   de,-$B5
-     call test_power_off
+     call TestPowerOff
 
-     call sync_apu
+     call SyncAPU
      delay_clocks 8192
      ld   de,-$B5
-     call test_power
+     call TestPower
 
-     call sync_apu
+     call SyncAPU
      delay_clocks 8192
      ld   de,-$B5
-     call test_power_off
+     call TestPowerOff
 
-     call sync_apu
+     call SyncAPU
      ld   de,-$B5
      wreg rAUDENA,AUDENA_OFF  ; power off
      delay_clocks 8192
-     call test_power
+     call TestPower
 
      set_test 6,"Powering up APU resets 128 Hz sweep divider"
-     call sync_sweep
+     call SyncSweep
      ld   de,-$229
-     call test_power2
+     call TestPower2
 
-     call sync_sweep
+     call SyncSweep
      delay_apu 1
      ld   de,-$229
-     call test_power2
+     call TestPower2
 
-     jp   tests_passed
+     jp   TestsPassed
 
-test_power_off:
+TestPowerOff:
      wreg rAUDENA,AUDENA_OFF  ; power off
-test_power:
+TestPower:
      wreg rAUDENA,AUDENA_ON  ; power on
      wreg rAUD1HIGH,$40
      wreg rAUD1LEN,-1   ; length = 1
      wreg rAUD1ENV,8
      wreg rAUD1HIGH,$C0
-     jp   test_timing
+     jp   TestTiming
 
-test_power2:
+TestPower2:
      wreg rAUDENA,AUDENA_OFF  ; power off
      wreg rAUDENA,AUDENA_ON  ; power on
      wreg rAUD1SWEEP,$11
      wreg rAUD1ENV,8
      wreg rAUD1LOW,$00
      wreg rAUD1HIGH,$84
-     jp   test_timing
+     jp   TestTiming
 
 INCLUDE "shell_end.inc"

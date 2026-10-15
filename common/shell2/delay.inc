@@ -47,15 +47,15 @@ DEF MAX_SHORT_DELAY EQU 28
 MACRO? delay_long_
      ; 0+ to avoid assembler treating as memory read
      ld   a,0+((((\2)<<16)+(\1)) - 11) >> 16
-     call delay_65536a_9_cycles_
+     call Delay65536A9Cycles_
      delay_nosave_ ((((\2)<<16)+(\1)) - 11)&$FFFF, 0
 ENDM
 
 ; Doesn't save AF, allowing minimization of AF save/restore
 MACRO? delay_nosave_
-     ; 65536+11     = maximum delay using delay_256a_9_cycles_
-     ; 255+22  = maximum delay using delay_a_20_cycles
-     ; 22      = minimum delay using delay_a_20_cycles
+     ; 65536+11     = maximum delay using Delay256A9Cycles_
+     ; 255+22  = maximum delay using DelayA20Cycles
+     ; 22      = minimum delay using DelayA20Cycles
      IF (\2) > 1
           delay_long_ \1, \2
      ELSE
@@ -64,12 +64,12 @@ MACRO? delay_nosave_
           ELSE
                IF ((\2)*(255+22+1))|(\1) > 255+22
                     ld   a,HIGH(((((\2)<<16)+(\1)) - 11))
-                    call delay_256a_9_cycles_
+                    call Delay256A9Cycles_
                     delay_nosave_ LOW(((((\2)<<16)+(\1)) - 11)), 0
                ELSE
                     IF (\1) >= 22
                          ld   a,(\1) - 22
-                         call delay_a_20_cycles
+                         call DelayA20Cycles
                     ELSE
                          delay_short_ \1
                     ENDC
@@ -131,6 +131,6 @@ MACRO? delay_short_
           nop
      ENDC
      IF (\1) >= 10
-          call delay_unrolled_ + 10 - (\1)
+          call DelayUnrolled_ + 10 - (\1)
      ENDC
 ENDM

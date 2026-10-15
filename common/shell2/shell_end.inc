@@ -2,7 +2,7 @@
 ; order, so it is in this file, which every program includes at its end.
 
      ; Catch user code running off end
-     jp   internal_error
+     jp   InternalError
 
 ; Common routines
 INCLUDE "delay.s"
@@ -11,8 +11,8 @@ INCLUDE "printing.s"
 INCLUDE "numbers.s"
 INCLUDE "testing.s"
 
-; Sets up hardware and runs main
-std_reset:
+; Sets up hardware and runs Main
+StdReset:
 
      ; Init hardware
      di
@@ -33,10 +33,10 @@ ENDC
      ; Clear memory except very top of stack
      ld   bc,STD_STACK-BSS_START - 2
      ld   hl,BSS_START
-     call clear_mem
+     call ClearMem
      ld   bc,$FFFF-HRAM_START
      ld   hl,HRAM_START
-     call clear_mem
+     call ClearMem
 
      ; Init hardware
      wreg rTAC,$00
@@ -48,40 +48,40 @@ ENDC
      wreg rAUDTERM,$FF  ; mono
      wreg rAUDVOL,$77  ; volume
 
-     call init_runtime
-     call init_text_out
-     call console_init
-     call init_testing
+     call InitRuntime
+     call InitTextOut
+     call ConsoleInit
+     call InitTesting
 
      IF DEF(TEST_NAME)
           print_str "{TEST_NAME}",NEWLINE,NEWLINE
      ENDC
 
-     call reset_crc ; in case init_runtime prints anything
+     call ResetCRC ; in case InitRuntime prints anything
 
      delay_msec 250
 
      ; Run user code
-     call main
+     call Main
 
      ; Default is to successful exit
      ld   a,0
-     jp   exit
+     jp   Exit
 
 
 ; Exits code and reports value of A
-exit:
+Exit:
      ld   sp,STD_STACK
      push af
      call .report
-     call console_show
+     call ConsoleShow
      pop  af
-     call play_byte
-     jp   post_exit
+     call PlayByte
+     jp   PostExit
 
 .report:
      push af
-     call print_newline
+     call PrintNewline
      pop  af
 
      ; Report exit status
@@ -91,20 +91,20 @@ exit:
      ret  c
 
      ; 1: "Failed"
-     jr   nz,.failed_n
+     jr   nz,.failedN
      print_str "Failed",NEWLINE
      ret
 
      ; n: "Failed #n"
-.failed_n:
+.failedN:
      print_str "Failed #"
-     call print_dec
-     call print_newline
+     call PrintDec
+     call PrintNewline
      ret
 
 
 ; Clears BC bytes starting at HL
-clear_mem:
+ClearMem:
      ; If C>0, increment B
      dec  bc
      inc  c
@@ -121,17 +121,17 @@ clear_mem:
 
 
 ; Reports internal error and exits with code 255
-internal_error:
+InternalError:
      print_str "Internal error"
      ld   a,255
-     jp   exit
+     jp   Exit
 
 
 ; build_devcart and build_multi customize this
 IF !DEF(CUSTOM_PRINT)
 
      ; Initializes text output to cartridge RAM
-     init_text_out:
+     InitTextOut:
           ; Enable cartridge RAM and set text output pointer
           setb rRAMG,RAMG_SRAM_ENABLE
           setw wTextOutAddr,sTextOutput
@@ -145,7 +145,7 @@ IF !DEF(CUSTOM_PRINT)
 
      ; Appends character to text output string
      ; Preserved: AF, BC, DE, HL
-     write_text_out:
+     WriteTextOut:
           push hl
           push af
           ld   a,[wTextOutAddr]
@@ -164,9 +164,9 @@ IF !DEF(CUSTOM_PRINT)
           pop  hl
           ret
 
-     print_char_nocrc:
-          call write_text_out
-          jp   console_print
+     PrintCharNoCRC:
+          call WriteTextOut
+          jp   ConsolePrint
 ENDC
 
 
@@ -174,22 +174,22 @@ ENDC
 IF DEF(NEED_CONSOLE)
      INCLUDE "console.s"
 ELSE
-     console_init:
-     console_print:
-     console_flush:
-     console_normal:
-     console_inverse:
-     console_show:
-     console_set_mode:
+     ConsoleInit:
+     ConsolePrint:
+     ConsoleFlush:
+     ConsoleNormal:
+     ConsoleInverse:
+     ConsoleShow:
+     ConsoleSetMode:
           ret
 ENDC
 
 
 ; build_devcart and build_multi need to customize this
 IF !DEF(CUSTOM_EXIT)
-     post_exit:
+     PostExit:
           ld   [sFinalResult],a
-     forever:
+     Forever:
           wreg rAUDENA,AUDENA_OFF    ; sound off
 .loop:
           jr   .loop
@@ -198,27 +198,27 @@ ENDC
 IF DEF(BUILD_MULTI)
 
 ; A test of the multi-test ROM prints nothing and returns to the driver
-init_runtime:
+InitRuntime:
      ret
 
-init_text_out:
+InitTextOut:
      ret
 
-print_char_nocrc:
+PrintCharNoCRC:
      ret
 
-play_byte:
+PlayByte:
      ret
 
-post_exit:
+PostExit:
      jp   MULTI_RETURN
 
 ELSE
 
-init_runtime:
+InitRuntime:
      ret
 
-play_byte:
+PlayByte:
      ret
 
 ENDC

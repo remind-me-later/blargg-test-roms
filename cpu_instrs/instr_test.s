@@ -1,7 +1,7 @@
 ; Framework for CPU instruction tests
 
-; Calls test_instr with each instruction copied
-; to instr, with a JP instr_done after it.
+; Calls TestInstr with each instruction copied
+; to wInstr, with a JP InstrDone after it.
 ; Verifies checksum after testing instruction and
 ; prints opcode if it's wrong.
 
@@ -14,7 +14,7 @@ INCLUDE "crc_fast.s"
 ; it uses
 PUSHS UNION "Instruction under test", WRAMX[$DEF8 - 4], BANK[1]
 wRpTemp:        ds 4
-wInstr:         ds 6    ; the instruction, then JP instr_done
+wInstr:         ds 6    ; the instruction, then JP InstrDone
 POPS
 
 PUSHS UNION "Test variables", WRAMX[wCrcTablesEnd], BANK[1]
@@ -31,14 +31,14 @@ MACRO ldsp ; addr
      ld   sp,hl
 ENDM
 
-main:
-     call cpu_fast
-     call init_crc_fast
-     call checksums_init
+Main:
+     call CPUFast
+     call InitCRCFast
+     call ChecksumsInit
      set_test 0
 
-     ld   hl,instrs
-.next_instr:
+     ld   hl,Instrs
+.nextInstr:
      ; Copy instruction
      ld   a,[hli]
      ld   [wInstr],a
@@ -48,44 +48,44 @@ main:
      ld   [wInstr+2],a
      push hl
 
-     ; Put JP instr_done after it
+     ; Put JP InstrDone after it
      ld   a,$C3
      ld   [wInstr+3],a
-     ld   a,LOW(instr_done)
+     ld   a,LOW(InstrDone)
      ld   [wInstr+4],a
-     ld   a,HIGH(instr_done)
+     ld   a,HIGH(InstrDone)
      ld   [wInstr+5],a
 
-     call reset_crc
-     call test_instr
+     call ResetCRC
+     call TestInstr
 
-     call checksums_compare
+     call ChecksumsCompare
      jr   z,.passed
 
      set_test 1
      ld   a,[wInstr]
-     call print_a
+     call PrintA
      cp   $CB
-     jr   nz,.one_byte
+     jr   nz,.oneByte
      ld   a,[wInstr+1]
-     call print_a
-.one_byte:
+     call PrintA
+.oneByte:
 
 .passed:
      ; Next instruction
      pop  hl
      ld   a,l
-     cp   LOW(instrs_end)
-     jr   nz,.next_instr
+     cp   LOW(InstrsEnd)
+     jr   nz,.nextInstr
      ld   a,h
-     cp   HIGH(instrs_end)
-     jr   nz,.next_instr
+     cp   HIGH(InstrsEnd)
+     jr   nz,.nextInstr
 
-     jp   tests_done
+     jp   TestsDone
 
 
 ; Updates checksum with AF, BC, DE, and HL
-checksum_af_bc_de_hl:
+ChecksumAFBCDEHL:
      push hl
 
      push af

@@ -8,69 +8,69 @@ DEF TEST_NAME EQUS "01-registers"
 INCLUDE "shell.inc"
 INCLUDE "apu.s"
 
-main:
+Main:
      set_test 2,"NR10-NR51 and wave RAM write/read"
      ld   d,0
-.next_value:
-     call test_rw
+.nextValue:
+     call TestRW
      inc  d
-     jr   nz,.next_value
+     jr   nz,.nextValue
 
      set_test 3,"NR52 write/read"
      wreg rAUDENA,AUDENA_OFF
      lda  rAUDENA
      cp   $70
-     jp   nz,test_failed
+     jp   nz,TestFailed
      wreg rAUDENA,$FF
      lda  rAUDENA
      cp   $F0
-     jp   nz,test_failed
+     jp   nz,TestFailed
 
      set_test 4,"Powering APU shouldn't affect wave"
      ld   a,$37
-     call fill_wave
+     call FillWave
      wreg rAUDENA,AUDENA_OFF
 
      ; Verify that wave RAM is unchanged
      ld   hl,AUD3WAVERAM
-.check_wave:
+.checkWave:
      ld   a,[hli]
      cp   $37
-     jp   nz,test_failed
+     jp   nz,TestFailed
      ld   a,l
      cp   $40
-     jr   nz,.check_wave
+     jr   nz,.checkWave
      wreg rAUDENA,AUDENA_ON ; on
 
      set_test 5,"Powering APU off should write 0 to all regs"
      ld   a,$FF
-     call fill_apu_regs
+     call FillAPURegs
      wreg rAUDENA,AUDENA_OFF
      wreg rAUDENA,AUDENA_ON
-     call regs_should_be_clear
+     call RegsShouldBeClear
 
      set_test 6,"When off, should ignore writes to registers"
      wreg rAUDENA,AUDENA_OFF
      ld   a,$FF
-     call fill_apu_regs
+     call FillAPURegs
      wreg rAUDENA,AUDENA_ON
-     call regs_should_be_clear
+     call RegsShouldBeClear
      wreg rAUDENA,AUDENA_ON
 
      set_test 7,"When off, should allow normal register reads"
      wreg rAUDENA,AUDENA_OFF
-     call regs_should_be_clear
+     call RegsShouldBeClear
      wreg rAUDENA,AUDENA_ON
 
-     jp   tests_passed
+     jp   TestsPassed
 
-regs_should_be_clear:
-     ld   bc,masks
+RegsShouldBeClear:
+     ld   bc,Masks
      ld   hl,rAUD1SWEEP
 .check:
      ld   a,[bc]
      cp   [hl]
-     jp   nz,test_failed
+     jp   nz,TestFailed
      inc  bc
      inc  l
      ld   a,l
@@ -78,10 +78,10 @@ regs_should_be_clear:
      jr   nz,.check
      ret
 
-test_rw:
-     ld   bc,masks
+TestRW:
+     ld   bc,Masks
      ld   hl,rAUD1SWEEP
-.next_reg:
+.nextReg:
      ; Skip NR52
      ld   a,l
      cp   LOW(rAUDENA)
@@ -94,7 +94,7 @@ test_rw:
      ; Write then read back and compare
      ld   [hl],d
      cp   [hl]
-     jp   nz,test_failed
+     jp   nz,TestFailed
 
 .mute:
      ; Mute channels
@@ -108,11 +108,11 @@ test_rw:
      inc  l
      ld   a,l
      cp   LOW(AUD3WAVERAM+AUD3WAVE_SIZE)
-     jr   nz,.next_reg
+     jr   nz,.nextReg
      ret
 
 ; Registers are ORed with this when reading
-masks:
+Masks:
      db $80, $3F, $00, $FF, $BF ; NR10-NR15
      db $FF, $3F, $00, $FF, $BF ; NR20-NR25
      db $7F, $FF, $9F, $FF, $BF ; NR30-NR35

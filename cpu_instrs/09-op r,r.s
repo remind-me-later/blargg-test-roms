@@ -6,7 +6,7 @@ DEF TEST_NAME EQUS "09-op r,r"
 INCLUDE "shell.inc"
 INCLUDE "instr_test.s"
 
-instrs:
+Instrs:
      db $00, 0, 0 ; NOP
      db $2F, 0, 0 ; CPL
      db $37, 0, 0 ; SCF
@@ -160,25 +160,25 @@ instrs:
      db $CB, $3C, 0 ; SRL  H
      db $CB, $3D, 0 ; SRL  L
      db $CB, $3F, 0 ; SRL  A
-instrs_end:
+InstrsEnd:
 
-test_instr:
+TestInstr:
      ld   c,$00
-     call test
+     call Test
      ld   c,$F0
-     call test
+     call Test
      ret
 
-test:
+Test:
      ; Go through each value for A
-     ld   hl,values
-a_loop:
+     ld   hl,Values
+ALoop:
      ld   b,[hl]
      push hl
 
      ; Go through each value for other registers
-     ld   hl,values
-values_loop:
+     ld   hl,Values
+ValuesLoop:
      push bc
      push hl
 
@@ -206,34 +206,34 @@ values_loop:
      pop  hl
      pop  af
 
-;    call print_regs
+;    call PrintRegs
      jp   wInstr
-instr_done:
+InstrDone:
 
      ; Checksum registers
-     call checksum_af_bc_de_hl
+     call ChecksumAFBCDEHL
 
      pop  hl
      pop  bc
      inc  hl
      ld   a,l
-     cp   LOW(values_end)
-     jr   nz,values_loop
+     cp   LOW(ValuesEnd)
+     jr   nz,ValuesLoop
 
      pop  hl
      inc  hl
      ld   a,l
-     cp   LOW(values_end)
-     jr   nz,a_loop
+     cp   LOW(ValuesEnd)
+     jr   nz,ALoop
 
      ret
 
-values:
+Values:
      db $00, $01, $0F, $10, $1F, $7F, $80, $F0, $FF
-values_end:
+ValuesEnd:
      db $00, $01, $0F, $10, $1F, $7F, $80, $F0, $FF
 
-checksums:
+Checksums:
      db $7C, $55, $BD, $05, $BA, $C7, $AC, $D1, $74, $6D, $82, $4A, $0F, $06, $2A, $C5
      db $FA, $97, $9B, $9D, $C3, $32, $A0, $78, $00, $C1, $9F, $69, $C0, $D1, $C2, $A1
      db $55, $0D, $3F, $C8, $09, $7D, $97, $92, $CE, $66, $30, $56, $95, $F3, $01, $A1

@@ -2,10 +2,10 @@
 
 ; Must be defined by target-specific runtime:
 ;
-; init_runtime:     ; target-specific inits
-; std_print:        ; default routine to print char A
-; post_exit:        ; called at end of std_exit
-; report_byte:      ; report A to user
+; InitRuntime:     ; target-specific inits
+; StdPrint:        ; default routine to print char A
+; PostExit:        ; called at end of std_exit
+; ReportByte:      ; report A to user
 
 INCLUDE "variables.inc"
 
@@ -21,7 +21,7 @@ DEF STD_STACK EQU $DFFF
 IF !DEF(BUILD_MULTI)
 
 SECTION "copy to WRAM", ROM0[$200]
-copy_to_wram_then_run:
+CopyToWRAMThenRun:
      ld   b,a
 
      ld   de,$C000
@@ -40,16 +40,16 @@ copy_to_wram_then_run:
 
 IF !DEF(MULTI_DRIVER)
 
-reset:
+Reset:
      ; Run code from $C000, as is done on devcart. This
      ; ensures minimal difference in how it behaves.
      ld   hl,$4000
-     jp   copy_to_wram_then_run
+     jp   CopyToWRAMThenRun
 
 ; The program: stored in bank 1, assembled for and run from $C000.
 SECTION "program", ROMX[$4000], BANK[1]
 LOAD "program in WRAM", WRAM0[$C000]
-     jp   std_reset
+     jp   StdReset
 
 ENDC
 
@@ -58,7 +58,7 @@ ELSE
 ; One of the tests of the multi-test ROM, stored in its own block.
 SECTION "multi test {MULTI_TEST}", ROMX[$4000 + (MULTI_TEST % 4) * $1000], BANK[1 + MULTI_TEST / 4]
 LOAD UNION "multi test in WRAM", WRAM0[$C000]
-     jp   std_reset
+     jp   StdReset
 
 ENDC
 
@@ -71,8 +71,8 @@ INCLUDE "printing.s"
 INCLUDE "numbers.s"
 INCLUDE "testing.s"
 
-; Sets up hardware and runs main
-std_reset:
+; Sets up hardware and runs Main
+StdReset:
 
      ; Init hardware
      di
@@ -93,34 +93,34 @@ std_reset:
 
      ; TODO: clear all memory?
 
-     ld   hl,std_print
-     call init_printing
-     call init_testing
-     call init_runtime
-     call reset_crc ; in case init_runtime prints anything
+     ld   hl,StdPrint
+     call InitPrinting
+     call InitTesting
+     call InitRuntime
+     call ResetCRC ; in case InitRuntime prints anything
 
      delay_msec 250
 
      ; Run user code
-     call main
+     call Main
 
      ; Default is to successful exit
      ld   a,0
-     jp   exit
+     jp   Exit
 
 
 ; Exits code and reports value of A
-exit:
+Exit:
      ld   sp,STD_STACK
      push af
      call .report
      pop  af
-     jp   post_exit
+     jp   PostExit
 
 .report:
      push af
-     call print_newline
-     call show_printing
+     call PrintNewline
+     call ShowPrinting
      pop  af
 
      ; Report exit status
@@ -130,15 +130,15 @@ exit:
      ret  c
 
      ; 1: "Failed"
-     jr   nz,.failed_n
+     jr   nz,.failedN
      print_str "Failed",NEWLINE
      ret
 
      ; n: "Failed #n"
-.failed_n:
+.failedN:
      print_str "Failed #"
-     call print_dec
-     call print_newline
+     call PrintDec
+     call PrintNewline
      ret
 
 ; The rest of the shell is in shell_end.inc, after the user code.

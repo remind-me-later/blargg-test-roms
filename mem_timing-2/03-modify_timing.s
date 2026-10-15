@@ -6,7 +6,7 @@ DEF ROM_NAME EQUS "03-MODIFY_TIMIN"
 INCLUDE "shell.inc"
 INCLUDE "tima_64.s"
 
-instructions:
+Instructions:
      ; last values are read/write times
      db $35, $00, $00, 2, 3 ; DEC  (HL)
      db $34, $00, $00, 2, 3 ; INC  (HL)
@@ -34,33 +34,33 @@ instructions:
      db $CB, $EE, $00, 3, 4 ; SET  5,(HL)
      db $CB, $F6, $00, 3, 4 ; SET  6,(HL)
      db $CB, $FE, $00, 3, 4 ; SET  7,(HL)
-instructions_end:
+InstructionsEnd:
 
-main:
-     call init_tima_64
+Main:
+     call InitTIMA64
      set_test 0
 
      ; Test instructions
-     ld   hl,instructions
-.next_instr:
-     call .test_instr
+     ld   hl,Instructions
+.nextInstr:
+     call .testInstr
      inc  hl
      ld   a,l
-     cp   LOW(instructions_end)
-     jr   nz,.next_instr
+     cp   LOW(InstructionsEnd)
+     jr   nz,.nextInstr
 
-     jp   tests_done
+     jp   TestsDone
 
-.test_instr:
-     call .time_instr
+.testInstr:
+     call .timeInstr
      ld   a,d
      cp   [hl]
      inc  hl
-     jr   nz,.print_failed
+     jr   nz,.printFailed
      ld   a,e
      cp   [hl]
      ret  z
-.print_failed:
+.printFailed:
      push hl
      ld   c,[hl]
      dec  hl
@@ -71,23 +71,23 @@ main:
      ld   a,[hli]
      cp   $CB
      jr   nz,.opcode
-     call print_a
+     call PrintA
      ld   a,[hl]
 .opcode:
-     call print_hex
+     call PrintHex
      print_str ":"
      ld   a,d
-     call print_dec
+     call PrintDec
      print_str "/"
      ld   a,e
-     call print_dec
+     call PrintDec
      print_str "-"
      ld   a,b
-     call print_dec
+     call PrintDec
      print_str "/"
      ld   a,c
-     call print_dec
-     call print_newline
+     call PrintDec
+     call PrintNewline
      pop  hl
      set_test 1
      ret
@@ -95,26 +95,26 @@ main:
 ; Times instruction
 ; HL -> 3-byte instruction
 ; HL <- HL + 3
-.time_instr:
+.timeInstr:
      ; Copy instr
      ld   a,[hli]
-     ld   [instr+0],a
+     ld   [Instr+0],a
      ld   a,[hli]
-     ld   [instr+1],a
+     ld   [Instr+1],a
      ld   a,[hli]
-     ld   [instr+2],a
+     ld   [Instr+2],a
      push hl
 
      ; Find result when access doesn't occur
      ld   b,0
-     call .time_access
+     call .timeAccess
 
      ; Find first access
-     call .find_next_access
+     call .findNextAccess
      ld   d,b
 
      ; Find second access
-     call .find_next_access
+     call .findNextAccess
      ld   e,b
 
      pop  hl
@@ -124,10 +124,10 @@ main:
 ; B -> starting clock
 ; B <- clock next access occurs on
 ; A <- new timer result
-.find_next_access:
+.findNextAccess:
      ld   c,a
 .again:
-     call .time_access
+     call .timeAccess
      cp   c
      ret  nz
      inc  b
@@ -144,15 +144,15 @@ main:
 ; Tests for access
 ; B -> which cycle to test
 ; A <- timer value after test
-.time_access:
-     call sync_tima_64
+.timeAccess:
+     call SyncTIMA64
      ld   hl,tima_64
      ld   [hl],$7F
      ld   a,17
      sub  b
-     call delay_a_20_cycles
+     call DelayA20Cycles
      xor  a    ; clear flags
-instr:
+Instr:
      nop
      nop
      nop

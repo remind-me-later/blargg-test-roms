@@ -5,7 +5,7 @@ DEF TEST_NAME EQUS "03-op sp,hl"
 INCLUDE "shell.inc"
 INCLUDE "instr_test.s"
 
-instrs:
+Instrs:
      db $33, 0, 0     ; INC  SP
      db $3B, 0, 0     ; DEC  SP
      db $39, 0, 0     ; ADD  HL,SP
@@ -14,20 +14,20 @@ instrs:
      db $E8, $FF, 0   ; ADD  SP,-1
      db $F8, $01, 0   ; LD   HL,SP+1
      db $F8, $FF, 0   ; LD   HL,SP-1
-instrs_end:
+InstrsEnd:
 
-test_instr:
+TestInstr:
      ; C = flags register
      ld   c,$00
-     call test
+     call Test
      ld   c,$F0
-     call test
+     call Test
      ret
 
-test:
+Test:
      ; Go through each value for HL
-     ld   hl,values
-hl_loop:
+     ld   hl,Values
+HLLoop:
      ld   e,[hl]
      inc  hl
      ld   d,[hl]
@@ -35,8 +35,8 @@ hl_loop:
      push hl
 
      ; Go through each value for SP
-     ld   hl,values
-values_loop:
+     ld   hl,Values
+ValuesLoop:
      push bc
      push de
      push hl
@@ -49,7 +49,7 @@ values_loop:
      ld   a,[hli]
      ld   h,[hl]
      ld   l,a
-;    call print_regs
+;    call PrintRegs
      ld   sp,hl
 
      ; Set registers
@@ -60,18 +60,18 @@ values_loop:
      ld   de,$9ABC
 
      jp   wInstr
-instr_done:
+InstrDone:
      ; Save new SP and switch to yet another stack
      ld   [wTemp+2],sp
      ld   sp,$DF70
 
-     call checksum_af_bc_de_hl
+     call ChecksumAFBCDEHL
 
      ; Checksum SP
      ld   a,[wTemp+2]
-     call update_crc_fast
+     call UpdateCRCFast
      ld   a,[wTemp+3]
-     call update_crc_fast
+     call UpdateCRCFast
 
      ldsp wTemp
 
@@ -81,24 +81,24 @@ instr_done:
      inc  hl
      inc  hl
      ld   a,l
-     cp   LOW(values_end)
-     jr   nz,values_loop
+     cp   LOW(ValuesEnd)
+     jr   nz,ValuesLoop
 
      pop  hl
      ld   a,l
-     cp   LOW(values_end)
-     jr   nz,hl_loop
+     cp   LOW(ValuesEnd)
+     jr   nz,HLLoop
 
      ret
 
-values:
+Values:
      dw $0000, $0001, $000F, $0010, $001F, $007F, $0080, $00FF
      dw $0100, $0F00, $1F00, $1000, $7FFF, $8000, $FFFF
-values_end:
+ValuesEnd:
      dw $0000, $0001, $000F, $0010, $001F, $007F, $0080, $00FF
      dw $0100, $0F00, $1F00, $1000, $7FFF, $8000, $FFFF
 
-checksums:
+Checksums:
      db $BC, $F4, $CD, $8C, $C7, $5E, $89, $E5, $36, $65, $21, $55, $D6, $6A, $2A, $FF
      db $EB, $34, $37, $B9, $08, $5F, $22, $13, $B6, $2A, $37, $C3, $72, $43, $5C, $4D
 

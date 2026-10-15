@@ -1,11 +1,11 @@
 ; Initializes checksum module. Might initialize tables
 ; in the future.
-init_crc:
-     jr   reset_crc
+InitCRC:
+     jr   ResetCRC
 
 ; Clears CRC
 ; Preserved: BC, DE, HL
-reset_crc:
+ResetCRC:
      ld   a,$FF
      sta  hChecksum+0
      sta  hChecksum+1
@@ -16,7 +16,7 @@ reset_crc:
 ; Updates current checksum with byte A
 ; Preserved: AF, BC, DE, HL
 ; Time: 237 cycles average
-update_crc:
+UpdateCRC:
      ; 65 cycles + 8*cycles per bit
      ; min cycles per bit: 14
      ; max cycles per bit: 29
@@ -40,7 +40,7 @@ update_crc:
      rr   c
      rr   d
      rra
-     jr   nc,.next_bit
+     jr   nc,.nextBit
      ld   e,a
      ld   a,b
      xor  $ED
@@ -53,7 +53,7 @@ update_crc:
      ld   d,a
      ld   a,e
      xor  $20
-.next_bit:
+.nextBit:
      dec  h
      jr   nz,.bit
 

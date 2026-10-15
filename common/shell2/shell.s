@@ -19,7 +19,7 @@ IF !DEF(BUILD_MULTI)
 ; Copies C*$100 bytes from HL to $C000, then jumps to it.
 ; A is preserved for jumped-to code.
 SECTION "copy to WRAM", ROM0[$2150]
-copy_to_wram_then_run:
+CopyToWRAMThenRun:
      ld   b,a
 
      ld   de,$C000
@@ -37,20 +37,20 @@ copy_to_wram_then_run:
 
 IF !DEF(MULTI_DRIVER)
 
-reset:
+Reset:
      di
 
      ; Run code from $C000, as is done on devcart. This
      ; ensures minimal difference in how it behaves.
      ld   hl,$4000
      ld   c,$14
-     jp   copy_to_wram_then_run
+     jp   CopyToWRAMThenRun
 
 ; The program, assembled for $C000. The code of the libraries (the .s files)
 ; is in shell_end.inc, because it has to follow the program.
 SECTION "program", ROMX[$4000], BANK[1]
 LOAD "program in WRAM", WRAM0[$C000]
-     jp   std_reset
+     jp   StdReset
 
 ENDC
 
@@ -59,7 +59,7 @@ ELSE
 ; One of the tests of the multi-test ROM, stored in its own block.
 SECTION "multi test {MULTI_TEST}", ROMX[$4000 + (MULTI_TEST % 4) * $1000], BANK[1 + MULTI_TEST / 4]
 LOAD UNION "multi test in WRAM", WRAM0[$C000]
-     jp   std_reset
+     jp   StdReset
 
 ENDC
 

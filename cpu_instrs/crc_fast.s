@@ -9,7 +9,7 @@ POPS
 
 ; Initializes fast CRC tables and resets checksum.
 ; Time: 47 msec
-init_crc_fast:
+InitCRCFast:
      ld   l,0
 .next:
      xor  a
@@ -23,7 +23,7 @@ init_crc_fast:
      rr   c
      rr   d
      rr   e
-     jr   nc,.next_bit
+     jr   nc,.nextBit
      xor  $ED
      ld   b,a
      ld   a,c
@@ -37,7 +37,7 @@ init_crc_fast:
      ld   e,a
      ld   a,b
 
-.next_bit:
+.nextBit:
      dec  h
      jr   nz,.bit
 
@@ -53,15 +53,15 @@ init_crc_fast:
      inc  l
      jr   nz,.next
 
-     jp   init_crc
+     jp   InitCRC
 
 
-; Faster version of update_crc
+; Faster version of UpdateCRC
 ; Preserved: BC, DE
 ; Time: 50 cycles (including CALL)
-update_crc_fast:
+UpdateCRCFast:
 
-; Fastest inline macro version of update_crc_fast
+; Fastest inline macro version of UpdateCRCFast
 ; Time: 40 cycles
 ; Size: 28 bytes
 MACRO update_crc_fast_inline

@@ -35,21 +35,21 @@ POPS
 ; The tests' way back, at a fixed address
 PUSHS
 SECTION "return from test", ROM0[$3FFD]
-     jp   main.test_exited
+     jp   Main.testExited
 POPS
 
-reset:
-     jp   std_reset
+Reset:
+     jp   StdReset
 
-report_byte:
+ReportByte:
      ret
 
-main:
+Main:
      ld   sp,wStackTop
      ld   b,0       ; test number
      ld   c,0       ; failed tests
 
-.next_test:
+.nextTest:
      ; Select the bank of the test, four to a bank
      ld   a,b
      srl  a
@@ -71,7 +71,7 @@ main:
      jp   nz,.finished
 
      push bc
-     call print_test_number
+     call PrintTestNumber
 
      ; Run it
      ld   hl,sp+0
@@ -81,10 +81,10 @@ main:
      ld   [wSavedSp+1],a
      ld   h,d
      ld   l,e
-     jp   copy_to_wram_then_run
+     jp   CopyToWRAMThenRun
 
      ; Back from the test at $3FFD, with its result in A
-.test_exited:
+.testExited:
      ld   d,a
      ld   a,[wSavedSp]
      ld   l,a
@@ -93,13 +93,13 @@ main:
      ld   sp,hl
      ld   a,d
      pop  bc
-     call report_test
+     call ReportTest
      inc  b
-     jp   .next_test
+     jp   .nextTest
 
 .finished:
-     call print_newline
-     call print_newline
+     call PrintNewline
+     call PrintNewline
      ld   a,c
      cp   0
      jr   nz,.failed
@@ -109,15 +109,15 @@ main:
 .failed:
      print_str "Failed "
      ld   a,c
-     call print_dec
+     call PrintDec
      print_str " tests."
 
 .done:
-     call print_newline
+     call PrintNewline
 
      ; Beep
-     call sound_off
-     call sound_on
+     call SoundOff
+     call SoundOn
      wreg rAUD1LEN,$80
      wreg rAUD1ENV,$F1
      wreg rAUD1LOW,$00
@@ -132,38 +132,38 @@ main:
 
 
 ; Prints number of test B
-print_test_number:
+PrintTestNumber:
      ld   a,b
      inc  a
-     call print_dec2
-     call console_flush
+     call PrintDec2
+     call ConsoleFlush
      ret
 
 
 ; Reports result A of test B: ok, or A in inverse. Counts the failure in C.
-report_test:
+ReportTest:
      ld   d,a
-     call cpu_norm
+     call CPUNorm
      print_str ":"
      ld   a,d
      cp   0
      jr   nz,.failed
      print_str "ok  "
-     call console_flush
+     call ConsoleFlush
      ret
 
 .failed:
      inc  c
      ld   a,b
-     call play_byte
+     call PlayByte
      ld   a,d
-     call play_byte
-     call console_inverse
+     call PlayByte
+     call ConsoleInverse
      ld   a,d
-     call print_dec2
-     call console_normal
+     call PrintDec2
+     call ConsoleNormal
      print_str "  "
-     call console_flush
+     call ConsoleFlush
      ret
 
 INCLUDE "shell_end.inc"

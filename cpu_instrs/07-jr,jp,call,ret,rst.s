@@ -5,7 +5,7 @@ DEF TEST_NAME EQUS "07-jr,jp,call,ret,rst"
 INCLUDE "shell.inc"
 INCLUDE "instr_test.s"
 
-instrs:
+Instrs:
      ;       JR cond,skip
      ;       INC A
      ; skip:
@@ -15,17 +15,17 @@ instrs:
      db $30, $01, $3C ; JR   NC,*+3
      db $38, $01, $3C ; JR   C,*+3
 
-     db $C2, LOW(taken), HIGH(taken) ; JP   NZ,taken
-     db $C3, LOW(taken), HIGH(taken) ; JP   taken
-     db $CA, LOW(taken), HIGH(taken) ; JP   Z,taken
-     db $D2, LOW(taken), HIGH(taken) ; JP   NC,taken
-     db $DA, LOW(taken), HIGH(taken) ; JP   C,taken
+     db $C2, LOW(Taken), HIGH(Taken) ; JP   NZ,taken
+     db $C3, LOW(Taken), HIGH(Taken) ; JP   taken
+     db $CA, LOW(Taken), HIGH(Taken) ; JP   Z,taken
+     db $D2, LOW(Taken), HIGH(Taken) ; JP   NC,taken
+     db $DA, LOW(Taken), HIGH(Taken) ; JP   C,taken
 
-     db $C4, LOW(taken), HIGH(taken) ; CALL NZ,taken
-     db $CC, LOW(taken), HIGH(taken) ; CALL Z,taken
-     db $CD, LOW(taken), HIGH(taken) ; CALL taken
-     db $D4, LOW(taken), HIGH(taken) ; CALL NC,taken
-     db $DC, LOW(taken), HIGH(taken) ; CALL C,taken
+     db $C4, LOW(Taken), HIGH(Taken) ; CALL NZ,taken
+     db $CC, LOW(Taken), HIGH(Taken) ; CALL Z,taken
+     db $CD, LOW(Taken), HIGH(Taken) ; CALL taken
+     db $D4, LOW(Taken), HIGH(Taken) ; CALL NC,taken
+     db $DC, LOW(Taken), HIGH(Taken) ; CALL C,taken
 
      ; RET cond
      ; INC A
@@ -49,9 +49,9 @@ IF !DEF(BUILD_DEVCART)
      db $FF, 0, 0 ; RST $38
 ENDC
 
-instrs_end:
+InstrsEnd:
 
-test_instr:
+TestInstr:
      wreg rIE,0 ; disable interrupts, since RETI does EI
 
      ; Go through all 16 combinations of flags
@@ -80,9 +80,9 @@ test_instr:
      push de
 
      jp   wInstr
-instr_done:
+InstrDone:
      inc  a
-taken:
+Taken:
      di             ; RETI enables interrupts
 
      ; Save new SP and switch to yet another stack
@@ -90,32 +90,32 @@ taken:
      ld   sp,$DF70
 
      ; Checksum A and SP
-     call update_crc_fast
+     call UpdateCRCFast
      ld   a,[wTemp+2]
-     call update_crc_fast
+     call UpdateCRCFast
      ld   a,[wTemp+3]
-     call update_crc_fast
+     call UpdateCRCFast
 
      ; Checksum 4 bytes of stack
      ld   a,[$DF80-2]
-     call update_crc_fast
+     call UpdateCRCFast
      ld   a,[$DF80-3]
-     call update_crc_fast
+     call UpdateCRCFast
      ld   a,[$DF80-4]
-     call update_crc_fast
+     call UpdateCRCFast
      ld   a,[$DF80-5]
-     call update_crc_fast
+     call UpdateCRCFast
 
      ldsp wTemp
 
      ld   a,c
      add  $10
      ld   c,a
-     jr   nz,test_instr.flags
+     jr   nz,TestInstr.flags
 
      ret
 
-checksums:
+Checksums:
      db $EC, $A4, $94, $79, $C4, $00, $96, $2C, $C4, $64, $90, $33, $77, $C7, $0A, $D4
      db $77, $A3, $0C, $CB, $79, $E7, $7E, $AE, $DA, $DC, $03, $F7, $4F, $9F, $E9, $20
      db $72, $12, $DA, $01, $44, $6A, $4D, $8F, $D1, $79, $30, $4C, $AA, $37, $F2, $6A

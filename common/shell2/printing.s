@@ -1,49 +1,49 @@
 ; Prints char without updating checksum
 ; Preserved: BC, DE, HL
-;print_char_nocrc (defined by user)
+;PrintCharNoCRC (defined by user)
 
 ; Prints character and updates checksum UNLESS
 ; it's a newline.
 ; Preserved: AF, BC, DE, HL
-print_char:
+PrintChar:
      push af
      cp   NEWLINE
-     call nz,update_crc
-     call print_char_nocrc
+     call nz,UpdateCRC
+     call PrintCharNoCRC
      pop  af
      ret
 
 ; Prints space. Does NOT update checksum.
 ; Preserved: AF, BC, DE, HL
-print_space:
+PrintSpace:
      push af
      ld   a,' '
-     call print_char_nocrc
+     call PrintCharNoCRC
      pop  af
      ret
 
 ; Advances to next line. Does NOT update checksum.
 ; Preserved: AF, BC, DE, HL
-print_newline:
+PrintNewline:
      push af
      ld   a,NEWLINE
-     call print_char_nocrc
+     call PrintCharNoCRC
      pop  af
      ret
 
-print_str_:
+PrintStr_:
      pop  hl
-     call print_str_hl
+     call PrintStrHL
      jp   hl
 
 ; Prints zero-terminated string pointed to by HL.
 ; On return, HL points to byte AFTER zero terminator.
 ; Preserved: AF, BC, DE
-print_str_hl:
+PrintStrHL:
      push af
      jr   .next
 .print:
-     call print_char
+     call PrintChar
 .next:
      ld   a,[hli]
      or   a

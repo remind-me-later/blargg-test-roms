@@ -2,7 +2,7 @@
 
 ; Switches to normal speed. No effect on DMG.
 ; Preserved: BC, DE, HL
-cpu_norm:
+CPUNorm:
      ; Do nothing if not CGB
      ld   a,[wGbId]
      and  GB_ID_CGB
@@ -11,12 +11,12 @@ cpu_norm:
      lda  rSPD
      rlca
      ret  nc
-     jr   cpu_speed_toggle
+     jr   CPUSpeedToggle
 
 
 ; Switches to double speed. No effect on DMG.
 ; Preserved: BC, DE, HL
-cpu_fast:
+CPUFast:
      ; Do nothing if not CGB
      ld   a,[wGbId]
      and  GB_ID_CGB
@@ -25,7 +25,7 @@ cpu_fast:
      lda  rSPD
      rlca
      ret  c
-cpu_speed_toggle:
+CPUSpeedToggle:
      di
      lda  rIE
      push af
@@ -43,9 +43,9 @@ cpu_speed_toggle:
 ; Determines current CPU speed without using KEY1.
 ; A=1 if fast, 0 if normal. Always 0 on DMG.
 ; Preserved: BC, DE,HL
-get_cpu_speed:
+GetCPUSpeed:
      push bc
-     call sync_apu
+     call SyncAPU
      wreg rAUD1HIGH,$C0
      wreg rAUD1LEN,-1
      wreg rAUD1ENV,8

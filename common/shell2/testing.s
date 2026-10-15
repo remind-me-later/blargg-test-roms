@@ -1,4 +1,4 @@
-set_test_:
+SetTest_:
      pop  hl
      push hl
      push af
@@ -14,56 +14,56 @@ set_test_:
      ret
 
 ; Initializes testing module
-init_testing:
+InitTesting:
      set_test $FF
-     call init_crc
+     call InitCRC
      ret
 
 ; Reports "Passed", then exits with code 0
-tests_passed:
-     call print_newline
+TestsPassed:
+     call PrintNewline
      print_str "Passed"
      ld   a,0
-     jp   exit
+     jp   Exit
 
 ; Reports "Done" if set_test has never been used,
 ; "Passed" if set_test 0 was last used, or
 ; failure if set_test n was last used.
-tests_done:
+TestsDone:
      ld   a,[wTestCode]
      inc  a
      jr   z,.done
      dec  a
-     jr   z,tests_passed
-     jr   test_failed
+     jr   z,TestsPassed
+     jr   TestFailed
 .done:
      print_str "Done"
      ld   a,0
-     jp   exit
+     jp   Exit
 
 ; Reports current error text and exits with result code
-test_failed:
+TestFailed:
      ld   a,[wTestName]
      ld   l,a
      ld   a,[wTestName+1]
      ld   h,a
      ld   a,[hl]
      or   a
-     jr   z,.no_text
-     call print_newline
-     call print_str_hl
-     call print_newline
-.no_text:
+     jr   z,.noText
+     call PrintNewline
+     call PrintStrHL
+     call PrintNewline
+.noText:
      ld   a,[wTestCode]
      cp   $FF       ; if a = $FF then a = 1
      jr   nz,.exit
      ld   a,1
 .exit:
-     jp   exit
+     jp   Exit
 
 ; Prints checksum as 8-character hex value
 ; Preserved: AF, BC, DE, HL
-print_crc:
+PrintCRC:
      push af
 
      ; Must read checksum entirely before printing,
@@ -83,18 +83,18 @@ print_crc:
      lda  hChecksum+3
      cpl
 
-     call print_hex
+     call PrintHex
      pop  af
-     call print_hex
+     call PrintHex
      pop  af
-     call print_hex
+     call PrintHex
      pop  af
-     call print_a
+     call PrintA
 
      pop  af
      ret
 
-check_crc_:
+CheckCRC_:
      lda  hChecksum+0
      cp   e
      jr   nz,.failed
@@ -111,16 +111,16 @@ check_crc_:
      cp   b
      jr   nz,.failed
 
-     jp   reset_crc
+     jp   ResetCRC
 
 .failed:
-     call print_crc
-     jp   test_failed
+     call PrintCRC
+     jp   TestFailed
 
-checksum_mem_:
+ChecksumMem_:
 .loop:
      ld   a,[hli]
-     call update_crc
+     call UpdateCRC
      dec  bc
      ld   a,b
      or   c

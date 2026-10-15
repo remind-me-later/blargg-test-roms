@@ -3,64 +3,64 @@
 DEF TEST_NAME EQUS "8-instr_effect"
 INCLUDE "oam_bug.inc"
 
-main:
+Main:
      save_sp
 
      set_test 2,"INC/DEC rp pattern is wrong"
-     call begin
+     call Begin
      ld   de,$FE00
      inc  de
-     call end
+     call End
 
      ld   de,$FE00
      dec  de
-     call end
+     call End
      check_crc $EF0C266A
 
      set_test 3,"POP rp pattern is wrong"
-     call begin
+     call Begin
      ld   sp,$FEF0
      pop  bc
      restore_sp
-     call end
+     call End
      check_crc $8C62EE7D
 
      set_test 4,"PUSH rp pattern is wrong"
-     call begin
+     call Begin
      ld   sp,$FEF0
      push bc
      restore_sp
-     call end
+     call End
      check_crc $B3693CEE
 
      set_test 5,"LD A,(HL+/-) pattern is wrong"
-     call begin
+     call Begin
      ld   hl,$FEF0
      ld   a,[hli]
-     call end
+     call End
 
      ld   hl,$FEF0
      ld   a,[hld]
-     call end
+     call End
      check_crc $06BE41A4
 
-     jp   tests_passed
+     jp   TestsPassed
 
-begin:
-     call disable_lcd
-     call fill_oam
+Begin:
+     call DisableLCD
+     call FillOAM
      wreg rLCDC,LCDC_ON | LCDC_BG_ON
      delay 70224 - 4
      ret
 
-end:
-     call disable_lcd
-     call cp_oam
+End:
+     call DisableLCD
+     call CpOAM
      jr   z,.unchanged
-     call print_oam
-     call print_newline
+     call PrintOAM
+     call PrintNewline
 .unchanged:
-     call begin
+     call Begin
      ret
 
 INCLUDE "shell_end.inc"

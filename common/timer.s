@@ -9,7 +9,7 @@
 
 ; Initializes timer
 ; Preserved: AF, BC, DE, HL
-init_timer:
+InitTimer:
      push af
      di
      lda  rIE        ; disable timer interrupt
@@ -25,10 +25,10 @@ init_timer:
      delay 70
      lda  rIF
      and  $04
-     jp   nz,test_failed
+     jp   nz,TestFailed
      lda  rIF
      and  $04
-     jp   z,test_failed
+     jp   z,TestFailed
 
      pop  af
      ret
@@ -36,7 +36,7 @@ init_timer:
 
 ; Starts timer
 ; Preserved: AF, BC, DE, HL
-start_timer:
+StartTimer:
      push af
 
 .sync:
@@ -53,19 +53,19 @@ start_timer:
 ; Stops timer and determines cycles since
 ; it was started. A = cycles (0 to 255).
 ; Preserved: BC, DE, HL
-stop_timer:
+StopTimer:
      push de
-     call stop_timer_word
+     call StopTimerWord
      ld   a,e
      sub  10
      pop  de
      ret
 
 
-; Same as stop_timer, but with greater range.
+; Same as StopTimer, but with greater range.
 ; DE = cycles (0 to 1019).
 ; Preserved: BC, HL
-stop_timer_word:
+StopTimerWord:
 
      ld   d,0
 

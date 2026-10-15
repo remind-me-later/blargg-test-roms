@@ -4,48 +4,48 @@
 IF DEF(BUILD_MULTI)
 
 ; A test of the multi-test ROM prints nothing and returns to the driver
-init_runtime:
+InitRuntime:
      ret
 
-std_print:
+StdPrint:
      ret
 
-post_exit:
+PostExit:
      jp   MULTI_RETURN
-forever:
-     jr   forever
+Forever:
+     jr   Forever
 
-play_byte:
+PlayByte:
      ret
 
 ELSE
 
 INCLUDE "console.s"
 
-init_runtime:
-     call console_init
+InitRuntime:
+     call ConsoleInit
 IF DEF(TEST_NAME)
      print_str "{TEST_NAME}",NEWLINE,NEWLINE
 ENDC
      ret
 
-std_print:
+StdPrint:
      push af
      sta  rSB
      wreg rSC,SC_START | SC_INTERNAL
      delay 2304
      pop  af
-     jp   console_print
+     jp   ConsolePrint
 
-post_exit:
-     call console_show
-     call play_byte
-forever:
+PostExit:
+     call ConsoleShow
+     call PlayByte
+Forever:
      wreg rAUDENA,AUDENA_OFF    ; sound off
 .loop:
      jr   .loop
 
-play_byte:
+PlayByte:
      ret
 
 ENDC

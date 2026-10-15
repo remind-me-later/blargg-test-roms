@@ -29,14 +29,14 @@ ENDM
 MACRO for_loop ; routine,start,end,step
      ld   a,\2
 
-for_loop\@:
+ForLoop\@:
      push af
      call \1
      pop  af
 
      add  \4
      cp   LOW((\3 + \4))
-     jr   nz,for_loop\@
+     jr   nz,ForLoop\@
 ENDM
 
 ; Calls routine n times. The value of A in the routine
@@ -51,7 +51,7 @@ ENDM
 MACRO for_loop16 ; routine,start,end,step
      ld   bc,\2
 
-for_loop16\@:
+ForLoop16\@:
      push bc
      call \1
      pop  bc
@@ -65,9 +65,9 @@ for_loop16\@:
      ld   b,a
 
      cp   HIGH((\3+\4))
-     jr   nz,for_loop16\@
+     jr   nz,ForLoop16\@
 
      ld   a,c
      cp   LOW((\3+\4))
-     jr   nz,for_loop16\@
+     jr   nz,ForLoop16\@
 ENDM

@@ -5,22 +5,22 @@ DEF TEST_NAME EQUS "12-wave write while on"
 INCLUDE "shell.inc"
 INCLUDE "apu.s"
 
-main:
-     loop_n_times test,69
+Main:
+     loop_n_times Test,69
 
      ; CGB behaves erratically, so DMG-only for now
      check_crc_dmg_cgb $3B4538A9,$2B27544E
-     jp   tests_passed
+     jp   TestsPassed
 
-test:
+Test:
      add  $99
      ld   b,a
 
      ; Reload wave and have its first
      ; sample read occur 2 clocks earlier
      ; each loop iteration
-     ld   hl,wave
-     call load_wave
+     ld   hl,Wave
+     call LoadWave
      wreg rAUD3ENA,$80  ; enable
      wreg rAUD3LEVEL,$00  ; silent
      ld   a,b
@@ -38,14 +38,14 @@ test:
      ld   hl,AUD3WAVERAM
 .read:
      ld   a,[hli]
-     call print_a
+     call PrintA
      bit  6,l
      jr   z,.read
-     call print_newline
+     call PrintNewline
 
      ret
 
-wave:
+Wave:
      db $00, $11, $22, $33, $44, $55, $66, $77
      db $88, $99, $AA, $BB, $CC, $DD, $EE, $FF
 

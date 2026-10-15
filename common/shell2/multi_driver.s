@@ -39,18 +39,18 @@ POPS
 ; The way back from the tests, at a fixed address
 PUSHS
 SECTION "return from test", ROM0[$3F00]
-     jp   test_exited
+     jp   TestExited
 POPS
 
-reset:
-     jp   std_reset
+Reset:
+     jp   StdReset
 
-main:
+Main:
      ld   sp,$C000
      setb hFirstFailed,0
      setb hTestNumber,-1
 
-.next_test:
+.nextTest:
      lda  hTestNumber
      inc  a
      sta  hTestNumber
@@ -74,25 +74,25 @@ main:
      cp   $C3
      jp   nz,.finished
 
-     call print_test_number
-     call run_test
-     call report_test
-     jp   .next_test
+     call PrintTestNumber
+     call RunTest
+     call ReportTest
+     jp   .nextTest
 
 .finished:
-     call print_newline
+     call PrintNewline
      lda  hFirstFailed
      or   a
-     jr   z,.all_passed
-     call print_newline
+     jr   z,.allPassed
+     call PrintNewline
      print_str "Run failed tests",NEWLINE
      print_str "individually for",NEWLINE
      print_str "more details.",NEWLINE
 
-.all_passed:
+.allPassed:
      ; Beep
-     call sound_off
-     call sound_on
+     call SoundOff
+     call SoundOn
      wreg rAUD1LEN,$80
      wreg rAUD1ENV,$F1
      wreg rAUD1LOW,$00
@@ -106,11 +106,11 @@ main:
      ; Exit with the number of the first test that failed
      lda  hFirstFailed
      ld   [wTestCode],a
-     jp   tests_done
+     jp   TestsDone
 
 
 ; Runs the test whose block is at DE
-run_test:
+RunTest:
      ; Save SP, as the test will use its own stack
      ld   hl,sp+0
      ld   a,l
@@ -123,18 +123,18 @@ run_test:
      ld   hl,sSavedState
      ld   bc,STATE_SIZE
      ld   de,NV_RAM_START
-     call copy_bytes
+     call CopyBytes
      ld   bc,DP_STATE_SIZE
      ld   de,HRAM_START
-     call copy_bytes
+     call CopyBytes
      pop  hl
 
      ; Copy the block and run it
      ld   c,$10
-     jp   copy_to_wram_then_run
+     jp   CopyToWRAMThenRun
 
      ; Back from the test at $3F00, with its result in A
-test_exited:
+TestExited:
      ld   d,a
      ld   a,[sSavedSp]
      ld   l,a
@@ -148,67 +148,67 @@ test_exited:
      ld   de,sSavedState
      ld   bc,STATE_SIZE
      ld   hl,NV_RAM_START
-     call copy_bytes
+     call CopyBytes
      ld   bc,DP_STATE_SIZE
      ld   hl,HRAM_START
-     call copy_bytes
+     call CopyBytes
 
-     call cpu_norm
+     call CPUNorm
      pop  af
      ret
 
 
 ; Copies BC bytes from DE to HL
-copy_bytes:
+CopyBytes:
      ld   a,[de]
      inc  de
      ld   [hli],a
      dec  bc
      ld   a,b
      or   c
-     jr   nz,copy_bytes
+     jr   nz,CopyBytes
      ret
 
 
 ; Prints the number of the test
-print_test_number:
+PrintTestNumber:
      lda  hTestNumber
      inc  a
-     call print_dec2
-     call console_flush
+     call PrintDec2
+     call ConsoleFlush
      ret
 
 
 ; Reports result A of the test: ok, or A in inverse. Remembers the first
 ; failure.
-report_test:
+ReportTest:
      print_str ":"
      or   a
      jr   nz,.failed
      print_str "ok  "
-     call console_flush
+     call ConsoleFlush
      ret
 
 .failed:
      push af
      lda  hFirstFailed
      or   a
-     jr   nz,.keep_first
+     jr   nz,.keepFirst
      lda  hTestNumber
      inc  a
      sta  hFirstFailed
-.keep_first:
+.keepFirst:
      lda  hTestNumber
      inc  a
-     call play_byte
+     call PlayByte
      ld   a,d
-     call play_byte
-     call console_inverse
+     call PlayByte
+     call ConsoleInverse
      pop  af
-     call print_dec2
-     call console_normal
+     call PrintDec2
+     call ConsoleNormal
      print_str "  "
-     call console_flush
+     call ConsoleFlush
      ret
 
 INCLUDE "shell_end.inc"

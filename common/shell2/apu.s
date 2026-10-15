@@ -13,14 +13,14 @@ ENDM
 
 ; Turns APU off
 ; Preserved: BC, DE, HL
-sound_off:
+SoundOff:
      wreg rAUDENA,AUDENA_OFF
      ret
 
 
 ; Turns APU on
 ; Preserved: BC, DE, HL
-sound_on:
+SoundOn:
      wreg rAUDENA,AUDENA_ON  ; power
      wreg rAUDTERM,$FF  ; mono
      wreg rAUDVOL,$77  ; volume
@@ -30,7 +30,7 @@ sound_on:
 ; Synchronizes to APU length counter within tens of clocks.
 ; Uses square 2 channel.
 ; Preserved: AF, BC, DE, HL
-sync_apu_coarse:
+SyncAPUCoarse:
      push af
      push hl
      wreg rAUD2ENV,$08  ; silent without disabling channel
@@ -49,8 +49,8 @@ sync_apu_coarse:
 
 ; Synchronizes to APU length counter exactly. Uses square 2 channel.
 ; Preserved: AF, BC, DE, HL
-sync_apu:
-     call sync_apu_coarse
+SyncAPU:
+     call SyncAPUCoarse
      push af
      push hl
 
@@ -92,7 +92,7 @@ sync_apu:
 ; Synchronizes to first square sweep within
 ; tens of clocks. Uses square 1 channel.
 ; Preserved: BC, DE, HL
-sync_sweep:
+SyncSweep:
      wreg rAUD1SWEEP,$11  ; sweep period = 1, shift = 1
      wreg rAUD1ENV,$08  ; silent without disabling channel
      wreg rAUD1LOW,$FF  ; freq = $3FF
@@ -106,7 +106,7 @@ sync_sweep:
 
 ; Copies 16-byte wave from (HL) to wave RAM
 ; Preserved: BC, DE
-load_wave:
+LoadWave:
      push bc
      wreg rAUD3ENA,$00  ; disable while writing
      ld   c,$30
@@ -122,7 +122,7 @@ load_wave:
 
 ; Fills wave RAM with A
 ; Preserved: BC, DE, HL
-fill_wave:
+FillWave:
      push bc
      ld   bc,$1030
 .fill:
@@ -136,7 +136,7 @@ fill_wave:
 
 ; Fills NR10-NR2F with A
 ; Preserved: BC, DE, HL
-fill_apu_regs:
+FillAPURegs:
      push bc
      ld   bc,$2010
 .fill:
@@ -152,7 +152,7 @@ fill_apu_regs:
 ; channel with mask A into A. Length counter
 ; must be enabled for that channel.
 ; Preserved: BC, DE, HL
-get_len_a:
+GetLenA:
      push bc
      ld   c,a
      ld   b,0
@@ -171,7 +171,7 @@ get_len_a:
 
 ; Delays A*4096 cycles
 ; Preserved: BC, DE, HL
-delay_apu_cycles:
+DelayAPUCycles:
      or   a
      ret  z
 .loop:
@@ -185,7 +185,7 @@ delay_apu_cycles:
 ; timing them with the length counter of the wave channel, or of square 2
 ; for the wave channel. Carry is set if the channel was on.
 ; Preserved: DE
-get_len_clocks:
+GetLenClocks:
      push bc
      push hl
 
@@ -194,11 +194,11 @@ get_len_clocks:
      ld   a,$0F
      ld   c,$80
      inc  h
-.find_reg:
+.findReg:
      add  5
      rlc  c
      dec  h
-     jr   nz,.find_reg
+     jr   nz,.findReg
      ld   l,a
      ld   h,$FF
 
@@ -221,10 +221,10 @@ get_len_clocks:
      wreg rAUD3LEN,-4
      wreg rAUD3HIGH,$C0
      wreg rAUD3LEN,-1
-.wait_wave:
+.waitWave:
      lda  rAUDENA
      and  $04
-     jr   nz,.wait_wave
+     jr   nz,.waitWave
 
      ; Clock length until the channel turns off
 .count:
@@ -248,12 +248,12 @@ get_len_clocks:
      wreg rAUD2LEN,-4
      wreg rAUD2HIGH,$C0
      wreg rAUD2LEN,-1
-.wait_square:
+.waitSquare:
      lda  rAUDENA
      and  $02
-     jr   nz,.wait_square
+     jr   nz,.waitSquare
      ld   c,$40
-.wave_count:
+.waveCount:
      dec  c
      jr   z,.wave
      ld   [hl],$40
@@ -261,5 +261,5 @@ get_len_clocks:
      inc  b
      lda  rAUDENA
      and  $04
-     jr   nz,.wave_count
+     jr   nz,.waveCount
      jr   .finished

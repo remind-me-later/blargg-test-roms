@@ -5,95 +5,95 @@
 ; Updates checksum with printed values.
 ; Preserved: AF, BC, DE, HL
 
-print_regs:
-     call print_af
-     call print_bc
-     call print_de
-     call print_hl
-     call print_newline
+PrintRegs:
+     call PrintAF
+     call PrintBC
+     call PrintDE
+     call PrintHL
+     call PrintNewline
      ret
 
-print_a:
+PrintA:
      push af
-print_a_:
-     call print_hex
+PrintA_:
+     call PrintHex
      ld   a,' '
      call wPrintCharNoCrc
      pop  af
      ret
 
-print_af:
+PrintAF:
      push af
-     call print_hex
+     call PrintHex
      pop  af
-print_f:
+PrintF:
      push bc
      push af
      pop  bc
-     call print_c
+     call PrintC
      pop  bc
      ret
 
-print_b:
+PrintB:
      push af
      ld   a,b
-     jr   print_a_
+     jr   PrintA_
 
-print_c:
+PrintC:
      push af
      ld   a,c
-     jr   print_a_
+     jr   PrintA_
 
-print_d:
+PrintD:
      push af
      ld   a,d
-     jr   print_a_
+     jr   PrintA_
 
-print_e:
+PrintE:
      push af
      ld   a,e
-     jr   print_a_
+     jr   PrintA_
 
-print_h:
+PrintH:
      push af
      ld   a,h
-     jr   print_a_
+     jr   PrintA_
 
-print_l:
+PrintL:
      push af
      ld   a,l
-     jr   print_a_
+     jr   PrintA_
 
-print_bc:
+PrintBC:
      push af
      push bc
-print_bc_:
+PrintBC_:
      ld   a,b
-     call print_hex
+     call PrintHex
      ld   a,c
      pop  bc
-     jr   print_a_
+     jr   PrintA_
 
-print_de:
+PrintDE:
      push af
      push bc
      ld   b,d
      ld   c,e
-     jr   print_bc_
+     jr   PrintBC_
 
-print_hl:
+PrintHL:
      push af
      push bc
      ld   b,h
      ld   c,l
-     jr   print_bc_
+     jr   PrintBC_
 
 
 ; Prints A as two hex chars and updates checksum
 ; Preserved: BC, DE, HL
-print_hex:
-     call update_crc
-print_hex_nocrc:
+PrintHex:
+     call UpdateCRC
+PrintHexNoCRC:
      push af
      swap a
      call .nibble
@@ -115,10 +115,10 @@ print_hex_nocrc:
 MACRO print_nz
      push af
      ld   a,\1
-     jr   nz,print_nz\@
+     jr   nz,PrintNZ\@
      ld   a,\2
-print_nz\@:
-     call print_char
+PrintNZ\@:
+     call PrintChar
      pop  af
 ENDM
 
@@ -129,25 +129,25 @@ ENDM
 MACRO print_nc
      push af
      ld   a,\1
-     jr   nz,print_nc\@
+     jr   nz,PrintNC\@
      ld   a,\2
-print_nc\@:
-     call print_char
+PrintNC\@:
+     call PrintChar
      pop  af
 ENDM
 
 
 ; Prints A as 2 decimal digits
 ; Preserved: AF, BC, DE, HL
-print_dec2:
+PrintDec2:
      push af
      push bc
-     jr   print_dec.tens
+     jr   PrintDec.tens
 
 
 ; Prints A as 1-3 digit decimal value
 ; Preserved: AF, BC, DE, HL
-print_dec:
+PrintDec:
      push af
      push bc
 
@@ -161,7 +161,7 @@ print_dec:
      call .digit
 .ones:
      add  '0'
-     call print_char
+     call PrintChar
 
      pop  bc
      pop  af
@@ -177,6 +177,6 @@ print_dec:
 
      ld   c,a
      ld   a,b
-     call print_char
+     call PrintChar
      ld   a,c
      ret

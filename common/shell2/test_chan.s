@@ -1,6 +1,6 @@
 ; Runs a test on each of the four channels.
 ;
-; The test defines test_chan, which is called once per channel with the
+; The test defines TestChan, which is called once per channel with the
 ; variables below describing the channel. wchn writes to its registers.
 ;
 ; Reconstructed: this file was not part of the released sources. It was
@@ -32,23 +32,23 @@ ENDM
 
 
 ; Sets up the variables for channel n, which has its registers at NRx0 =
-; regs, then calls test_chan with the DAC of the channel enabled and the
+; regs, then calls TestChan with the DAC of the channel enabled and the
 ; channel off.
 MACRO test_chan_n ; n, regs, mask, maxlen, dac register, dac value
      ld   a,\1
      sta  hChan
-     call print_dec
-     call print_space
+     call PrintDec
+     call PrintSpace
      wreg hChanRegs,\2
      wreg hChanMask,\3
      wreg hChanMaxlen,\4
-     call console_flush
+     call ConsoleFlush
      wreg \5,\6
-     call test_chan
+     call TestChan
 ENDM
 
 
-; Calls test_chan for every channel
+; Calls TestChan for every channel
 MACRO test_all_chans
      test_chan_n 0,LOW(rAUD1SWEEP),$01,$40,rAUD1ENV,$08
      test_chan_n 1,LOW(rAUD1SWEEP)+5,$02,$40,rAUD2ENV,$08

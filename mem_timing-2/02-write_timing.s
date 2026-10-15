@@ -6,7 +6,7 @@ DEF ROM_NAME EQUS "02-WRITE_TIMING"
 INCLUDE "shell.inc"
 INCLUDE "tima_64.s"
 
-instructions:
+Instructions:
      ; last value is time of write
      db $36, $FF, $00, 3 ; LD   (HL),n
      db $70, $00, $00, 2 ; LD   (HL),B
@@ -23,26 +23,26 @@ instructions:
      db $E2, $00, $00, 2 ; LDH  (C),A
      db $E0, LOW(tima_64), $00, 3 ; LDH  (n),A
      db $EA, LOW(tima_64), HIGH(tima_64), 4 ; LD   (nn),A
-instructions_end:
+InstructionsEnd:
 
-main:
-     call init_tima_64
+Main:
+     call InitTIMA64
      set_test 0
 
      ; Test instructions
-     ld   hl,instructions
-.next_instr:
-     call .test_instr
+     ld   hl,Instructions
+.nextInstr:
+     call .testInstr
      cp   [hl]
-     call nz,.print_failed
+     call nz,.printFailed
      inc  hl
      ld   a,l
-     cp   LOW(instructions_end)
-     jr   nz,.next_instr
+     cp   LOW(InstructionsEnd)
+     jr   nz,.nextInstr
 
-     jp   tests_done
+     jp   TestsDone
 
-.print_failed:
+.printFailed:
      push hl
      ld   b,a
      ld   c,[hl]
@@ -50,13 +50,13 @@ main:
      dec  hl
      dec  hl
      ld   a,[hl]
-     call print_hex
+     call PrintHex
      print_str ":"
      ld   a,b
-     call print_dec
+     call PrintDec
      print_str "-"
      ld   a,c
-     call print_dec
+     call PrintDec
      print_str " "
      pop  hl
      set_test 1
@@ -65,32 +65,32 @@ main:
 ; Tests instruction
 ; HL -> 3-byte instruction
 ; HL <- HL + 3
-.test_instr:
+.testInstr:
      ; Copy instr
      ld   a,[hli]
-     ld   [instr+0],a
+     ld   [Instr+0],a
      ld   a,[hli]
-     ld   [instr+1],a
+     ld   [Instr+1],a
      ld   a,[hli]
-     ld   [instr+2],a
+     ld   [Instr+2],a
      push hl
 
      ; Test for writes on each cycle
      ld   b,0
-.next_cycle:
+.nextCycle:
      push bc
-     call .time_write
+     call .timeWrite
      pop  bc
      cp   LOW(tima_64)
-     jr   z,.no_write
+     jr   z,.noWrite
      cp   HIGH(tima_64)
-     jr   z,.no_write
+     jr   z,.noWrite
      jr   .found
-.no_write:
+.noWrite:
      inc  b
      ld   a,b
      cp   10
-     jr   nz,.next_cycle
+     jr   nz,.nextCycle
      ld   b,0
 
 .found:
@@ -101,16 +101,16 @@ main:
 ; Tests for write
 ; B -> which cycle to test
 ; A <- timer value after test
-.time_write:
-     call sync_tima_64
+.timeWrite:
+     call SyncTIMA64
      ld   a,13
      sub  b
-     call delay_a_20_cycles
+     call DelayA20Cycles
      ld   hl,tima_64
      ld   bc,tima_64
      ld   de,tima_64
      ld   a,LOW(tima_64)
-instr:
+Instr:
      nop
      nop
      nop

@@ -5,7 +5,7 @@ DEF TEST_NAME EQUS "06-ld r,r"
 INCLUDE "shell.inc"
 INCLUDE "instr_test.s"
 
-instrs:
+Instrs:
      db $40, 0, 0 ; LD   B,B
      db $41, 0, 0 ; LD   B,C
      db $42, 0, 0 ; LD   B,D
@@ -76,20 +76,20 @@ instrs:
      db $7D, 0, 0 ; LD   A,L
      db $7E, 0, 0 ; LD   A,(HL)
      db $7F, 0, 0 ; LD   A,A
-instrs_end:
+InstrsEnd:
 
-test_instr:
+TestInstr:
      ld   c,$00
-     call test
+     call Test
      ld   c,$10
-     call test
+     call Test
      ld   c,$E0
-     call test
+     call Test
      ld   c,$F0
-     call test
+     call Test
      ret
 
-test:
+Test:
      ; Put different value in each register and (hl_temp)
      ld   b,$BC
      push bc
@@ -101,18 +101,18 @@ test:
      ld   hl,wRpTemp ; (HL) points to RAM
      pop  af
 
-;    call print_regs
+;    call PrintRegs
      jp   wInstr
-instr_done:
+InstrDone:
 
      ; Checksum registers and (HL)
-     call checksum_af_bc_de_hl
+     call ChecksumAFBCDEHL
      ld   a,[wRpTemp]
-     call update_crc_fast
+     call UpdateCRCFast
 
      ret
 
-checksums:
+Checksums:
      db $40, $3A, $AF, $06, $B6, $CB, $B2, $AB, $6F, $EF, $71, $9B, $75, $E3, $6C, $B9, $34, $FB, $26, $B7, $5A, $B9, $2F, $CE, $34, $FB, $26, $B7, $C2, $0A, $3B, $1A, $2A, $8A, $D6, $7C, $40, $3A, $AF, $06, $AF, $0A, $74, $70, $19, $A9, $6E, $6F, $11, $DA, $FE, $FE, $18, $10, $04, $2B, $11, $DA, $FE, $FE, $7B, $6A, $87, $84, $8B, $87, $34, $12, $00, $45, $DE, $01, $40, $3A, $AF, $06, $93, $E2, $8F, $C6, $DD, $7D, $90, $32, $FF, $90, $1B, $A8, $DD, $7D, $90, $32, $56, $BF, $7A, $21, $23, $C0, $FA, $06, $3B, $1D, $A0, $80, $3F, $44, $1B, $9C, $40, $3A, $AF, $06, $56, $25, $85, $CD, $D7, $B1, $DB, $F9, $56, $25, $85, $CD, $4E, $F8, $DF, $4B, $F0, $C3, $F9, $18, $20, $0F, $F6, $91, $71, $69, $CE, $46, $F0, $A0, $03, $4D, $40, $3A, $AF, $06, $29, $47, $E2, $36, $40, $3A, $AF, $06, $90, $F6, $A0, $8F, $3D, $62, $26, $A9, $A4, $52, $C1, $75, $45, $ED, $75, $40, $8A, $4D, $63, $56, $AF, $BA, $2D, $FE, $40, $3A, $AF, $06, $AF, $BA, $2D, $FE, $36, $8A, $CA, $22, $34, $8D, $C2, $65, $1A, $DB, $FF, $54, $32, $C0, $E8, $55, $ED, $4A, $87, $2F, $40, $3A, $AF, $06, $9D, $BC, $81, $E6, $6E, $6C, $92, $37, $B1, $EC, $C3, $29, $1D, $C5, $9F, $A1, $59, $6F, $66, $CD, $B4, $FB, $FD, $74, $EC, $13, $F3, $8E, $70, $0C, $5F, $ED, $EC, $13, $F3, $8E, $40, $3A, $AF, $06,
 
 INCLUDE "shell_end.inc"

@@ -9,7 +9,7 @@ SECTION "RST area", ROM0[$70]
 SECTION "header", ROM0[$100]
      ; GB header read by bootrom
      nop
-     jp   reset
+     jp   Reset
 
      ; Nintendo logo required for proper boot
      db $CE,$ED,$66,$66,$CC,$0D,$00,$0B

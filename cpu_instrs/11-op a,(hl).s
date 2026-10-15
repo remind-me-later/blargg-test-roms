@@ -6,7 +6,7 @@ DEF TEST_NAME EQUS "11-op a,(hl)"
 INCLUDE "shell.inc"
 INCLUDE "instr_test.s"
 
-instrs:
+Instrs:
      db $0A, 0, 0     ; LD   A,(BC)
      db $1A, 0, 0     ; LD   A,(DE)
      db $02, 0, 0     ; LD   (BC),A
@@ -58,29 +58,29 @@ instrs:
      db $CB, $F6, 0   ; SET  6,(HL)
      db $CB, $FE, 0   ; SET  7,(HL)
      db $27, 0, 0     ; DAA
-instrs_end:
+InstrsEnd:
 
-test_instr:
+TestInstr:
      ld   c,$00
-     call test
+     call Test
      ld   c,$10
-     call test
+     call Test
      ld   c,$E0
-     call test
+     call Test
      ld   c,$F0
-     call test
+     call Test
      ret
 
-test:
+Test:
      ; Go through each value for A
-     ld   hl,values
-a_loop:
+     ld   hl,Values
+ALoop:
      ld   b,[hl]
      push hl
 
      ; Go through each value for (HL)
-     ld   hl,values
-values_loop:
+     ld   hl,Values
+ValuesLoop:
      push bc
      push hl
 
@@ -104,50 +104,50 @@ values_loop:
      ; AF
      pop  af
 
-;    call print_regs
+;    call PrintRegs
      jp   wInstr
-instr_done:
+InstrDone:
 
      ; Checksum AF, HL, and (HL)
      push hl
      push af
-     call update_crc_fast
+     call UpdateCRCFast
      pop  hl
      ld   a,l
-     call update_crc_fast
+     call UpdateCRCFast
      pop  bc
      ld   a,b
-     call update_crc_fast
+     call UpdateCRCFast
      ld   a,c
-     call update_crc_fast
+     call UpdateCRCFast
      ld   a,[wRpTemp]
-     call update_crc_fast
+     call UpdateCRCFast
      ld   a,[wRpTemp+1]
-     call update_crc_fast
+     call UpdateCRCFast
      ld   a,[wRpTemp+2]
-     call update_crc_fast
+     call UpdateCRCFast
 
      pop  hl
      pop  bc
      inc  hl
      ld   a,l
-     cp   LOW(values_end)
-     jr   nz,values_loop
+     cp   LOW(ValuesEnd)
+     jr   nz,ValuesLoop
 
      pop  hl
      inc  hl
      ld   a,l
-     cp   LOW(values_end)
-     jr   nz,a_loop
+     cp   LOW(ValuesEnd)
+     jr   nz,ALoop
 
      ret
 
-values:
+Values:
      db $00, $01, $0F, $10, $1F, $7F, $80, $F0, $FF, $02, $04, $08, $20, $40
-values_end:
+ValuesEnd:
      db $00, $01, $0F, $10, $1F, $7F, $80, $F0, $FF, $02, $04, $08, $20, $40
 
-checksums:
+Checksums:
      db $E0, $E5, $09, $A7, $FB, $28, $0D, $AE, $AC, $BB, $91, $D8, $B3, $E2, $AF, $C4
      db $3D, $B5, $02, $07, $4F, $6E, $5B, $7E, $AE, $02, $E7, $14, $DC, $D9, $BE, $6D
      db $F1, $48, $A9, $42, $67, $08, $FE, $57, $06, $6A, $A9, $B1, $FD, $A5, $84, $F0

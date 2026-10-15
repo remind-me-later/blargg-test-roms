@@ -41,8 +41,8 @@ tests include "shell.inc" at the beginning, which sets things up and
 includes all the appropriate library files.
 
 The reset handler does minimal GB hardware initialization, clears RAM,
-sets up the text console, then runs main. Main can exit by returning or
-jumping to "exit" with an error code in A. Exit reports the code then
+sets up the text console, then runs Main. Main can exit by returning or
+jumping to "Exit" with an error code in A. Exit reports the code then
 goes into an infinite loop. If the code is 0, it doesn't do anything,
 otherwise it reports the code. Code 1 is reported as "Failed", and the
 rest as "Error <code>".

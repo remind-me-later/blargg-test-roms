@@ -3,20 +3,20 @@
 DEF TEST_NAME EQUS "6-timing_no_bug"
 INCLUDE "oam_bug.inc"
 
-main:
-     call disable_lcd
-     call fill_oam
+Main:
+     call DisableLCD
+     call FillOAM
 
-     call test
+     call Test
 
-     call disable_lcd
-     call cp_oam
+     call DisableLCD
+     call CpOAM
 
-     call print_oam
+     call PrintOAM
      check_crc $7BB4F198
-     jp   tests_passed
+     jp   TestsPassed
 
-test:
+Test:
      ld   de,$FE00
      wreg rLCDC,LCDC_ON | LCDC_BG_ON
 
@@ -31,28 +31,28 @@ test:
      ; window where corruption occurs, for every
      ; scanline
      ld   b,144
-.visible_line:
+.visibleLine:
      inc  de
      delay 18
      dec  de
      delay 114-22-4
      dec  b
-     jr   nz,.visible_line
+     jr   nz,.visibleLine
 
      ; Try to trigger constantly during vblank
      ld   b,10
-     jr   .vblank_enter
-.vblank_line:
+     jr   .vblankEnter
+.vblankLine:
      delay 13
-.vblank_enter:
+.vblankEnter:
      ld   c,12
-.vblank_inner:
+.vblankInner:
      inc  de
      dec  c
      dec  de
-     jr   nz,.vblank_inner
+     jr   nz,.vblankInner
      dec  b
-     jr   nz,.vblank_line
+     jr   nz,.vblankLine
 
      delay 4
 

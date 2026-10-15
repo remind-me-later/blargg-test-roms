@@ -47,15 +47,15 @@ DEF MAX_SHORT_DELAY EQU 28
 MACRO? delay_long_
      ; 0+ to avoid assembler treating as memory read
      ld   a,0+((((\2)<<16)+(\1)) - 11) >> 16
-     call delay_65536a_9_cycles_
+     call Delay65536A9Cycles_
      delay_nosave_ ((((\2)<<16)+(\1)) - 11)&$FFFF, 0
 ENDM
 
 ; Doesn't save AF, allowing minimization of AF save/restore
 MACRO? delay_nosave_
-     ; 65536+11     = maximum delay using delay_256a_9_cycles_
-     ; 255+22  = maximum delay using delay_a_20_cycles
-     ; 22      = minimum delay using delay_a_20_cycles
+     ; 65536+11     = maximum delay using Delay256A9Cycles_
+     ; 255+22  = maximum delay using DelayA20Cycles
+     ; 22      = minimum delay using DelayA20Cycles
      IF (\2) > 1
           delay_long_ \1, \2
      ELSE
@@ -64,12 +64,12 @@ MACRO? delay_nosave_
           ELSE
                IF ((\2)*(255+22+1))|(\1) > 255+22
                     ld   a,HIGH(((((\2)<<16)+(\1)) - 11))
-                    call delay_256a_9_cycles_
+                    call Delay256A9Cycles_
                     delay_nosave_ LOW(((((\2)<<16)+(\1)) - 11)), 0
                ELSE
                     IF (\1) >= 22
                          ld   a,(\1) - 22
-                         call delay_a_20_cycles
+                         call DelayA20Cycles
                     ELSE
                          delay_short_ \1
                     ENDC
@@ -92,7 +92,7 @@ ENDM
 ; Delays A cycles + overhead
 ; Preserved: BC, DE, HL
 ; Time: A+20 cycles (including CALL)
-delay_a_20_cycles:
+DelayA20Cycles:
 .loop:
      sub  5    ; 2
      jr   nc,.loop ;3/2 do multiples of 5
@@ -108,10 +108,10 @@ delay_a_20_cycles:
 ; Delays A*256 cycles + overhead
 ; Preserved: BC, DE, HL
 ; Time: A*256+12 cycles (including CALL)
-delay_256a_12_cycles:
+Delay256A12Cycles:
      or   a              ; 1
      ret  z              ; 5/2
-delay_256a_9_cycles_:
+Delay256A9Cycles_:
 .loop:
      delay 256-4
      dec  a              ; 1
@@ -121,10 +121,10 @@ delay_256a_9_cycles_:
 ; Delays A*65536 cycles + overhead
 ; Preserved: BC, DE, HL
 ; Time: A*65536+12 cycles (including CALL)
-delay_65536a_12_cycles:
+Delay65536A12Cycles:
      or   a              ; 1
      ret  z              ;5/2
-delay_65536a_9_cycles_:
+Delay65536A9Cycles_:
 .loop:
      delay 65536-4
      dec  a              ; 1
@@ -134,18 +134,18 @@ delay_65536a_9_cycles_:
 ; Delays H*256+L cycles + overhead
 ; Preserved: AF, BC, DE, HL
 ; Time: H*256+L+51 cycles
-delay_hl_51_cycles:
+DelayHL51Cycles:
      push af
      ld   a,h
-     call delay_256a_12_cycles
+     call Delay256A12Cycles
      ld   a,l
-     call delay_a_20_cycles
+     call DelayA20Cycles
      pop  af
      ret
 
 ; delay_short_ macro calls into these
 ds MAX_SHORT_DELAY-10, $00 ; NOP repeated several times
-delay_unrolled_:
+DelayUnrolled_:
      ret
 
 MACRO? delay_short_
@@ -191,6 +191,6 @@ MACRO? delay_short_
           nop
      ENDC
      IF (\1) >= 10
-          call delay_unrolled_ + 10 - (\1)
+          call DelayUnrolled_ + 10 - (\1)
      ENDC
 ENDM

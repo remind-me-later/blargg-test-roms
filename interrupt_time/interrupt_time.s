@@ -16,42 +16,42 @@ PUSHS UNION "Serial interrupt handler", WRAMX[$DEC3], BANK[1]
 wSerialHandler: db
 POPS
 
-main:
-     call init_timer
+Main:
+     call InitTimer
 
      ld   d,0
-     call test_interrupt
+     call TestInterrupt
      ld   d,8
-     call test_interrupt
-     call cpu_fast
+     call TestInterrupt
+     call CPUFast
      ld   d,0
-     call test_interrupt
+     call TestInterrupt
      ld   d,8
-     call test_interrupt
+     call TestInterrupt
 
      ; The released ROM expects this checksum; the source said $C86CC74D.
      check_crc $B511F33D
-     jp   tests_passed
+     jp   TestsPassed
 
-test_interrupt:
-     call get_cpu_speed
-     call print_a
-     call print_d
+TestInterrupt:
+     call GetCPUSpeed
+     call PrintA
+     call PrintD
 
      ld   a,$C9     ; RET
      ld   [wSerialHandler],a
 
      wreg rIE,$08
      wreg rIF,$00
-     call start_timer
+     call StartTimer
      ei
      ld   a,d
      ld   [rIF],a    ; $00 = 0 clocks, $08 = 13 clocks
      di
-     call stop_timer
+     call StopTimer
      sub  3+4       ; instruction overhead
-     call print_a
-     call print_newline
+     call PrintA
+     call PrintNewline
 
      ret
 

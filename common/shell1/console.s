@@ -3,7 +3,7 @@
 
 ; Waits for start of LCD blanking period
 ; Preserved: BC, DE, HL
-console_wait_vbl:
+ConsoleWaitVBL:
      push bc
 
      ; Wait for start of vblank, with
@@ -25,25 +25,25 @@ console_wait_vbl:
 
 
 ; Initializes text console
-console_init:
-     call console_hide
+ConsoleInit:
+     call ConsoleHide
 
      ; CGB-specific inits
      ld   a,[wGbId]
      and  GB_ID_CGB
-     call nz,.init_cgb
+     call nz,.initCGB
 
      ; Clear nametable
      ld   a,' '
-     call .fill_nametable
+     call .fillNametable
 
      ; Load tiles
      ld   hl,TILEBLOCK0+$200
      ld   c,0
-     call .load_tiles
+     call .loadTiles
      ld   hl,TILEBLOCK0+$A00
      ld   c,$FF
-     call .load_tiles
+     call .loadTiles
 
      ; Init state
      ld   a,CONSOLE_WIDTH
@@ -52,10 +52,10 @@ console_init:
      ld   [wConsoleMode],a
      ld   a,-8
      ld   [wConsoleScroll],a
-     call console_scroll_up_
-     jr   console_show
+     call ConsoleScrollUp_
+     jr   ConsoleShow
 
-.fill_nametable:
+.fillNametable:
      ld   hl,TILEMAP0
      ld   b,4
 .fill:
@@ -67,7 +67,7 @@ console_init:
      jr   nz,.fill
      ret
 
-.init_cgb:
+.initCGB:
      ; Clear palette
      wreg rBGPI,$80
      ld   b,16
@@ -87,13 +87,13 @@ console_init:
      ld   a,1
      ld   [rVBK],a
      ld   a,0
-     call .fill_nametable
+     call .fillNametable
 
      ld   a,0
      ld   [rVBK],a
      ret
 
-.load_tiles:
+.loadTiles:
      ld   de,ASCII
      ld   b,96
 .char:
@@ -115,25 +115,25 @@ console_init:
 
 ; Shows console display
 ; Preserved: AF, BC, DE, HL
-console_show:
+ConsoleShow:
      push af
 
      ; Enable LCD
-     call console_wait_vbl
+     call ConsoleWaitVBL
      wreg rLCDC,LCDC_ON | LCDC_BLOCK01 | LCDC_BG_ON
      wreg rSCX,0
      wreg rBGP,$E4
 
-     jp   console_apply_scroll_
+     jp   ConsoleApplyScroll_
 
 
 ; Hides console display by turning LCD off
 ; Preserved: AF, BC, DE, HL
-console_hide:
+ConsoleHide:
      push af
 
      ; LCD off
-     call console_wait_vbl
+     call ConsoleWaitVBL
      wreg rLCDC,LCDC_OFF | LCDC_BLOCK01 | LCDC_BG_ON
 
      pop  af
@@ -142,19 +142,19 @@ console_hide:
 
 ; Changes to normal text mode
 ; Preserved: BC, DE, HL
-console_normal:
+ConsoleNormal:
      xor  a
-     jr   console_set_mode
+     jr   ConsoleSetMode
 
 ; Changes to inverse text mode
 ; Preserved: BC, DE, HL
-console_inverse:
+ConsoleInverse:
      ld   a,$80
 
 ; Changes console mode to A.
 ; 0: Normal, $80: Inverse
 ; Preserved: BC, DE, HL
-console_set_mode:
+ConsoleSetMode:
      and  $80
      ld   [wConsoleMode],a
      ret
@@ -163,32 +163,32 @@ console_set_mode:
 ; Prints char A to console. Will not appear until
 ; a newline or flush occurs.
 ; Preserved: AF, BC, DE, HL
-console_print:
+ConsolePrint:
      push af
 
      cp   10
-     jr   z,console_newline_
+     jr   z,ConsoleNewline_
 
      push hl
      push af
      ld   hl,wConsolePos
      ld   a,[hli]
      cp   LOW(wConsoleBuf)
-     jr   nz,.not_at_end
+     jr   nz,.notAtEnd
 
      ; Newline if at end of current line. If this
      ; were done after writing to buffer, calling
-     ; console_newline would print extra newline.
+     ; ConsoleNewline would print extra newline.
      ; Doing it before eliminates this.
 
      ; Ignore any spaces at end of line
      pop  af
      cp   ' '
-     jr   z,.ignore_space
-     call console_newline
+     jr   z,.ignoreSpace
+     call ConsoleNewline
      push af
 
-.not_at_end:
+.notAtEnd:
      pop  af
      or   [hl]      ; apply current attributes
      dec  l         ; hl = wConsolePos
@@ -196,7 +196,7 @@ console_print:
      ld   l,[hl]    ; hl = position in buffer
      ld   [hl],a
 
-.ignore_space:
+.ignoreSpace:
      pop  hl
      pop  af
      ret
@@ -204,17 +204,17 @@ console_print:
 
 ; Displays current line and starts new one
 ; Preserved: AF, BC, DE, HL
-console_newline:
+ConsoleNewline:
      push af
-console_newline_:
-     call console_wait_vbl
-     call console_flush_
-     call console_scroll_up_
-     call console_flush_
-     jp   console_apply_scroll_
+ConsoleNewline_:
+     call ConsoleWaitVBL
+     call ConsoleFlush_
+     call ConsoleScrollUp_
+     call ConsoleFlush_
+     jp   ConsoleApplyScroll_
 
 
-console_scroll_up_:
+ConsoleScrollUp_:
      push bc
      push hl
 
@@ -241,18 +241,18 @@ console_scroll_up_:
 
 ; Displays current line's contents without scrolling.
 ; Preserved: A, BC, DE, HL
-console_flush:
+ConsoleFlush:
      push af
-     call console_wait_vbl
-     call console_flush_
-console_apply_scroll_:
+     call ConsoleWaitVBL
+     call ConsoleFlush_
+ConsoleApplyScroll_:
      ld   a,[wConsoleScroll]
      sub  136
      sta  rSCY
      pop  af
      ret
 
-console_flush_:
+ConsoleFlush_:
      push de
      push hl
 

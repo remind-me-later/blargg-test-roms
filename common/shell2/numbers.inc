@@ -4,10 +4,10 @@
 MACRO print_nz
      push af
      ld   a,\1
-     jr   nz,print_nz\@
+     jr   nz,PrintNZ\@
      ld   a,\2
-print_nz\@:
-     call print_char
+PrintNZ\@:
+     call PrintChar
      pop  af
 ENDM
 
@@ -17,9 +17,9 @@ ENDM
 MACRO print_nc
      push af
      ld   a,\1
-     jr   nz,print_nc\@
+     jr   nz,PrintNC\@
      ld   a,\2
-print_nc\@:
-     call print_char
+PrintNC\@:
+     call PrintChar
      pop  af
 ENDM

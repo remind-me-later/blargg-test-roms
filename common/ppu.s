@@ -1,6 +1,6 @@
 ; Waits for LCD blanking period
 ; Preserved: BC, DE, HL
-wait_vbl:
+WaitVBL:
      ; Return if off
      lda  rLCDC
      rla

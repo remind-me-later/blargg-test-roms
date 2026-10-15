@@ -9,43 +9,43 @@ DEF TEST_NAME EQUS "halt bug"
 INCLUDE "shell.inc"
 INCLUDE "ppu.s"
 
-main:
+Main:
      ld   bc,$0000
      print_str "IE IF IF DE"
-     call print_newline
+     call PrintNewline
 
      ; Needs the LCD on
-     call wait_vbl
+     call WaitVBL
      wreg rLCDC,LCDC_ON | LCDC_BLOCK01 | LCDC_BG_ON
 
      ld   bc,$0110
-     call test
+     call Test
      ld   bc,$0100
-     call test
+     call Test
      ld   bc,$0101
-     call test
+     call Test
      ld   bc,$1100
-     call test
+     call Test
      ld   bc,$1110
-     call test
+     call Test
      ld   bc,$1111
-     call test
+     call Test
      ld   bc,$E100
-     call test
+     call Test
      ld   bc,$E1E0
-     call test
+     call Test
      ld   bc,$E1E1
-     call test
+     call Test
 
      check_crc $B29060A6
-     jp   tests_passed
+     jp   TestsPassed
 
 
 ; Does a HALT with IE = B and IF = C, then another with the instruction
 ; after it as LD DE,$0C04, and prints IE, IF, then IF and DE
-test:
-     call print_b
-     call print_c
+Test:
+     call PrintB
+     call PrintC
 
      di
      wreg rIE,$01
@@ -66,9 +66,9 @@ test:
 
      delay_msec 100
      lda  rIF
-     call print_a
-     call print_de
-     call print_newline
+     call PrintA
+     call PrintDE
+     call PrintNewline
      ret
 
 INCLUDE "shell_end.inc"

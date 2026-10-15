@@ -6,7 +6,7 @@ DEF TEST_NAME EQUS "10-bit ops"
 INCLUDE "shell.inc"
 INCLUDE "instr_test.s"
 
-instrs:
+Instrs:
      db $CB, $40, 0 ; BIT  0,B
      db $CB, $41, 0 ; BIT  0,C
      db $CB, $42, 0 ; BIT  0,D
@@ -198,25 +198,25 @@ instrs:
      db $CB, $FC, 0 ; SET  7,H
      db $CB, $FD, 0 ; SET  7,L
      db $CB, $FF, 0 ; SET  7,A
-instrs_end:
+InstrsEnd:
 
-test_instr:
+TestInstr:
      ld   c,$00
-     call test
+     call Test
      ld   c,$F0
-     call test
+     call Test
      ret
 
-test:
+Test:
      ; Go through each value for A
-     ld   hl,values
-a_loop:
+     ld   hl,Values
+ALoop:
      ld   b,[hl]
      push hl
 
      ; Go through each value for other registers
-     ld   hl,values
-values_loop:
+     ld   hl,Values
+ValuesLoop:
      push bc
      push hl
 
@@ -244,34 +244,34 @@ values_loop:
      pop  hl
      pop  af
 
-;    call print_regs
+;    call PrintRegs
      jp   wInstr
-instr_done:
+InstrDone:
 
      ; Checksum registers
-     call checksum_af_bc_de_hl
+     call ChecksumAFBCDEHL
 
      pop  hl
      pop  bc
      inc  hl
      ld   a,l
-     cp   LOW(values_end)
-     jr   nz,values_loop
+     cp   LOW(ValuesEnd)
+     jr   nz,ValuesLoop
 
      pop  hl
      inc  hl
      ld   a,l
-     cp   LOW(values_end)
-     jr   nz,a_loop
+     cp   LOW(ValuesEnd)
+     jr   nz,ALoop
 
      ret
 
-values:
+Values:
      db $00, $01, $02, $04, $08, $10, $20, $40, $80, $FF
-values_end:
+ValuesEnd:
      db $00, $01, $02, $04, $08, $10, $20, $40, $80, $FF
 
-checksums:
+Checksums:
      db $46, $51, $4A, $16, $D4, $18, $B2, $4E, $ED, $B5, $15, $EA, $74, $66, $66, $3E
      db $C2, $F3, $7F, $6A, $63, $CA, $62, $21, $72, $1E, $E4, $83, $6A, $56, $41, $1D
      db $91, $90, $DB, $38, $54, $0A, $6C, $24, $02, $9E, $EA, $5B, $6D, $A7, $CB, $80

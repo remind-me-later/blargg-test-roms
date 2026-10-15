@@ -5,8 +5,8 @@
 ; Preserved: AF, BC, DE, HL
 MACRO set_test ; code[,text[,text2[,text3]]]
      push hl
-     call set_test_
-     jr   .set_test\@
+     call SetTest_
+     jr   .setTest\@
      db \1
      IF _NARG > 1
           db \2
@@ -18,7 +18,7 @@ MACRO set_test ; code[,text[,text2[,text3]]]
           db \4
      ENDC
      db 0
-.set_test\@:
+.setTest\@:
      pop  hl
 ENDM
 
@@ -26,12 +26,12 @@ ENDM
 ; Passing 0 just prints checksum. Clears checksum afterwards.
 MACRO check_crc
      IF (\1) == 0
-          call print_newline
-          call print_crc
+          call PrintNewline
+          call PrintCRC
      ELSE
           ld   bc,((\1) >>> 16) ^ $FFFF
           ld   de,((\1) & $FFFF) ^ $FFFF
-          call check_crc_
+          call CheckCRC_
      ENDC
 ENDM
 
@@ -52,5 +52,5 @@ ENDM
 MACRO checksum_mem
      ld   hl,\1
      ld   bc,\2
-     call checksum_mem_
+     call ChecksumMem_
 ENDM

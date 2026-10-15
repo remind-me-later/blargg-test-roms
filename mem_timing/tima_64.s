@@ -1,13 +1,13 @@
 ; Timer that's incremented every 64 cycles
 
-; Initializes timer for use by sync_tima_64
-init_tima_64:
+; Initializes timer for use by SyncTIMA64
+InitTIMA64:
      wreg rTMA,0
      wreg rTAC,$07
      ret
 
 ; Synchronizes to timer
-sync_tima_64:
+SyncTIMA64:
      push af
      push hl
 

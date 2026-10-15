@@ -3,7 +3,7 @@
 DEF TEST_NAME EQUS "02-interrupts"
 INCLUDE "shell.inc"
 
-main:
+Main:
      wreg rIE,$04
 
      set_test 2,"EI"
@@ -13,19 +13,19 @@ main:
      pop  bc
      inc  b
      wreg rIF,$04
-interrupt_addr:
+InterruptAddr:
      dec  b
-     jp   nz,test_failed
+     jp   nz,TestFailed
      ld   hl,sp-2
      ld   a,[hli]
-     cp   LOW(interrupt_addr)
-     jp   nz,test_failed
+     cp   LOW(InterruptAddr)
+     jp   nz,TestFailed
      ld   a,[hl]
-     cp   HIGH(interrupt_addr)
-     jp   nz,test_failed
+     cp   HIGH(InterruptAddr)
+     jp   nz,TestFailed
      lda  rIF
      and  $04
-     jp   nz,test_failed
+     jp   nz,TestFailed
 
      set_test 3,"DI"
      di
@@ -36,10 +36,10 @@ interrupt_addr:
      ld   hl,sp-2
      ld   a,[hli]
      or   [hl]
-     jp   nz,test_failed
+     jp   nz,TestFailed
      lda  rIF
      and  $04
-     jp   z,test_failed
+     jp   z,TestFailed
 
      set_test 4,"Timer doesn't work"
      wreg rTAC,$05
@@ -49,11 +49,11 @@ interrupt_addr:
      lda  rIF
      delay 500
      and  $04
-     jp   nz,test_failed
+     jp   nz,TestFailed
      delay 500
      lda  rIF
      and  $04
-     jp   z,test_failed
+     jp   z,TestFailed
      pop  af
 
      set_test 5,"HALT"
@@ -64,9 +64,9 @@ interrupt_addr:
      nop       ; avoids DMG bug
      lda  rIF
      and  $04
-     jp   z,test_failed
+     jp   z,TestFailed
 
-     jp   tests_passed
+     jp   TestsPassed
 
 ; The multi-test ROM has this vector already, from test 07
 IF !DEF(BUILD_MULTI)

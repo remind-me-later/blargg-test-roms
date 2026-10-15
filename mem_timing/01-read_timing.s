@@ -5,7 +5,7 @@ DEF TEST_NAME EQUS "01-read_timing"
 INCLUDE "shell.inc"
 INCLUDE "tima_64.s"
 
-instructions:
+Instructions:
      ; last value is time of read
      db $B6, $00, $00, 2 ; OR   (HL)
      db $BE, $00, $00, 2 ; CP   (HL)
@@ -38,26 +38,26 @@ instructions:
      db $CB, $6E, $00, 3 ; BIT  5,(HL)
      db $CB, $76, $00, 3 ; BIT  6,(HL)
      db $CB, $7E, $00, 3 ; BIT  7,(HL)
-instructions_end:
+InstructionsEnd:
 
-main:
-     call init_tima_64
+Main:
+     call InitTIMA64
      set_test 0
 
      ; Test instructions
-     ld   hl,instructions
-.next_instr:
-     call .time_instr
+     ld   hl,Instructions
+.nextInstr:
+     call .timeInstr
      cp   [hl]
-     call nz,.print_failed
+     call nz,.printFailed
      inc  hl
      ld   a,l
-     cp   LOW(instructions_end)
-     jr   nz,.next_instr
+     cp   LOW(InstructionsEnd)
+     jr   nz,.nextInstr
 
-     jp   tests_done
+     jp   TestsDone
 
-.print_failed:
+.printFailed:
      push hl
      ld   b,a
      ld   c,[hl]
@@ -67,16 +67,16 @@ main:
      ld   a,[hli]
      cp   $CB
      jr   nz,.opcode
-     call print_a
+     call PrintA
      ld   a,[hl]
 .opcode:
-     call print_hex
+     call PrintHex
      print_str ":"
      ld   a,b
-     call print_dec
+     call PrintDec
      print_str "-"
      ld   a,c
-     call print_dec
+     call PrintDec
      print_str " "
      pop  hl
      set_test 1
@@ -85,33 +85,33 @@ main:
 ; Tests instruction
 ; HL -> 3-byte instruction
 ; HL <- HL + 3
-.time_instr:
+.timeInstr:
      ; Copy instr
      ld   a,[hli]
-     ld   [instr+0],a
+     ld   [Instr+0],a
      ld   a,[hli]
-     ld   [instr+1],a
+     ld   [Instr+1],a
      ld   a,[hli]
-     ld   [instr+2],a
+     ld   [Instr+2],a
      push hl
 
      ; Find result when access doesn't occur
      ld   b,0
-     call .time_access
+     call .timeAccess
      ld   c,a
 
      ; Test for accesses on each cycle
      ld   b,0
-.next_cycle:
+.nextCycle:
      push bc
-     call .time_access
+     call .timeAccess
      pop  bc
      cp   c
      jr   nz,.found
      inc  b
      ld   a,b
      cp   10
-     jr   nz,.next_cycle
+     jr   nz,.nextCycle
      ld   b,0
 
 .found:
@@ -122,18 +122,18 @@ main:
 ; Tests for read
 ; B -> which cycle to test
 ; A <- timer value after test
-.time_access:
-     call sync_tima_64
+.timeAccess:
+     call SyncTIMA64
      ld   a,9
      sub  b
-     call delay_a_20_cycles
+     call DelayA20Cycles
      xor  a    ; clear flags
      ld   hl,tima_64
      ld   [hl],$7F
      ld   bc,tima_64
      ld   de,tima_64
      ld   a,$7F
-instr:
+Instr:
      nop
      nop
      nop

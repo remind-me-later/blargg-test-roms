@@ -7,21 +7,21 @@ DEF TEST_NAME EQUS "09-wave read while on"
 INCLUDE "shell.inc"
 INCLUDE "apu.s"
 
-main:
+Main:
      wreg rAUDTERM,0    ; mute sound
-     loop_n_times test,69
+     loop_n_times Test,69
      check_crc_dmg_cgb $118A3620,$270DA9A3
-     jp   tests_passed
+     jp   TestsPassed
 
-test:
+Test:
      add  $99
      ld   b,a
 
      ; Reload wave and have its first
      ; sample read occur 2 clocks earlier
      ; each loop iteration
-     ld   hl,wave
-     call load_wave
+     ld   hl,Wave
+     call LoadWave
      wreg rAUD3ENA,$80  ; enable
      wreg rAUD3LEVEL,$00  ; silent
      ld   a,b
@@ -33,11 +33,11 @@ test:
      delay_clocks 176
      lda  rAUD3WAVE_0
 
-     call print_a
+     call PrintA
 
      ret
 
-wave:
+Wave:
      db $00, $11, $22, $33, $44, $55, $66, $77
      db $88, $99, $AA, $BB, $CC, $DD, $EE, $FF
 

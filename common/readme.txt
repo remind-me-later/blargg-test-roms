@@ -21,6 +21,13 @@ type, RAM size and so on). Include paths, in this order:
 
 	-I ../common/shellN/ -I ../common/ -I ../hardware.inc/
 
+Names. They follow the style guide of gbdev.io: labels are PascalCase
+(StdReset, PrintCRC), local labels camelCase (.nextInstr), RAM labels have a
+prefix for the kind of RAM (wTestCode, hChecksum, sFinalResult), constants are
+CAPS_SNAKE (CONSOLE_WIDTH) and macros snake_case (set_test, delay_msec). The
+names are Blargg's, written that way. A trailing underscore (SetTest_,
+PrintStr_) is a helper of the routine or macro that has the name without it.
+
 RAM. The variables of the shell are listed in variables.inc of each shell,
 as labels in sections with fixed addresses (the ROMs have to be the released
 ones), named as the style guide of gbdev.io says: w for WRAM, h for HRAM, s
