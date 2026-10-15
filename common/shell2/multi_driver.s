@@ -39,176 +39,176 @@ POPS
 ; The way back from the tests, at a fixed address
 PUSHS
 SECTION "return from test", ROM0[$3F00]
-     jp   TestExited
+	jp   TestExited
 POPS
 
 Reset:
-     jp   StdReset
+	jp   StdReset
 
 Main:
-     ld   sp,$C000
-     setb hFirstFailed,0
-     setb hTestNumber,-1
+	ld   sp,$C000
+	setb hFirstFailed,0
+	setb hTestNumber,-1
 
 .nextTest:
-     lda  hTestNumber
-     inc  a
-     sta  hTestNumber
+	lda  hTestNumber
+	inc  a
+	sta  hTestNumber
 
-     ; Select the bank of the test, four to a bank
-     srl  a
-     srl  a
-     inc  a
-     ld   [rROMB],a
+	; Select the bank of the test, four to a bank
+	srl  a
+	srl  a
+	inc  a
+	ld   [rROMB],a
 
-     ; DE = address of its block
-     lda  hTestNumber
-     swap a
-     and  $30
-     or   $40
-     ld   d,a
-     ld   e,0
+	; DE = address of its block
+	lda  hTestNumber
+	swap a
+	and  $30
+	or   $40
+	ld   d,a
+	ld   e,0
 
-     ; The blocks end at the first one that doesn't start with a JP
-     ld   a,[de]
-     cp   $C3
-     jp   nz,.finished
+	; The blocks end at the first one that doesn't start with a JP
+	ld   a,[de]
+	cp   $C3
+	jp   nz,.finished
 
-     call PrintTestNumber
-     call RunTest
-     call ReportTest
-     jp   .nextTest
+	call PrintTestNumber
+	call RunTest
+	call ReportTest
+	jp   .nextTest
 
 .finished:
-     call PrintNewline
-     lda  hFirstFailed
-     or   a
-     jr   z,.allPassed
-     call PrintNewline
-     print_str "Run failed tests",NEWLINE
-     print_str "individually for",NEWLINE
-     print_str "more details.",NEWLINE
+	call PrintNewline
+	lda  hFirstFailed
+	or   a
+	jr   z,.allPassed
+	call PrintNewline
+	print_str "Run failed tests",NEWLINE
+	print_str "individually for",NEWLINE
+	print_str "more details.",NEWLINE
 
 .allPassed:
-     ; Beep
-     call SoundOff
-     call SoundOn
-     wreg rAUD1LEN,$80
-     wreg rAUD1ENV,$F1
-     wreg rAUD1LOW,$00
-     ld   c,5
+	; Beep
+	call SoundOff
+	call SoundOn
+	wreg rAUD1LEN,$80
+	wreg rAUD1ENV,$F1
+	wreg rAUD1LOW,$00
+	ld   c,5
 .beep:
-     wreg rAUD1HIGH,$87
-     delay_msec 250
-     dec  c
-     jr   nz,.beep
+	wreg rAUD1HIGH,$87
+	delay_msec 250
+	dec  c
+	jr   nz,.beep
 
-     ; Exit with the number of the first test that failed
-     lda  hFirstFailed
-     ld   [wTestCode],a
-     jp   TestsDone
+	; Exit with the number of the first test that failed
+	lda  hFirstFailed
+	ld   [wTestCode],a
+	jp   TestsDone
 
 
 ; Runs the test whose block is at DE
 RunTest:
-     ; Save SP, as the test will use its own stack
-     ld   hl,sp+0
-     ld   a,l
-     ld   [sSavedSp],a
-     ld   a,h
-     ld   [sSavedSp+1],a
+	; Save SP, as the test will use its own stack
+	ld   hl,sp+0
+	ld   a,l
+	ld   [sSavedSp],a
+	ld   a,h
+	ld   [sSavedSp+1],a
 
-     ; Save the variables of the driver
-     push de
-     ld   hl,sSavedState
-     ld   bc,STATE_SIZE
-     ld   de,NV_RAM_START
-     call CopyBytes
-     ld   bc,DP_STATE_SIZE
-     ld   de,HRAM_START
-     call CopyBytes
-     pop  hl
+	; Save the variables of the driver
+	push de
+	ld   hl,sSavedState
+	ld   bc,STATE_SIZE
+	ld   de,NV_RAM_START
+	call CopyBytes
+	ld   bc,DP_STATE_SIZE
+	ld   de,HRAM_START
+	call CopyBytes
+	pop  hl
 
-     ; Copy the block and run it
-     ld   c,$10
-     jp   CopyToWRAMThenRun
+	; Copy the block and run it
+	ld   c,$10
+	jp   CopyToWRAMThenRun
 
-     ; Back from the test at $3F00, with its result in A
+	; Back from the test at $3F00, with its result in A
 TestExited:
-     ld   d,a
-     ld   a,[sSavedSp]
-     ld   l,a
-     ld   a,[sSavedSp+1]
-     ld   h,a
-     ld   sp,hl
-     ld   a,d
-     push af
+	ld   d,a
+	ld   a,[sSavedSp]
+	ld   l,a
+	ld   a,[sSavedSp+1]
+	ld   h,a
+	ld   sp,hl
+	ld   a,d
+	push af
 
-     ; Restore the variables of the driver
-     ld   de,sSavedState
-     ld   bc,STATE_SIZE
-     ld   hl,NV_RAM_START
-     call CopyBytes
-     ld   bc,DP_STATE_SIZE
-     ld   hl,HRAM_START
-     call CopyBytes
+	; Restore the variables of the driver
+	ld   de,sSavedState
+	ld   bc,STATE_SIZE
+	ld   hl,NV_RAM_START
+	call CopyBytes
+	ld   bc,DP_STATE_SIZE
+	ld   hl,HRAM_START
+	call CopyBytes
 
-     call CPUNorm
-     pop  af
-     ret
+	call CPUNorm
+	pop  af
+	ret
 
 
 ; Copies BC bytes from DE to HL
 CopyBytes:
-     ld   a,[de]
-     inc  de
-     ld   [hli],a
-     dec  bc
-     ld   a,b
-     or   c
-     jr   nz,CopyBytes
-     ret
+	ld   a,[de]
+	inc  de
+	ld   [hli],a
+	dec  bc
+	ld   a,b
+	or   c
+	jr   nz,CopyBytes
+	ret
 
 
 ; Prints the number of the test
 PrintTestNumber:
-     lda  hTestNumber
-     inc  a
-     call PrintDec2
-     call ConsoleFlush
-     ret
+	lda  hTestNumber
+	inc  a
+	call PrintDec2
+	call ConsoleFlush
+	ret
 
 
 ; Reports result A of the test: ok, or A in inverse. Remembers the first
 ; failure.
 ReportTest:
-     print_str ":"
-     or   a
-     jr   nz,.failed
-     print_str "ok  "
-     call ConsoleFlush
-     ret
+	print_str ":"
+	or   a
+	jr   nz,.failed
+	print_str "ok  "
+	call ConsoleFlush
+	ret
 
 .failed:
-     push af
-     lda  hFirstFailed
-     or   a
-     jr   nz,.keepFirst
-     lda  hTestNumber
-     inc  a
-     sta  hFirstFailed
+	push af
+	lda  hFirstFailed
+	or   a
+	jr   nz,.keepFirst
+	lda  hTestNumber
+	inc  a
+	sta  hFirstFailed
 .keepFirst:
-     lda  hTestNumber
-     inc  a
-     call PlayByte
-     ld   a,d
-     call PlayByte
-     call ConsoleInverse
-     pop  af
-     call PrintDec2
-     call ConsoleNormal
-     print_str "  "
-     call ConsoleFlush
-     ret
+	lda  hTestNumber
+	inc  a
+	call PlayByte
+	ld   a,d
+	call PlayByte
+	call ConsoleInverse
+	pop  af
+	call PrintDec2
+	call ConsoleNormal
+	print_str "  "
+	call ConsoleFlush
+	ret
 
 INCLUDE "shell_end.inc"

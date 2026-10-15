@@ -11,4 +11,3 @@
 DEF CONSOLE_WIDTH EQU 20
 
 ; Its variables, wConsoleBuf and the following, are in variables.inc
-

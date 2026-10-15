@@ -24,89 +24,89 @@ POPS
 ; Sets SP to word at addr
 ; Preserved: BC, DE
 MACRO ldsp ; addr
-     ld   a,[\1]
-     ld   l,a
-     ld   a,[(\1)+1]
-     ld   h,a
-     ld   sp,hl
+	ld   a,[\1]
+	ld   l,a
+	ld   a,[(\1)+1]
+	ld   h,a
+	ld   sp,hl
 ENDM
 
 Main:
-     call CPUFast
-     call InitCRCFast
-     call ChecksumsInit
-     set_test 0
+	call CPUFast
+	call InitCRCFast
+	call ChecksumsInit
+	set_test 0
 
-     ld   hl,Instrs
+	ld   hl,Instrs
 .nextInstr:
-     ; Copy instruction
-     ld   a,[hli]
-     ld   [wInstr],a
-     ld   a,[hli]
-     ld   [wInstr+1],a
-     ld   a,[hli]
-     ld   [wInstr+2],a
-     push hl
+	; Copy instruction
+	ld   a,[hli]
+	ld   [wInstr],a
+	ld   a,[hli]
+	ld   [wInstr+1],a
+	ld   a,[hli]
+	ld   [wInstr+2],a
+	push hl
 
-     ; Put JP InstrDone after it
-     ld   a,$C3
-     ld   [wInstr+3],a
-     ld   a,LOW(InstrDone)
-     ld   [wInstr+4],a
-     ld   a,HIGH(InstrDone)
-     ld   [wInstr+5],a
+	; Put JP InstrDone after it
+	ld   a,$C3
+	ld   [wInstr+3],a
+	ld   a,LOW(InstrDone)
+	ld   [wInstr+4],a
+	ld   a,HIGH(InstrDone)
+	ld   [wInstr+5],a
 
-     call ResetCRC
-     call TestInstr
+	call ResetCRC
+	call TestInstr
 
-     call ChecksumsCompare
-     jr   z,.passed
+	call ChecksumsCompare
+	jr   z,.passed
 
-     set_test 1
-     ld   a,[wInstr]
-     call PrintA
-     cp   $CB
-     jr   nz,.oneByte
-     ld   a,[wInstr+1]
-     call PrintA
+	set_test 1
+	ld   a,[wInstr]
+	call PrintA
+	cp   $CB
+	jr   nz,.oneByte
+	ld   a,[wInstr+1]
+	call PrintA
 .oneByte:
 
 .passed:
-     ; Next instruction
-     pop  hl
-     ld   a,l
-     cp   LOW(InstrsEnd)
-     jr   nz,.nextInstr
-     ld   a,h
-     cp   HIGH(InstrsEnd)
-     jr   nz,.nextInstr
+	; Next instruction
+	pop  hl
+	ld   a,l
+	cp   LOW(InstrsEnd)
+	jr   nz,.nextInstr
+	ld   a,h
+	cp   HIGH(InstrsEnd)
+	jr   nz,.nextInstr
 
-     jp   TestsDone
+	jp   TestsDone
 
 
 ; Updates checksum with AF, BC, DE, and HL
 ChecksumAFBCDEHL:
-     push hl
+	push hl
 
-     push af
-     update_crc_fast_inline
-     pop  hl
-     ld   a,l
-     update_crc_fast_inline
+	push af
+	update_crc_fast_inline
+	pop  hl
+	ld   a,l
+	update_crc_fast_inline
 
-     ld   a,b
-     update_crc_fast_inline
-     ld   a,c
-     update_crc_fast_inline
+	ld   a,b
+	update_crc_fast_inline
+	ld   a,c
+	update_crc_fast_inline
 
-     ld   a,d
-     update_crc_fast_inline
-     ld   a,e
-     update_crc_fast_inline
+	ld   a,d
+	update_crc_fast_inline
+	ld   a,e
+	update_crc_fast_inline
 
-     pop  de
-     ld   a,d
-     update_crc_fast_inline
-     ld   a,e
-     update_crc_fast_inline
-     ret
+	pop  de
+	ld   a,d
+	update_crc_fast_inline
+	ld   a,e
+	update_crc_fast_inline
+	ret

@@ -45,11 +45,11 @@ hShellVariablesEnd:
 POPS
 
 IF !DEF(CUSTOM_PRINT)
-     PUSHS "Text output", SRAM[$A000]
+	PUSHS "Text output", SRAM[$A000]
 
 sFinalResult:       db  ; exit code of the test, $80 while it runs
 sSignature:         ds 3 ; $DE $B0 $61, which tells that there is text output
 sTextOutput:        ds SAVED_STATE_START - $A004 ; zero-terminated string
 
-     POPS
+	POPS
 ENDC

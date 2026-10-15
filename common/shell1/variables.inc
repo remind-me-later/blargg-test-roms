@@ -8,20 +8,20 @@
 ; ones.
 
 IF !DEF(BSS_START)
-     ; Start of the variables in WRAM; the driver of a multi-test ROM has its own
-     DEF BSS_START EQU $D800
+	; Start of the variables in WRAM; the driver of a multi-test ROM has its own
+	DEF BSS_START EQU $D800
 ENDC
 
 IF !DEF(HRAM_START)
-     ; Start of the variables in HRAM ($FF80-$FFFE)
-     DEF HRAM_START EQU $FF80
+	; Start of the variables in HRAM ($FF80-$FFFE)
+	DEF HRAM_START EQU $FF80
 ENDC
 
 ; The driver of a multi-test ROM keeps its variables at other addresses
 IF DEF(MULTI_DRIVER)
-     DEF RAM_OWNER EQUS " of the driver"
+	DEF RAM_OWNER EQUS " of the driver"
 ELSE
-     DEF RAM_OWNER EQUS ""
+	DEF RAM_OWNER EQUS ""
 ENDC
 
 PUSHS UNION "Shell variables{RAM_OWNER}", WRAMX[BSS_START], BANK[1]
@@ -34,7 +34,7 @@ wResult:            db  ; test code, set by set_test
 wTestName:          dw  ; text of the test, set by set_test
 
 IF !DEF(BUILD_MULTI)
-     ; The tests of a multi-test ROM don't use the console
+	; The tests of a multi-test ROM don't use the console
 wConsoleBuf:        ds CONSOLE_WIDTH
 wConsolePos:        db
 wConsoleMode:       db

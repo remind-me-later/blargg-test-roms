@@ -6,86 +6,86 @@ INCLUDE "shell.inc"
 INCLUDE "instr_test.s"
 
 Instrs:
-     db $36, 0, 0 ; LD   (HL),$00
-     db $06, 0, 0 ; LD   B,$00
-     db $0E, 0, 0 ; LD   C,$00
-     db $16, 0, 0 ; LD   D,$00
-     db $1E, 0, 0 ; LD   E,$00
-     db $26, 0, 0 ; LD   H,$00
-     db $2E, 0, 0 ; LD   L,$00
-     db $3E, 0, 0 ; LD   A,$00
-     db $F6, 0, 0 ; OR   $00
-     db $FE, 0, 0 ; CP   $00
-     db $C6, 0, 0 ; ADD  $00
-     db $CE, 0, 0 ; ADC  $00
-     db $D6, 0, 0 ; SUB  $00
-     db $DE, 0, 0 ; SBC  $00
-     db $E6, 0, 0 ; AND  $00
-     db $EE, 0, 0 ; XOR  $00
+	db $36, 0, 0 ; LD   (HL),$00
+	db $06, 0, 0 ; LD   B,$00
+	db $0E, 0, 0 ; LD   C,$00
+	db $16, 0, 0 ; LD   D,$00
+	db $1E, 0, 0 ; LD   E,$00
+	db $26, 0, 0 ; LD   H,$00
+	db $2E, 0, 0 ; LD   L,$00
+	db $3E, 0, 0 ; LD   A,$00
+	db $F6, 0, 0 ; OR   $00
+	db $FE, 0, 0 ; CP   $00
+	db $C6, 0, 0 ; ADD  $00
+	db $CE, 0, 0 ; ADC  $00
+	db $D6, 0, 0 ; SUB  $00
+	db $DE, 0, 0 ; SBC  $00
+	db $E6, 0, 0 ; AND  $00
+	db $EE, 0, 0 ; XOR  $00
 InstrsEnd:
 
 TestInstr:
-     ld   c,$00
-     call Test
-     ld   c,$10
-     call Test
-     ld   c,$E0
-     call Test
-     ld   c,$F0
-     call Test
-     ret
+	ld   c,$00
+	call Test
+	ld   c,$10
+	call Test
+	ld   c,$E0
+	call Test
+	ld   c,$F0
+	call Test
+	ret
 
 Test:
-     ; Go through each value for A
-     ld   hl,Values
+	; Go through each value for A
+	ld   hl,Values
 ALoop:
-     ld   b,[hl]
-     push hl
+	ld   b,[hl]
+	push hl
 
-     ; Go through each value for immediate data
-     ld   hl,Values
+	; Go through each value for immediate data
+	ld   hl,Values
 ValuesLoop:
-     push bc
-     push hl
+	push bc
+	push hl
 
-     ; Set registers
-     push bc
-     ld   a,[hl]
-     ld   [wInstr+1],a
-     ld   bc,$1234
-     ld   de,$5678
-     ld   hl,wRpTemp
-     pop  af
+	; Set registers
+	push bc
+	ld   a,[hl]
+	ld   [wInstr+1],a
+	ld   bc,$1234
+	ld   de,$5678
+	ld   hl,wRpTemp
+	pop  af
 
 ;    call PrintRegs
-     jp   wInstr
+	jp   wInstr
 InstrDone:
 
-     ; Checksum registers and (hl)
-     call ChecksumAFBCDEHL
-     ld   a,[wRpTemp]
-     call UpdateCRCFast
+	; Checksum registers and (hl)
+	call ChecksumAFBCDEHL
+	ld   a,[wRpTemp]
+	call UpdateCRCFast
 
-     pop  hl
-     pop  bc
-     inc  hl
-     ld   a,l
-     cp   LOW(ValuesEnd)
-     jr   nz,ValuesLoop
+	pop  hl
+	pop  bc
+	inc  hl
+	ld   a,l
+	cp   LOW(ValuesEnd)
+	jr   nz,ValuesLoop
 
-     pop  hl
-     inc  hl
-     ld   a,l
-     cp   LOW(ValuesEnd)
-     jr   nz,ALoop
+	pop  hl
+	inc  hl
+	ld   a,l
+	cp   LOW(ValuesEnd)
+	jr   nz,ALoop
 
-     ret
+	ret
 
 Values:
-     db $00, $01, $0F, $10, $1F, $7F, $80, $F0, $FF
+	db $00, $01, $0F, $10, $1F, $7F, $80, $F0, $FF
 ValuesEnd:
 
 Checksums:
-     db $7F, $7F, $05, $B7, $85, $82, $94, $B6, $D8, $0A, $D6, $F5, $44, $8C, $37, $2A, $FB, $46, $05, $FA, $BD, $2F, $9E, $C1, $5A, $56, $2A, $DA, $D0, $EE, $14, $BA, $EA, $42, $36, $D2, $87, $28, $AB, $30, $4D, $A2, $63, $C6, $34, $4E, $55, $08, $9B, $1C, $97, $0E, $49, $F8, $73, $D4, $86, $C7, $DC, $C6, $03, $BF, $43, $21,
+	db $7F, $7F, $05, $B7, $85, $82, $94, $B6, $D8, $0A, $D6, $F5, $44, $8C, $37, $2A, $FB, $46, $05, $FA, $BD, $2F, $9E, $C1, $5A, $56, $2A, $DA, $D0, $EE, $14, $BA, $EA, $42, $36, $D2, $87, $28, $AB, $30, $4D, $A2, $63, $C6, $34, $4E, $55, $08, $9B, $1C, $97, $0E, $49, $F8, $73, $D4, $86, $C7, $DC, $C6, $03, $BF, $43, $21,
 
 INCLUDE "shell_end.inc"

@@ -10,65 +10,65 @@ INCLUDE "shell.inc"
 INCLUDE "ppu.s"
 
 Main:
-     ld   bc,$0000
-     print_str "IE IF IF DE"
-     call PrintNewline
+	ld   bc,$0000
+	print_str "IE IF IF DE"
+	call PrintNewline
 
-     ; Needs the LCD on
-     call WaitVBL
-     wreg rLCDC,LCDC_ON | LCDC_BLOCK01 | LCDC_BG_ON
+	; Needs the LCD on
+	call WaitVBL
+	wreg rLCDC,LCDC_ON | LCDC_BLOCK01 | LCDC_BG_ON
 
-     ld   bc,$0110
-     call Test
-     ld   bc,$0100
-     call Test
-     ld   bc,$0101
-     call Test
-     ld   bc,$1100
-     call Test
-     ld   bc,$1110
-     call Test
-     ld   bc,$1111
-     call Test
-     ld   bc,$E100
-     call Test
-     ld   bc,$E1E0
-     call Test
-     ld   bc,$E1E1
-     call Test
+	ld   bc,$0110
+	call Test
+	ld   bc,$0100
+	call Test
+	ld   bc,$0101
+	call Test
+	ld   bc,$1100
+	call Test
+	ld   bc,$1110
+	call Test
+	ld   bc,$1111
+	call Test
+	ld   bc,$E100
+	call Test
+	ld   bc,$E1E0
+	call Test
+	ld   bc,$E1E1
+	call Test
 
-     check_crc $B29060A6
-     jp   TestsPassed
+	check_crc $B29060A6
+	jp   TestsPassed
 
 
 ; Does a HALT with IE = B and IF = C, then another with the instruction
 ; after it as LD DE,$0C04, and prints IE, IF, then IF and DE
 Test:
-     call PrintB
-     call PrintC
+	call PrintB
+	call PrintC
 
-     di
-     wreg rIE,$01
-     wreg rIF,$00
-     halt
-     nop
+	di
+	wreg rIE,$01
+	wreg rIF,$00
+	halt
+	nop
 
-     ld   a,b
-     ldh  [rIE],a
-     ld   de,$1234
-     ld   a,c
-     ldh  [rIF],a
-     nop
-     nop
-     halt
-     ld   de,$0C04
-     nop
+	ld   a,b
+	ldh  [rIE],a
+	ld   de,$1234
+	ld   a,c
+	ldh  [rIF],a
+	nop
+	nop
+	halt
+	ld   de,$0C04
+	nop
 
-     delay_msec 100
-     lda  rIF
-     call PrintA
-     call PrintDE
-     call PrintNewline
-     ret
+	delay_msec 100
+	lda  rIF
+	call PrintA
+	call PrintDE
+	call PrintNewline
+	ret
 
 INCLUDE "shell_end.inc"
