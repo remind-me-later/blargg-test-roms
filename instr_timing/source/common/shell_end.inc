@@ -1,6 +1,25 @@
 ; The shell code that goes after the program (WLA-DX placed it there with
 ; `.section "runtime" returnOrg`). Included at the end of every program.
 
+IF DEF(BUILD_MULTI)
+
+; A test of the multi-test ROM prints nothing and returns to the driver
+init_runtime:
+     ret
+
+std_print:
+     ret
+
+post_exit:
+     jp   MULTI_RETURN
+forever:
+     jr   forever
+
+play_byte:
+     ret
+
+ELSE
+
 INCLUDE "console.s"
 
 init_runtime:
@@ -27,3 +46,5 @@ forever:
 
 play_byte:
      ret
+
+ENDC

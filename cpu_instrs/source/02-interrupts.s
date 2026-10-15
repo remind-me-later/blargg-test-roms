@@ -68,10 +68,13 @@ interrupt_addr:
      
      jp   tests_passed
 
+; The multi-test ROM has this vector already, from test 07
+IF !DEF(BUILD_MULTI)
 PUSHS
 SECTION "vector 1", ROM0[$50]
      inc a
      ret
 POPS
+ENDC
 
 INCLUDE "shell_end.inc"

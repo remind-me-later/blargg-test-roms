@@ -55,21 +55,72 @@ wanted() {
 tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT
 
-# build_rom SOURCE_DIR SOURCE_FILE OUTPUT PAD
+# option NAME OPTIONS: the value of NAME=value in the comma-separated OPTIONS
+option() {
+    local item
+    for item in ${2//,/ }; do
+        [[ $item == "$1="* ]] && { echo "${item#*=}"; return; }
+    done
+}
+
+# build_rom SOURCE_DIR SOURCE_FILES OUTPUT PAD OPTIONS
+#
+# A multi-test ROM has several source files separated by |: the driver, which
+# runs from bank 0, and the tests, each of which is assembled as one block of
+# the ROM (BUILD_MULTI, MULTI_TEST) and linked with the driver.
+#
+# OPTIONS:
+#   size=BYTES       pad the ROM to this size with the pad byte
+#   checksum=bank0   the global checksum of the released ROM covers bank 0
+#                    only: it was computed before the tests were added to it
 build_rom() {
-    local srcdir=$1 file=$2 out=$here/build/$3 pad=$4
+    local srcdir=$1 files=$2 out=$here/build/$3 pad=$4 options=${5:-}
+    local -a sources objs=()
+    IFS='|' read -r -a sources <<< "$files"
     mkdir -p "$(dirname "$out")"
-    (cd "$here/$srcdir" && rgbasm -I common/ -o "$tmp/rom.o" "$file")
-    rgblink -p "$pad" -o "$out" "$tmp/rom.o"
-    rgbfix -f hg "$out"
+    if [ ${#sources[@]} -eq 1 ]; then
+        (cd "$here/$srcdir" && rgbasm -I common/ -o "$tmp/0.o" "${sources[0]}")
+        objs=("$tmp/0.o")
+    else
+        local i
+        (cd "$here/$srcdir" && rgbasm -I common/ -o "$tmp/driver.o" "${sources[0]}")
+        objs=("$tmp/driver.o")
+        for ((i = 1; i < ${#sources[@]}; i++)); do
+            (cd "$here/$srcdir" && rgbasm -I common/ -D BUILD_MULTI=1 -D MULTI_TEST=$((i - 1)) \
+                -o "$tmp/test$i.o" "${sources[i]}")
+            objs+=("$tmp/test$i.o")
+        done
+    fi
+    rgblink -p "$pad" -o "$out" "${objs[@]}"
+
+    local size
+    size=$(option size "$options")
+    if [ -n "$size" ]; then
+        local have
+        have=$(stat -c %s "$out")
+        if [ "$have" -lt "$size" ]; then
+            head -c $((size - have)) /dev/zero | tr '\0' "$(printf '\\%03o' $((pad)))" >> "$out"
+        fi
+    fi
+
+    if [ "$(option checksum "$options")" = bank0 ]; then
+        rgbfix -f h "$out"
+        local sum
+        sum=$(head -c 16384 "$out" | od -An -v -tu1 -w16 \
+            | awk '{ for (i = 1; i <= NF; i++) s += $i } END { print s % 65536 }')
+        printf "$(printf '\\x%02x\\x%02x' $((sum >> 8)) $((sum & 255)))" \
+            | dd of="$out" bs=1 seek=334 conv=notrunc status=none
+    else
+        rgbfix -f hg "$out"
+    fi
 }
 
 built=0
 failed=0
-while IFS=$'\t' read -r srcdir file out pad; do
+while IFS=$'\t' read -r srcdir file out pad options; do
     [[ -z $srcdir || $srcdir == \#* ]] && continue
     wanted "$out" || continue
-    if ! build_rom "$srcdir" "$file" "$out" "$pad"; then
+    if ! build_rom "$srcdir" "$file" "$out" "$pad" "$options"; then
         echo "FAILED     $out"
         failed=$((failed + 1))
         continue

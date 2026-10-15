@@ -31,10 +31,12 @@ DEF std_stack = $DFFF
 
 ; Copies $1000 bytes from HL to $C000, then jumps to it.
 ; A is preserved for jumped-to code.
+IF !DEF(BUILD_MULTI)
+
 SECTION "copy to WRAM", ROM0[$200]
 copy_to_wram_then_run:
      ld   b,a
-
+     
      ld   de,$C000
      ld   c,$10
 :    ld   a,[hli]
@@ -44,9 +46,11 @@ copy_to_wram_then_run:
      inc  d
      dec  c
      jr   nz,:-
-
+     
      ld   a,b
      jp   $C000
+
+IF !DEF(MULTI_DRIVER)
 
 reset:
      ; Run code from $C000, as is done on devcart. This
@@ -58,6 +62,17 @@ reset:
 SECTION "program", ROMX[$4000], BANK[1]
 LOAD "program in WRAM", WRAM0[$C000]
      jp   std_reset
+
+ENDC
+
+ELSE
+
+; One of the tests of the multi-test ROM, stored in its own block.
+SECTION "multi test {MULTI_TEST}", ROMX[$4000 + (MULTI_TEST % 4) * $1000], BANK[1 + MULTI_TEST / 4]
+LOAD UNION "multi test in WRAM", WRAM0[$C000]
+     jp   std_reset
+
+ENDC
 
 ; Common routines
 INCLUDE "gb.inc"

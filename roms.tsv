@@ -1,4 +1,4 @@
-# source directory	source file	output (relative path of the ROM)	pad byte
+# source directory	source file, or driver|test|test... for a multi-test ROM	output (relative path of the ROM)	pad byte	options
 cpu_instrs/source	01-special.s	cpu_instrs/individual/01-special.gb	0
 cpu_instrs/source	02-interrupts.s	cpu_instrs/individual/02-interrupts.gb	0
 cpu_instrs/source	03-op sp,hl.s	cpu_instrs/individual/03-op sp,hl.gb	0
@@ -51,3 +51,5 @@ cgb_sound/source	11-regs after power.s	cgb_sound/rom_singles/11-regs after power
 cgb_sound/source	12-wave.s	cgb_sound/rom_singles/12-wave.gb	0
 interrupt_time/source	interrupt_time.s	interrupt_time/interrupt_time.gb	0
 halt_bug/source	halt_bug.s	halt_bug.gb	0
+cpu_instrs/source	multi.s|01-special.s|02-interrupts.s|03-op sp,hl.s|04-op r,imm.s|05-op rp.s|06-ld r,r.s|07-jr,jp,call,ret,rst.s|08-misc instrs.s|09-op r,r.s|10-bit ops.s|11-op a,(hl).s	cpu_instrs/cpu_instrs.gb	0	size=65536,checksum=bank0
+mem_timing/source	multi.s|01-read_timing.s|02-write_timing.s|03-modify_timing.s	mem_timing/mem_timing.gb	0	size=65536,checksum=bank0

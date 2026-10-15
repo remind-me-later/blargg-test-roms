@@ -35,7 +35,12 @@ ENDC
 
      ds $147 - @
      db 1           ; cartridge type: MBC1
-     ds $150 - @    ; 32K ROM, no RAM; rgbfix sets the checksums
+IF DEF(MULTI_DRIVER)
+     db 1           ; 64K ROM
+ELSE
+     db 0           ; 32K ROM
+ENDC
+     ds $150 - @    ; no RAM; rgbfix sets the checksums
 
 
 ;;;; Shell
