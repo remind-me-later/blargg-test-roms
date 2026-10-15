@@ -1,25 +1,30 @@
 Game Boy Tests Source Code
 --------------------------
 
-Building with wla-dx
---------------------
-To assemble a test ROM with wla-dx, use the following commands:
+Building with RGBDS
+-------------------
+The tests are assembled with RGBDS (rgbasm, rgblink and rgbfix), tested
+with version 1.0.4. To assemble a test ROM by hand, from this directory:
 
-	wla -o source_filename_here.s test.o
-	wlalink linkfile test.gb
+	rgbasm -I common/ -o test.o source_filename_here.s
+	rgblink -o test.gb test.o
+	rgbfix -f hg test.gb
 
-To assemble as a GBS music file:
-	
-	wla -o source_filename_here.s test.o -DBUILD_GBS
-	wlalink linkfile test.gbs
+build.sh, in the main directory of the repository, builds all the ROMs
+that way and compares them with the released ones.
 
-Note that some tests might only work when built as a ROM or GBS file,
-but not both.
+The sources were written for WLA-DX and have been converted; the ROMs they
+give are the same, byte for byte. The GBS and devcart builds that WLA-DX
+had are not supported.
 
-Some tests might include a ROM/GBS that has all the tests combined.
-Building such a multi-test is complex and the necessary files aren't
-included.
+The multi-test ROM is built from multi.s, the driver, and one block per
+test (built with BUILD_MULTI and MULTI_TEST defined). Its source was not
+released: multi.s is a reconstruction, so build.sh does it.
 
+Tests include "shell.inc" at the beginning and "shell_end.inc" at the end.
+The code of the common/ libraries that WLA-DX put after the test is in
+shell_end.inc, and the definitions and macros of the libraries are in
+the .inc files.
 
 Framework
 ---------
@@ -36,8 +41,8 @@ goes into an infinite loop. If the code is 0, it doesn't do anything,
 otherwise it reports the code. Code 1 is reported as "Failed", and the
 rest as "Error <code>".
 
-The default is to build a ROM. Defining BUILD_GBS will build as an GBS.
-The other build types aren't supported due to their complexity. I load
+The default is to build a ROM. The other build types (GBS, devcart,
+multi-test) aren't supported due to their complexity. I load
 the code into RAM at $C000 since my devcart requires it, and I don't
 want the normal ROM to differ in any way from what I've tested. This
 also allows easy self-modifying code.

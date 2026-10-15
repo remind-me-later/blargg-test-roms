@@ -78,15 +78,19 @@ tests which print lots of information that scrolls off screen.
 
 Source code
 -----------
-Source code is included for all tests, in source/. It can be used to
-build the individual test ROMs. Code for the multi test isn't included
-due to the complexity of putting everything together.
+Source code is included for all tests, in source/. It builds the
+individual test ROMs, and with multi.s, the multi test.
 
-Code is written for the wla-dx assembler. To assemble a particular test,
+Code is written for the RGBDS assembler (it was converted from WLA-DX,
+and gives the same ROMs). To assemble a particular test, from source/,
 execute
 
-	wla -o "source_filename.s" test.o
-	wlalink linkfile test.gb
+	rgbasm -I common/ -o test.o "source_filename.s"
+	rgblink -o test.gb test.o
+	rgbfix -f hg test.gb
+
+build.sh, in the main directory of the repository, builds all the ROMs
+and compares them with the released ones.
 
 Test code uses a common shell framework contained in common/.
 
