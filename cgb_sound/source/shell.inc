@@ -1,27 +1,11 @@
-; Included at beginning of all programs
-; that use standard shell
+; Included at beginning of all programs that use standard shell. The program
+; ends with INCLUDE "shell_end.inc", which adds the shell code that has to
+; follow it in the ROM.
+;
+; Assemble with the common/ directory on the include path:
+;   rgbasm -I common/ -o test.o test.s
 
-; Get include files from common/
-.incdir "common"
+; The released ROMs were built for one kind of hardware.
+DEF REQUIRE_CGB = 1
 
-; Sub-test in a multi-test ROM
-.ifdef BUILD_MULTI
-     .include "build_multi.s"
-.else
-
-; GBS music file
-.ifdef BUILD_GBS
-     .include "build_gbs.s"
-.endif
-
-; Devcart
-.ifdef BUILD_DEVCART
-     .include "build_devcart.s"
-.endif
-
-; GB ROM (default)
-.ifndef RUNTIME_INCLUDED
-     .include "build_rom.s"
-.endif
-
-.endif ; .ifdef BUILD_MULTI
+INCLUDE "build_rom.s"

@@ -3,8 +3,9 @@
 
 ;.define REQUIRE_DMG 1
 ;.define REQUIRE_CGB 1
-.include "shell.inc"
-.include "apu.s"
+DEF TEST_NAME EQUS "\"09-wave read while on\""
+INCLUDE "shell.inc"
+INCLUDE "apu.s"
 
 main:
      wreg NR51,0    ; mute sound
@@ -37,5 +38,7 @@ test:
      ret
 
 wave:
-     .byte $00,$11,$22,$33,$44,$55,$66,$77
-     .byte $88,$99,$AA,$BB,$CC,$DD,$EE,$FF
+     db $00, $11, $22, $33, $44, $55, $66, $77
+     db $88, $99, $AA, $BB, $CC, $DD, $EE, $FF
+
+INCLUDE "shell_end.inc"

@@ -1,8 +1,9 @@
 ; Tests wave channel timer reload and phase rest on trigger,
 ; and access to wave RAM while playing.
-.define REQUIRE_CGB 1
-.include "shell.inc"
-.include "apu.s"
+DEF REQUIRE_CGB = 1
+DEF TEST_NAME EQUS "\"12-wave\""
+INCLUDE "shell.inc"
+INCLUDE "apu.s"
      
 main:
      ld   hl,wave
@@ -44,7 +45,7 @@ main:
      delay_clocks 256
      wreg $FF30,$BC
      wreg NR30,0
-     ld   a,($FF34)
+     ld   a,[$FF34]
      cp   $BC
      jp   nz,test_failed
      
@@ -86,10 +87,10 @@ main:
      jp   tests_passed
      
 test_wave:
--    inc  de             ; 8
-     ld   a,($FF00+c)    ; 8
+:    inc  de             ; 8
+     ld   a,[$FF00+c]    ; 8
      or   a              ; 4
-     jr   z,-            ; 12
+     jr   z,:-            ; 12
      
      ;call     print_a
      ;call     print_de
@@ -108,5 +109,7 @@ test_wave:
      ret
 
 wave:
-     .byte $00,$11,$22,$33,$44,$55,$66,$77
-     .byte $88,$99,$AA,$BB,$CC,$DD,$EE,$FF
+     db $00, $11, $22, $33, $44, $55, $66, $77
+     db $88, $99, $AA, $BB, $CC, $DD, $EE, $FF
+
+INCLUDE "shell_end.inc"

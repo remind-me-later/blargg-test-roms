@@ -1,8 +1,9 @@
 ; Finds highest and lowest frequencies that don't overflow
 ; immediately on trigger, for NR10 values of $00-$07
 
-.include "shell.inc"
-.include "apu.s"
+DEF TEST_NAME EQUS "\"06-overflow on trigger\""
+INCLUDE "shell.inc"
+INCLUDE "apu.s"
 
 main:
      
@@ -15,18 +16,18 @@ shift_loop:
      ld   a,d
      sta  NR10
      ld   bc,$87FF
--    ld   a,c
+:    ld   a,c
      sta  NR13
      ld   a,b
      sta  NR14
      delay_clocks 40
      lda  NR52
      and  1
-     jr   nz,+
+     jr   nz,:+
      dec  bc
      bit  6,b
-     jr   z,-
-+    res  7,b
+     jr   z,:-
+:    res  7,b
      call print_bc
      inc  d
      bit  3,d
@@ -43,18 +44,18 @@ shift_loop2:
      ld   a,d
      sta  NR10
      ld   bc,$8000
--    ld   a,c
+:    ld   a,c
      sta  NR13
      ld   a,b
      sta  NR14
      delay_clocks 40
      lda  NR52
      and  1
-     jr   z,+
+     jr   z,:+
      inc  bc
      bit  6,b
-     jr   z,-
-+    res  7,b
+     jr   z,:-
+:    res  7,b
      call print_bc
      inc  d
      bit  3,d
@@ -62,3 +63,5 @@ shift_loop2:
      check_crc $5A1697EE
      
      jp   tests_passed
+
+INCLUDE "shell_end.inc"

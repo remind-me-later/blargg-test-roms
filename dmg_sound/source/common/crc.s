@@ -1,14 +1,7 @@
-; CRC-32 checksum calculation
-
-.define checksum    dp+0 ; little-endian, complemented
-.redefine dp        dp+4
-
-
 ; Initializes checksum module. Might initialize tables
 ; in the future.
 init_crc:
      jr   reset_crc
-
 
 ; Clears CRC
 ; Preserved: BC, DE, HL
@@ -19,7 +12,6 @@ reset_crc:
      sta  checksum+2
      sta  checksum+3
      ret
-
 
 ; Updates current checksum with byte A
 ; Preserved: AF, BC, DE, HL
@@ -32,22 +24,22 @@ update_crc:
      push bc
      push de
      push hl
-     
+
      ld   hl,checksum+3
-     ld   b,(hl)
+     ld   b,[hl]
      dec  l
-     ld   c,(hl)
+     ld   c,[hl]
      dec  l
-     ld   d,(hl)
+     ld   d,[hl]
      dec  l
-     xor  (hl)
-     
+     xor  [hl]
+
      ld   h,8
--    srl  b
+:    srl  b
      rr   c
      rr   d
      rra
-     jr   nc,+
+     jr   nc,:+
      ld   e,a
      ld   a,b
      xor  $ED
@@ -60,17 +52,17 @@ update_crc:
      ld   d,a
      ld   a,e
      xor  $20
-+    dec  h
-     jr   nz,-
-     
-     ld   h,>checksum
-     ldi  (hl),a
-     ld   (hl),d
+:    dec  h
+     jr   nz,:--
+
+     ld   h,HIGH(checksum)
+     ld   [hli],a
+     ld   [hl],d
      inc  l
-     ld   (hl),c
+     ld   [hl],c
      inc  l
-     ld   (hl),b
-     
+     ld   [hl],b
+
      pop  hl
      pop  de
      pop  bc

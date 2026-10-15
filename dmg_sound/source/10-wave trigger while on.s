@@ -2,8 +2,9 @@
 
 ;.define REQUIRE_DMG 1
 ;.define REQUIRE_CGB 1
-.include "shell.inc"
-.include "apu.s"
+DEF TEST_NAME EQUS "\"10-wave trigger while on\""
+INCLUDE "shell.inc"
+INCLUDE "apu.s"
 
 main:
      wreg NR51,0    ; mute sound
@@ -35,15 +36,17 @@ test:
      ; Print wave RAM
      wreg NR30,0
      ld   c,$30
--    ld   a,($FF00+c)
+:    ld   a,[$FF00+c]
      call print_a
      inc  c
      bit  6,c
-     jr   z,-
+     jr   z,:-
      call print_newline
      
      ret
 
 wave:
-     .byte $00,$11,$22,$33,$44,$55,$66,$77
-     .byte $88,$99,$AA,$BB,$CC,$DD,$EE,$FF
+     db $00, $11, $22, $33, $44, $55, $66, $77
+     db $88, $99, $AA, $BB, $CC, $DD, $EE, $FF
+
+INCLUDE "shell_end.inc"

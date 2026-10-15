@@ -25,3 +25,27 @@ oam_bug/source	5-timing_bug.s	oam_bug/rom_singles/5-timing_bug.gb	0
 oam_bug/source	6-timing_no_bug.s	oam_bug/rom_singles/6-timing_no_bug.gb	0
 oam_bug/source	7-timing_effect.s	oam_bug/rom_singles/7-timing_effect.gb	0
 oam_bug/source	8-instr_effect.s	oam_bug/rom_singles/8-instr_effect.gb	0
+dmg_sound/source	01-registers.s	dmg_sound/rom_singles/01-registers.gb	0
+dmg_sound/source	02-len ctr.s	dmg_sound/rom_singles/02-len ctr.gb	0
+dmg_sound/source	03-trigger.s	dmg_sound/rom_singles/03-trigger.gb	0
+dmg_sound/source	04-sweep.s	dmg_sound/rom_singles/04-sweep.gb	0
+dmg_sound/source	05-sweep details.s	dmg_sound/rom_singles/05-sweep details.gb	0
+dmg_sound/source	06-overflow on trigger.s	dmg_sound/rom_singles/06-overflow on trigger.gb	0
+dmg_sound/source	07-len sweep period sync.s	dmg_sound/rom_singles/07-len sweep period sync.gb	0
+dmg_sound/source	08-len ctr during power.s	dmg_sound/rom_singles/08-len ctr during power.gb	0
+dmg_sound/source	09-wave read while on.s	dmg_sound/rom_singles/09-wave read while on.gb	0
+dmg_sound/source	10-wave trigger while on.s	dmg_sound/rom_singles/10-wave trigger while on.gb	0
+dmg_sound/source	11-regs after power.s	dmg_sound/rom_singles/11-regs after power.gb	0
+dmg_sound/source	12-wave write while on.s	dmg_sound/rom_singles/12-wave write while on.gb	0
+cgb_sound/source	01-registers.s	cgb_sound/rom_singles/01-registers.gb	0
+cgb_sound/source	02-len ctr.s	cgb_sound/rom_singles/02-len ctr.gb	0
+cgb_sound/source	03-trigger.s	cgb_sound/rom_singles/03-trigger.gb	0
+cgb_sound/source	04-sweep.s	cgb_sound/rom_singles/04-sweep.gb	0
+cgb_sound/source	05-sweep details.s	cgb_sound/rom_singles/05-sweep details.gb	0
+cgb_sound/source	06-overflow on trigger.s	cgb_sound/rom_singles/06-overflow on trigger.gb	0
+cgb_sound/source	07-len sweep period sync.s	cgb_sound/rom_singles/07-len sweep period sync.gb	0
+cgb_sound/source	08-len ctr during power.s	cgb_sound/rom_singles/08-len ctr during power.gb	0
+cgb_sound/source	09-wave read while on.s	cgb_sound/rom_singles/09-wave read while on.gb	0
+cgb_sound/source	10-wave trigger while on.s	cgb_sound/rom_singles/10-wave trigger while on.gb	0
+cgb_sound/source	11-regs after power.s	cgb_sound/rom_singles/11-regs after power.gb	0
+cgb_sound/source	12-wave.s	cgb_sound/rom_singles/12-wave.gb	0

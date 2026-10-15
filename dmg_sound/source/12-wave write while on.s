@@ -1,9 +1,10 @@
 ; Writes to wave RAM while playing
 
-.define REQUIRE_DMG 1
+DEF REQUIRE_DMG = 1
 ;.define REQUIRE_CGB 1
-.include "shell.inc"
-.include "apu.s"
+DEF TEST_NAME EQUS "\"12-wave write while on\""
+INCLUDE "shell.inc"
+INCLUDE "apu.s"
 
 main:
      loop_n_times test,69
@@ -36,14 +37,16 @@ test:
      wreg NR30,0
      delay 1000
      ld   hl,WAVE
--    ld   a,(hl+)
+:    ld   a,[hli]
      call print_a
      bit  6,l
-     jr   z,-
+     jr   z,:-
      call print_newline
      
      ret
 
 wave:
-     .byte $00,$11,$22,$33,$44,$55,$66,$77
-     .byte $88,$99,$AA,$BB,$CC,$DD,$EE,$FF
+     db $00, $11, $22, $33, $44, $55, $66, $77
+     db $88, $99, $AA, $BB, $CC, $DD, $EE, $FF
+
+INCLUDE "shell_end.inc"

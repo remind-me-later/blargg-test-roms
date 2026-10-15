@@ -2,9 +2,10 @@
 ; and NR44 is unchanged. While powered off, writes to
 ; NR41 are NOT ignored.
 
-.define REQUIRE_DMG 1
-.include "shell.inc"
-.include "apu.s"
+DEF REQUIRE_DMG = 1
+DEF TEST_NAME EQUS "\"11-regs after power\""
+INCLUDE "shell.inc"
+INCLUDE "apu.s"
 
 main:
      call sync_apu
@@ -50,3 +51,5 @@ main:
      jp   nz,test_failed
      
      jp   tests_passed
+
+INCLUDE "shell_end.inc"

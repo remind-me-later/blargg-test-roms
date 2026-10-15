@@ -1,7 +1,8 @@
 ; Tests basic length counter operation
 
-.include "shell.inc"
-.include "test_chan.s"
+DEF TEST_NAME EQUS "\"02-len ctr\""
+INCLUDE "shell.inc"
+INCLUDE "test_chan.s"
 
 main:
      test_all_chans
@@ -161,3 +162,5 @@ test_chan:
      call should_be_almost_off
      
      ret
+
+INCLUDE "shell_end.inc"

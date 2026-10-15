@@ -4,15 +4,16 @@
 ; - While off, register writes are ignored, but not reads.
 ; - Wave RAM is always readable and writable, and unaffected by power.
 
-.include "shell.inc"
-.include "apu.s"
+DEF TEST_NAME EQUS "\"01-registers\""
+INCLUDE "shell.inc"
+INCLUDE "apu.s"
 
 main:
      set_test 2,"NR10-NR51 and wave RAM write/read"
      ld   d,0
--    call test_rw
+:    call test_rw
      inc  d
-     jr   nz,-
+     jr   nz,:-
      
      set_test 3,"NR52 write/read"
      wreg NR52,$00
@@ -31,12 +32,12 @@ main:
      
      ; Verify that wave RAM is unchanged
      ld   hl,WAVE
--    ld   a,(hl+)
+:    ld   a,[hli]
      cp   $37
      jp   nz,test_failed
      ld   a,l
      cp   $40
-     jr   nz,-
+     jr   nz,:-
      wreg NR52,$80 ; on
      
      set_test 5,"Powering APU off should write 0 to all regs"
@@ -64,34 +65,34 @@ main:
 regs_should_be_clear:
      ld   bc,masks
      ld   hl,NR10
--    ld   a,(bc)
-     cp   (hl)
+:    ld   a,[bc]
+     cp   [hl]
      jp   nz,test_failed
      inc  bc
      inc  l
      ld   a,l
-     cp   <NR52
-     jr   nz,-
+     cp   LOW(NR52)
+     jr   nz,:-
      ret
 
 test_rw:
      ld   bc,masks
      ld   hl,NR10
--    ; Skip NR52
+:    ; Skip NR52
      ld   a,l
-     cp   <NR52
-     jr   z,+
+     cp   LOW(NR52)
+     jr   z,:+
      
      ; A = value that should be read back
-     ld   a,(bc)
+     ld   a,[bc]
      or   d
      
      ; Write then read back and compare
-     ld   (hl),d
-     cp   (hl)
+     ld   [hl],d
+     cp   [hl]
      jp   nz,test_failed
      
-+    ; Mute channels
+:    ; Mute channels
      wreg NR51,0
      
      ; Disable wave, in case it just got enabled
@@ -101,17 +102,19 @@ test_rw:
      inc  bc
      inc  l
      ld   a,l
-     cp   <WAVE+$10
-     jr   nz,-
+     cp   LOW(WAVE)+$10
+     jr   nz,:--
      ret
      
 ; Registers are ORed with this when reading
 masks:
-     .byte $80,$3F,$00,$FF,$BF ; NR10-NR15
-     .byte $FF,$3F,$00,$FF,$BF ; NR20-NR25
-     .byte $7F,$FF,$9F,$FF,$BF ; NR30-NR35
-     .byte $FF,$FF,$00,$00,$BF ; NR40-NR45
-     .byte $00,$00,$70         ; NR50-NR52
-     .byte $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
-     .byte $00,$00,$00,$00,$00,$00,$00,$00 ; Wave RAM
-     .byte $00,$00,$00,$00,$00,$00,$00,$00
+     db $80, $3F, $00, $FF, $BF ; NR10-NR15
+     db $FF, $3F, $00, $FF, $BF ; NR20-NR25
+     db $7F, $FF, $9F, $FF, $BF ; NR30-NR35
+     db $FF, $FF, $00, $00, $BF ; NR40-NR45
+     db $00, $00, $70         ; NR50-NR52
+     db $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
+     db $00, $00, $00, $00, $00, $00, $00, $00 ; Wave RAM
+     db $00, $00, $00, $00, $00, $00, $00, $00
+
+INCLUDE "shell_end.inc"

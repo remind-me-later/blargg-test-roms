@@ -1,0 +1,25 @@
+; Prints char_nz if Z flag is clear,
+; char_z if Z flag is set.
+; Preserved: AF, BC, DE, HL
+MACRO print_nz
+     push af
+     ld   a,\1
+     jr   nz,print_nz\@
+     ld   a,\2
+print_nz\@:
+     call print_char
+     pop  af
+ENDM
+
+; Prints char_nc if C flag is clear,
+; char_c if C flag is set.
+; Preserved: AF, BC, DE, HL
+MACRO print_nc
+     push af
+     ld   a,\1
+     jr   nz,print_nc\@
+     ld   a,\2
+print_nc\@:
+     call print_char
+     pop  af
+ENDM

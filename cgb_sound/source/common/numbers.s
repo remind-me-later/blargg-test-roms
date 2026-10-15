@@ -73,21 +73,20 @@ print_bc_:
      ld   a,c
      pop  bc
      jr   print_a_
-     
+
 print_de:
      push af
      push bc
      ld   b,d
      ld   c,e
      jr   print_bc_
-     
+
 print_hl:
      push af
      push bc
      ld   b,h
      ld   c,l
      jr   print_bc_
-     
 
 ; Prints A as two hex chars and updates checksum
 ; Preserved: BC, DE, HL
@@ -96,80 +95,50 @@ print_hex:
 print_hex_nocrc:
      push af
      swap a
-     call +
+     call :+
      pop  af
-     
-+    and  $0F
+
+:    and  $0F
      cp   10
-     jr   c,+
+     jr   c,:+
      add  7
-+    add  '0'
+:    add  '0'
      jp   print_char_nocrc
-
-
-; Prints char_nz if Z flag is clear,
-; char_z if Z flag is set.
-; Preserved: AF, BC, DE, HL
-.macro print_nz ARGS char_nz, char_z
-     push af
-     ld   a,char_nz
-     jr   nz,print_nz\@
-     ld   a,char_z
-print_nz\@:
-     call print_char
-     pop  af
-.endm
-
-
-; Prints char_nc if C flag is clear,
-; char_c if C flag is set.
-; Preserved: AF, BC, DE, HL
-.macro print_nc ARGS char_nc, char_c
-     push af
-     ld   a,char_nc
-     jr   nz,print_nc\@
-     ld   a,char_c
-print_nc\@:
-     call print_char
-     pop  af
-.endm
-
 
 ; Prints A as 2 decimal digits
 ; Preserved: AF, BC, DE, HL
 print_dec2:
      push af
      push bc
-     jr   +
-
+     jr   :+
 
 ; Prints A as 1-3 digit decimal value
 ; Preserved: AF, BC, DE, HL
 print_dec:
      push af
      push bc
-     
+
      cp   10
-     jr   c,++
+     jr   c,:++
      ld   c,100
      cp   c
-     call nc,@digit
-+    ld   c,10
-     call @digit
-++   add  '0'
+     call nc,.digit
+:    ld   c,10
+     call .digit
+:    add  '0'
      call print_char
-     
+
      pop  bc
      pop  af
      ret
-     
-@digit:
+
+.digit:
      ld   b,'0'-1
--    inc  b
+:    inc  b
      sub  c
-     jr   nc,-
+     jr   nc,:-
      add  c
-     
+
      ld   c,a
      ld   a,b
      call print_char

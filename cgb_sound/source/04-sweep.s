@@ -1,7 +1,8 @@
 ; Calc = calculation of new frequency and check for > $7FF
 ; Update = modification of frequency with new calculated value
-.include "shell.inc"
-.include "apu.s"
+DEF TEST_NAME EQUS "\"04-sweep\""
+INCLUDE "shell.inc"
+INCLUDE "apu.s"
 
 begin:
      call sync_sweep
@@ -118,3 +119,5 @@ main:
      call should_be_almost_off
      
      jp   tests_passed
+
+INCLUDE "shell_end.inc"

@@ -1,8 +1,9 @@
 ; Verifies length counter clocking during fifth register writes
 
 ;.define CGB_02 1
-.include "shell.inc"
-.include "test_chan.s"
+DEF TEST_NAME EQUS "\"03-trigger\""
+INCLUDE "shell.inc"
+INCLUDE "test_chan.s"
 
 main:
      test_all_chans
@@ -45,7 +46,7 @@ test_chan:
      ld   a,1
      call end_nodelay
      
-.ifdef CGB_02
+IF DEF(CGB_02)
      set_test 4,"Keeping disabled should clock length; ","disabling or keeping enabled shouldn't"
      call begin
      wchn 1,-2      ; length = 2
@@ -60,7 +61,7 @@ test_chan:
      wchn 4,$00     ; enabled  -> disabled doesn't clock
      ld   a,2
      call end
-.else
+ELSE
      set_test 4,"Anything besides enabling shouldnt't clock"
      call begin
      wchn 4,$40     ; enable length
@@ -70,7 +71,7 @@ test_chan:
      wchn 4,$00     ; disabled -> disabled doesn't clock
      ld   a,2
      call end
-.endif
+ENDC
 
      set_test 5,"If clock makes length zero, should disable chan"
      call begin
@@ -90,7 +91,7 @@ test_chan:
      wchn 4,$40     ; no clock; length still 0
      wchn 4,0
      wchn 4,$40     ; no clock; length still 0
-     lda  chan_maxlen; end triggers channel, which loads it with max length
+     lda  chan_maxlen ; end triggers channel, which loads it with max length
      call end
      
      set_test 7,"Trigger should un-freeze length that reached zero"
@@ -143,7 +144,7 @@ test_chan:
      lda  chan_maxlen
      call end_nodelay
      
-.ifndef CGB_02
+IF !DEF(CGB_02)
      call begin
      wchn 1,0       ; length = max
      wchn 4,$80     ; trigger
@@ -155,7 +156,7 @@ test_chan:
      wchn 4,$80     ; trigger
      ld   a,2
      call end
-.endif
+ENDC
      
      set_test 11,"Disabled DAC shouldn't stop other trigger effects"
      call begin
@@ -198,3 +199,5 @@ test_chan:
      jp   nz,test_failed
 
      ret
+
+INCLUDE "shell_end.inc"

@@ -1,13 +1,14 @@
 ; Tests length and sweep periods, and synchronization between the two
-.include "shell.inc"
-.include "apu.s"
+DEF TEST_NAME EQUS "\"07-len sweep period sync\""
+INCLUDE "shell.inc"
+INCLUDE "apu.s"
 
 test_timing:
      ; Time how long until next length clock
--    inc  de
-     ld   a,(NR52)
+:    inc  de
+     ld   a,[NR52]
      and  $01
-     jr   nz,-
+     jr   nz,:-
      
      ;call     print_de
      
@@ -104,3 +105,5 @@ test_power2:
      wreg NR13,$00
      wreg NR14,$84
      jp   test_timing
+
+INCLUDE "shell_end.inc"

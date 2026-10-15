@@ -3,8 +3,9 @@
 
 ;.define REQUIRE_DMG 1
 ;.define REQUIRE_CGB 1
-.include "shell.inc"
-.include "apu.s"
+DEF TEST_NAME EQUS "\"08-len ctr during power\""
+INCLUDE "shell.inc"
+INCLUDE "apu.s"
 
 enable_len_ctrs:
      wreg NR22,8
@@ -82,3 +83,5 @@ main:
      
      check_crc_dmg_cgb $32F0CFBB,$3CF589B4
      jp tests_passed
+
+INCLUDE "shell_end.inc"

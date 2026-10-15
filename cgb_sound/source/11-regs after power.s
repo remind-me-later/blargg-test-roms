@@ -1,8 +1,9 @@
 ; After powering sound off then on, NR12, NR14, and NR44
 ; are clear.
-.define REQUIRE_CGB 1
-.include "shell.inc"
-.include "apu.s"
+DEF REQUIRE_CGB = 1
+DEF TEST_NAME EQUS "\"11-regs after power\""
+INCLUDE "shell.inc"
+INCLUDE "apu.s"
      
 main:
      call sync_apu
@@ -49,3 +50,5 @@ main:
      jp   nz,test_failed
      
      jp   tests_passed
+
+INCLUDE "shell_end.inc"
