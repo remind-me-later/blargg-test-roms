@@ -4,17 +4,17 @@
 ; Initializes checksum module. Might initialize tables
 ; in the future.
 InitCRC:
-	jr   ResetCRC
+	jr ResetCRC
 
 
 ; Clears CRC
 ; Preserved: BC, DE, HL
 ResetCRC:
-	ld   a,$FF
-	sta  hChecksum+0
-	sta  hChecksum+1
-	sta  hChecksum+2
-	sta  hChecksum+3
+	ld a, $FF
+	sta hChecksum+0
+	sta hChecksum+1
+	sta hChecksum+2
+	sta hChecksum+3
 	ret
 
 
@@ -30,48 +30,48 @@ UpdateCRC:
 	push de
 	push hl
 
-	ld   hl,hChecksum+3
-	ld   b,[hl]
-	dec  l
-	ld   c,[hl]
-	dec  l
-	ld   d,[hl]
-	dec  l
-	xor  [hl]
+	ld hl, hChecksum+3
+	ld b, [hl]
+	dec l
+	ld c, [hl]
+	dec l
+	ld d, [hl]
+	dec l
+	xor [hl]
 
-	ld   h,8
+	ld h, 8
 .bit:
-	srl  b
-	rr   c
-	rr   d
+	srl b
+	rr c
+	rr d
 	rra
-	jr   nc,.nextBit
-	ld   e,a
-	ld   a,b
-	xor  $ED
-	ld   b,a
-	ld   a,c
-	xor  $B8
-	ld   c,a
-	ld   a,d
-	xor  $83
-	ld   d,a
-	ld   a,e
-	xor  $20
+	jr nc, .nextBit
+	ld e, a
+	ld a, b
+	xor $ED
+	ld b, a
+	ld a, c
+	xor $B8
+	ld c, a
+	ld a, d
+	xor $83
+	ld d, a
+	ld a, e
+	xor $20
 .nextBit:
-	dec  h
-	jr   nz,.bit
+	dec h
+	jr nz, .bit
 
-	ld   h,HIGH(hChecksum)
-	ld   [hli],a
-	ld   [hl],d
-	inc  l
-	ld   [hl],c
-	inc  l
-	ld   [hl],b
+	ld h, HIGH(hChecksum)
+	ld [hli], a
+	ld [hl], d
+	inc l
+	ld [hl], c
+	inc l
+	ld [hl], b
 
-	pop  hl
-	pop  de
-	pop  bc
-	pop  af
+	pop hl
+	pop de
+	pop bc
+	pop af
 	ret

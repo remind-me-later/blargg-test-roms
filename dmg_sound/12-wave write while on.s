@@ -6,41 +6,41 @@ INCLUDE "shell.inc"
 INCLUDE "apu.s"
 
 Main:
-	loop_n_times Test,69
+	loop_n_times Test, 69
 
 	; CGB behaves erratically, so DMG-only for now
-	check_crc_dmg_cgb $3B4538A9,$2B27544E
-	jp   TestsPassed
+	check_crc_dmg_cgb $3B4538A9, $2B27544E
+	jp TestsPassed
 
 Test:
-	add  $99
-	ld   b,a
+	add $99
+	ld b, a
 
 	; Reload wave and have its first
 	; sample read occur 2 clocks earlier
 	; each loop iteration
-	ld   hl,Wave
+	ld hl, Wave
 	call LoadWave
-	wreg rAUD3ENA,$80  ; enable
-	wreg rAUD3LEVEL,$00  ; silent
-	ld   a,b
-	sta  rAUD3LOW      ; period
-	wreg rAUD3HIGH,$87  ; start
+	wreg rAUD3ENA, $80   ; enable
+	wreg rAUD3LEVEL, $00 ; silent
+	ld a, b
+	sta rAUD3LOW        ; period
+	wreg rAUD3HIGH, $87 ; start
 
 	; Write to wave
-	wreg rAUD3LOW,-2   ; period = 4
+	wreg rAUD3LOW, -2 ; period = 4
 	delay_clocks 168
-	wreg rAUD3WAVE_0,$F7
+	wreg rAUD3WAVE_0, $F7
 
 	; Print wave RAM
-	wreg rAUD3ENA,0
+	wreg rAUD3ENA, 0
 	delay 1000
-	ld   hl,AUD3WAVERAM
+	ld hl, AUD3WAVERAM
 .read:
-	ld   a,[hli]
+	ld a, [hli]
 	call PrintA
-	bit  6,l
-	jr   z,.read
+	bit 6, l
+	jr z, .read
 	call PrintNewline
 
 	ret

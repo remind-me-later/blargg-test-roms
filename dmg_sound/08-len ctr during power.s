@@ -8,34 +8,34 @@ INCLUDE "shell.inc"
 INCLUDE "apu.s"
 
 EnableLenCtrs:
-	wreg rAUD2ENV,8
-	wreg rAUD2HIGH,$C0
-	wreg rAUD1ENV,8
-	wreg rAUD1HIGH,$C0
-	wreg rAUD3ENA,$80
-	wreg rAUD3HIGH,$C0
-	wreg rAUD4ENV,8
-	wreg rAUD4GO,$C0
+	wreg rAUD2ENV, 8
+	wreg rAUD2HIGH, $C0
+	wreg rAUD1ENV, 8
+	wreg rAUD1HIGH, $C0
+	wreg rAUD3ENA, $80
+	wreg rAUD3HIGH, $C0
+	wreg rAUD4ENV, 8
+	wreg rAUD4GO, $C0
 	ret
 
 Main:
 	call SyncAPU
 
-	ld   a,0
+	ld a, 0
 	call FillAPURegs
 
 	; Load length counters
-	wreg rAUD4LEN,-$33
-	wreg rAUD3LEN,-$44
-	wreg rAUD1LEN,-$11
-	wreg rAUD2LEN,-$22
+	wreg rAUD4LEN, -$33
+	wreg rAUD3LEN, -$44
+	wreg rAUD1LEN, -$11
+	wreg rAUD2LEN, -$22
 
 	delay_clocks 8192
 	call EnableLenCtrs
 
 	; Power down. Comment out to see what would
 	; happen if length counters did run.
-	wreg rAUDENA,AUDENA_OFF
+	wreg rAUDENA, AUDENA_OFF
 
 	; Try to enable length counters
 	call EnableLenCtrs
@@ -44,44 +44,44 @@ Main:
 	delay_msec 250
 
 	; Power back on and wait a bit longer
-	wreg rAUDENA,AUDENA_ON
+	wreg rAUDENA, AUDENA_ON
 	;call EnableLenCtrs ; can't do this here
 	delay_clocks 2048
 
 	; Get values from length counters
-	wreg rAUD2ENV,8
-	wreg rAUD2HIGH,$C0
-	ld   a,$02
+	wreg rAUD2ENV, 8
+	wreg rAUD2HIGH, $C0
+	ld a, $02
 	call GetLenA
 	push af
 
-	wreg rAUD1ENV,8
-	wreg rAUD1HIGH,$C0
-	ld   a,$01
+	wreg rAUD1ENV, 8
+	wreg rAUD1HIGH, $C0
+	ld a, $01
 	call GetLenA
 	push af
 
-	wreg rAUD3ENA,$80
-	wreg rAUD3HIGH,$C0
-	ld   a,$04
+	wreg rAUD3ENA, $80
+	wreg rAUD3HIGH, $C0
+	ld a, $04
 	call GetLenA
 	push af
 
-	wreg rAUD4ENV,8
-	wreg rAUD4GO,$C0
-	ld   a,$08
+	wreg rAUD4ENV, 8
+	wreg rAUD4GO, $C0
+	ld a, $08
 	call GetLenA
 
 	; Print them
 	call PrintA
-	pop  af
+	pop af
 	call PrintA
-	pop  af
+	pop af
 	call PrintA
-	pop  af
+	pop af
 	call PrintA
 
-	check_crc_dmg_cgb $32F0CFBB,$3CF589B4
+	check_crc_dmg_cgb $32F0CFBB, $3CF589B4
 	jp TestsPassed
 
 INCLUDE "shell_end.inc"

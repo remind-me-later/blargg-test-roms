@@ -40,54 +40,54 @@ Main:
 	set_test 0
 
 	; Test instructions
-	ld   hl,Instructions
+	ld hl, Instructions
 .nextInstr:
 	call .testInstr
-	inc  hl
-	ld   a,l
-	cp   LOW(InstructionsEnd)
-	jr   nz,.nextInstr
+	inc hl
+	ld a, l
+	cp LOW(InstructionsEnd)
+	jr nz, .nextInstr
 
-	jp   TestsDone
+	jp TestsDone
 
 .testInstr:
 	call .timeInstr
-	ld   a,d
-	cp   [hl]
-	inc  hl
-	jr   nz,.printFailed
-	ld   a,e
-	cp   [hl]
-	ret  z
+	ld a, d
+	cp [hl]
+	inc hl
+	jr nz, .printFailed
+	ld a, e
+	cp [hl]
+	ret z
 .printFailed:
 	push hl
-	ld   c,[hl]
-	dec  hl
-	ld   b,[hl]
-	dec  hl
-	dec  hl
-	dec  hl
-	ld   a,[hli]
-	cp   $CB
-	jr   nz,.opcode
+	ld c, [hl]
+	dec hl
+	ld b, [hl]
+	dec hl
+	dec hl
+	dec hl
+	ld a, [hli]
+	cp $CB
+	jr nz, .opcode
 	call PrintA
-	ld   a,[hl]
+	ld a, [hl]
 .opcode:
 	call PrintHex
 	print_str ":"
-	ld   a,d
+	ld a, d
 	call PrintDec
 	print_str "/"
-	ld   a,e
+	ld a, e
 	call PrintDec
 	print_str "-"
-	ld   a,b
+	ld a, b
 	call PrintDec
 	print_str "/"
-	ld   a,c
+	ld a, c
 	call PrintDec
 	call PrintNewline
-	pop  hl
+	pop hl
 	set_test 1
 	ret
 
@@ -96,27 +96,27 @@ Main:
 ; HL <- HL + 3
 .timeInstr:
 	; Copy instr
-	ld   a,[hli]
-	ld   [Instr+0],a
-	ld   a,[hli]
-	ld   [Instr+1],a
-	ld   a,[hli]
-	ld   [Instr+2],a
+	ld a, [hli]
+	ld [Instr+0], a
+	ld a, [hli]
+	ld [Instr+1], a
+	ld a, [hli]
+	ld [Instr+2], a
 	push hl
 
 	; Find result when access doesn't occur
-	ld   b,0
+	ld b, 0
 	call .timeAccess
 
 	; Find first access
 	call .findNextAccess
-	ld   d,b
+	ld d, b
 
 	; Find second access
 	call .findNextAccess
-	ld   e,b
+	ld e, b
 
-	pop  hl
+	pop hl
 	ret
 
 ; A -> current timer result
@@ -124,20 +124,20 @@ Main:
 ; B <- clock next access occurs on
 ; A <- new timer result
 .findNextAccess:
-	ld   c,a
+	ld c, a
 .again:
 	call .timeAccess
-	cp   c
-	ret  nz
-	inc  b
-	ld   a,b
-	cp   10
-	jr   c,.again
+	cp c
+	ret nz
+	inc b
+	ld a, b
+	cp 10
+	jr c, .again
 
 	; Couldn't find time, so return 0/0
-	ld   a,c
-	ld   b,0
-	ld   d,b
+	ld a, c
+	ld b, 0
+	ld d, b
 	ret
 
 ; Tests for access
@@ -145,18 +145,18 @@ Main:
 ; A <- timer value after test
 .timeAccess:
 	call SyncTIMA64
-	ld   hl,tima_64
-	ld   [hl],$7F
-	ld   a,17
-	sub  b
+	ld hl, tima_64
+	ld [hl], $7F
+	ld a, 17
+	sub b
 	call DelayA20Cycles
-	xor  a    ; clear flags
+	xor a ; clear flags
 Instr:
 	nop
 	nop
 	nop
 	delay 32
-	ld   a,[tima_64]
+	ld a, [tima_64]
 	ret
 
 INCLUDE "shell_end.inc"

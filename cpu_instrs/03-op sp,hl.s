@@ -6,88 +6,88 @@ INCLUDE "shell.inc"
 INCLUDE "instr_test.s"
 
 Instrs:
-	db $33, 0, 0     ; INC  SP
-	db $3B, 0, 0     ; DEC  SP
-	db $39, 0, 0     ; ADD  HL,SP
-	db $F9, 0, 0     ; LD   SP,HL
-	db $E8, $01, 0   ; ADD  SP,1
-	db $E8, $FF, 0   ; ADD  SP,-1
-	db $F8, $01, 0   ; LD   HL,SP+1
-	db $F8, $FF, 0   ; LD   HL,SP-1
+	db $33, 0, 0   ; INC  SP
+	db $3B, 0, 0   ; DEC  SP
+	db $39, 0, 0   ; ADD  HL,SP
+	db $F9, 0, 0   ; LD   SP,HL
+	db $E8, $01, 0 ; ADD  SP,1
+	db $E8, $FF, 0 ; ADD  SP,-1
+	db $F8, $01, 0 ; LD   HL,SP+1
+	db $F8, $FF, 0 ; LD   HL,SP-1
 InstrsEnd:
 
 TestInstr:
 	; C = flags register
-	ld   c,$00
+	ld c, $00
 	call Test
-	ld   c,$F0
+	ld c, $F0
 	call Test
 	ret
 
 Test:
 	; Go through each value for HL
-	ld   hl,Values
+	ld hl, Values
 HLLoop:
-	ld   e,[hl]
-	inc  hl
-	ld   d,[hl]
-	inc  hl
+	ld e, [hl]
+	inc hl
+	ld d, [hl]
+	inc hl
 	push hl
 
 	; Go through each value for SP
-	ld   hl,Values
+	ld hl, Values
 ValuesLoop:
 	push bc
 	push de
 	push hl
 
 	push bc
-	pop  af
+	pop af
 
 	; Switch stack
-	ld   [wTemp],sp
-	ld   a,[hli]
-	ld   h,[hl]
-	ld   l,a
+	ld [wTemp], sp
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
 ;    call PrintRegs
-	ld   sp,hl
+	ld sp, hl
 
 	; Set registers
-	ld   h,d
-	ld   l,e
-	ld   a,$12
-	ld   bc,$5691
-	ld   de,$9ABC
+	ld h, d
+	ld l, e
+	ld a, $12
+	ld bc, $5691
+	ld de, $9ABC
 
-	jp   wInstr
+	jp wInstr
 InstrDone:
 	; Save new SP and switch to yet another stack
-	ld   [wTemp+2],sp
-	ld   sp,$DF70
+	ld [wTemp+2], sp
+	ld sp, $DF70
 
 	call ChecksumAFBCDEHL
 
 	; Checksum SP
-	ld   a,[wTemp+2]
+	ld a, [wTemp+2]
 	call UpdateCRCFast
-	ld   a,[wTemp+3]
+	ld a, [wTemp+3]
 	call UpdateCRCFast
 
 	ldsp wTemp
 
-	pop  hl
-	pop  de
-	pop  bc
-	inc  hl
-	inc  hl
-	ld   a,l
-	cp   LOW(ValuesEnd)
-	jr   nz,ValuesLoop
+	pop hl
+	pop de
+	pop bc
+	inc hl
+	inc hl
+	ld a, l
+	cp LOW(ValuesEnd)
+	jr nz, ValuesLoop
 
-	pop  hl
-	ld   a,l
-	cp   LOW(ValuesEnd)
-	jr   nz,HLLoop
+	pop hl
+	ld a, l
+	cp LOW(ValuesEnd)
+	jr nz, HLLoop
 
 	ret
 

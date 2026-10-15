@@ -23,9 +23,11 @@ type, RAM size and so on). Include paths, in this order:
 
 Layout of the code. Labels are at the beginning of the line and everything
 else is indented with tabs, one for each level (the body of a macro, of an
-IF); spaces are only for alignment (the operands of an instruction start in
-the same column, and so do the comments after it). .editorconfig has the
-settings.
+IF); spaces are only for alignment. An instruction is written `ld a, [hl]`,
+with one space after the mnemonic and after each comma, as in pokecrystal.
+The comments that follow the code of several lines in a row are aligned with
+spaces, one space after the longest line, and start with "; ". .editorconfig
+has the settings.
 
 Names. They follow the style guide of gbdev.io: labels are PascalCase
 (StdReset, PrintCRC), local labels camelCase (.nextInstr), RAM labels have a

@@ -13,18 +13,18 @@ DEF SAVED_STATE_START EQU $BC00
 
 PUSHS UNION "Non-volatile variables", WRAMX[NV_RAM_START], BANK[1]
 
-wGbId:              db  ; DMG/CGB hardware identifier, from A at reset
+wGbId:              db ; DMG/CGB hardware identifier, from A at reset
 
 POPS
 
 PUSHS UNION "Shell variables", WRAMX[BSS_START], BANK[1]
 
-wTestCode:          db  ; test code, set by set_test
-wTestName:          dw  ; text of the test, set by set_test
+wTestCode:          db ; test code, set by set_test
+wTestName:          dw ; text of the test, set by set_test
 
 ; build_devcart and build_multi customize this
 IF !DEF(CUSTOM_PRINT)
-wTextOutAddr:       dw  ; where the next character of the text output goes
+wTextOutAddr:       dw ; where the next character of the text output goes
 ENDC
 
 wConsoleBuf:        ds CONSOLE_WIDTH
@@ -45,11 +45,11 @@ hShellVariablesEnd:
 POPS
 
 IF !DEF(CUSTOM_PRINT)
-	PUSHS "Text output", SRAM[$A000]
+PUSHS "Text output", SRAM[$A000]
 
-sFinalResult:       db  ; exit code of the test, $80 while it runs
-sSignature:         ds 3 ; $DE $B0 $61, which tells that there is text output
+sFinalResult:       db                           ; exit code of the test, $80 while it runs
+sSignature:         ds 3                         ; $DE $B0 $61, which tells that there is text output
 sTextOutput:        ds SAVED_STATE_START - $A004 ; zero-terminated string
 
-	POPS
+POPS
 ENDC

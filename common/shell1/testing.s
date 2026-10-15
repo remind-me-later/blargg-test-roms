@@ -6,7 +6,7 @@
 MACRO set_test ; code[,text[,text2]]
 	push hl
 	call SetTest_
-	jr   .setTest\@
+	jr .setTest\@
 	db \1
 	IF _NARG > 1
 		db \2
@@ -16,22 +16,22 @@ MACRO set_test ; code[,text[,text2]]
 	ENDC
 	db 0
 .setTest\@:
-	pop  hl
+	pop hl
 ENDM
 
 SetTest_:
-	pop  hl
+	pop hl
 	push hl
 	push af
-	inc  hl
-	inc  hl
-	ld   a,[hli]
-	ld   [wResult],a
-	ld   a,l
-	ld   [wTestName],a
-	ld   a,h
-	ld   [wTestName+1],a
-	pop  af
+	inc hl
+	inc hl
+	ld a, [hli]
+	ld [wResult], a
+	ld a, l
+	ld [wTestName], a
+	ld a, h
+	ld [wTestName+1], a
+	pop af
 	ret
 
 
@@ -46,43 +46,43 @@ InitTesting:
 TestsPassed:
 	call PrintNewline
 	print_str "Passed"
-	ld   a,0
-	jp   Exit
+	ld a, 0
+	jp Exit
 
 
 ; Reports "Done" if set_test has never been used,
 ; "Passed" if set_test 0 was last used, or
 ; failure if set_test n was last used.
 TestsDone:
-	ld   a,[wResult]
-	inc  a
-	jr   z,.done
-	dec  a
-	jr   z,TestsPassed
-	jr   TestFailed
+	ld a, [wResult]
+	inc a
+	jr z, .done
+	dec a
+	jr z, TestsPassed
+	jr TestFailed
 .done:
 	print_str "Done"
-	ld   a,0
-	jp   Exit
+	ld a, 0
+	jp Exit
 
 
 ; Reports current error text and exits with result code
 TestFailed:
-	ld   a,[wTestName]
-	ld   l,a
-	ld   a,[wTestName+1]
-	ld   h,a
-	ld   a,[hl]
-	or   a
-	jr   z,.noText
+	ld a, [wTestName]
+	ld l, a
+	ld a, [wTestName+1]
+	ld h, a
+	ld a, [hl]
+	or a
+	jr z, .noText
 	call PrintNewline
 	call PrintStrHL
 	call PrintNewline
 .noText:
-	ld   a,[wResult]
-	cp   1         ; if a = 0 then a = 1
-	adc  0
-	jp   Exit
+	ld a, [wResult]
+	cp 1 ; if a = 0 then a = 1
+	adc 0
+	jp Exit
 
 
 ; Prints checksum as 8-character hex value
@@ -92,30 +92,30 @@ PrintCRC:
 
 	; Must read checksum entirely before printing,
 	; since printing updates it.
-	lda  hChecksum
+	lda hChecksum
 	cpl
 	push af
 
-	lda  hChecksum+1
+	lda hChecksum+1
 	cpl
 	push af
 
-	lda  hChecksum+2
+	lda hChecksum+2
 	cpl
 	push af
 
-	lda  hChecksum+3
+	lda hChecksum+3
 	cpl
 
 	call PrintHex
-	pop  af
+	pop af
 	call PrintHex
-	pop  af
+	pop af
 	call PrintHex
-	pop  af
+	pop af
 	call PrintA
 
-	pop  af
+	pop af
 	ret
 
 
@@ -127,49 +127,49 @@ MACRO check_crc
 		call PrintNewline
 		call PrintCRC
 	ELSE
-		ld   bc,((\1) >>> 16) ^ $FFFF
-		ld   de,((\1) & $FFFF) ^ $FFFF
+		ld bc, ((\1) >>> 16) ^ $FFFF
+		ld de, ((\1) & $FFFF) ^ $FFFF
 		call CheckCRC_
 	ENDC
 ENDM
 
 CheckCRC_:
-	lda  hChecksum+0
-	cp   e
-	jr   nz,.failed
+	lda hChecksum+0
+	cp e
+	jr nz, .failed
 
-	lda  hChecksum+1
-	cp   d
-	jr   nz,.failed
+	lda hChecksum+1
+	cp d
+	jr nz, .failed
 
-	lda  hChecksum+2
-	cp   c
-	jr   nz,.failed
+	lda hChecksum+2
+	cp c
+	jr nz, .failed
 
-	lda  hChecksum+3
-	cp   b
-	jr   nz,.failed
+	lda hChecksum+3
+	cp b
+	jr nz, .failed
 
-	jp   ResetCRC
+	jp ResetCRC
 
 .failed:
 	call PrintCRC
-	jp   TestFailed
+	jp TestFailed
 
 
 ; Updates checksum with bytes from addr to addr+size-1
 MACRO checksum_mem
-	ld   hl,\1
-	ld   bc,\2
+	ld hl, \1
+	ld bc, \2
 	call ChecksumMem_
 ENDM
 
 ChecksumMem_:
 .loop:
-	ld   a,[hli]
+	ld a, [hli]
 	call UpdateCRC
-	dec  bc
-	ld   a,b
-	or   c
-	jr   nz,.loop
+	dec bc
+	ld a, b
+	or c
+	jr nz, .loop
 	ret

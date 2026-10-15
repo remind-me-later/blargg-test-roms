@@ -16,7 +16,7 @@ ENDM
 ; Preserved: AF, BC, DE, HL
 MACRO? delay_clocks
 	ASSERT (\1) % 4 == 0, "Delay must be a multiple of 4"
-	delay_ ((\1)/4)&$FFFF,((\1)/4)>>16
+	delay_ ((\1)/4)&$FFFF, ((\1)/4)>>16
 ENDM
 
 ; Delays n microseconds (1/1000000 second)
@@ -25,7 +25,7 @@ ENDM
 MACRO? delay_usec
 	ASSERT (\1) >= 0, "Delay must be >= 0"
 	ASSERT (\1) <= 4000, "Delay must be <= 4000 usec"
-	delay_ (((\1) * 1048576 + 500000) / 1000000)&$FFFF,(((\1) * 1048576 + 500000) / 1000000)>>16
+	delay_ (((\1) * 1048576 + 500000) / 1000000)&$FFFF, (((\1) * 1048576 + 500000) / 1000000)>>16
 ENDM
 
 ; Delays n milliseconds (1/1000 second)
@@ -46,7 +46,7 @@ DEF MAX_SHORT_DELAY EQU 28
 
 MACRO? delay_long_
 	; 0+ to avoid assembler treating as memory read
-	ld   a,0+((((\2)<<16)+(\1)) - 11) >> 16
+	ld a, 0+((((\2)<<16)+(\1)) - 11) >> 16
 	call Delay65536A9Cycles_
 	delay_nosave_ ((((\2)<<16)+(\1)) - 11)&$FFFF, 0
 ENDM
@@ -63,12 +63,12 @@ MACRO? delay_nosave_
 			delay_long_ \1, \2
 		ELSE
 			IF ((\2)*(255+22+1))|(\1) > 255+22
-				ld   a,HIGH(((((\2)<<16)+(\1)) - 11))
+				ld a, HIGH(((((\2)<<16)+(\1)) - 11))
 				call Delay256A9Cycles_
 				delay_nosave_ LOW(((((\2)<<16)+(\1)) - 11)), 0
 			ELSE
 				IF (\1) >= 22
-					ld   a,(\1) - 22
+					ld a, (\1) - 22
 					call DelayA20Cycles
 				ELSE
 					delay_short_ \1
@@ -82,7 +82,7 @@ MACRO? delay_
 	IF ((\2)*(MAX_SHORT_DELAY+1))|(\1) > MAX_SHORT_DELAY
 		push af
 		delay_nosave_ (((\2)<<16)+(\1) - 7)&$FFFF, (((\2)<<16)+(\1) - 7)>>16
-		pop  af
+		pop af
 	ELSE
 		delay_short_ \1
 	ENDC
@@ -117,16 +117,16 @@ MACRO? delay_short_
 	ENDC
 	IF (\1) == 7
 		push af
-		pop  af
+		pop af
 	ENDC
 	IF (\1) == 8
 		push af
-		pop  af
+		pop af
 		nop
 	ENDC
 	IF (\1) == 9
 		push af
-		pop  af
+		pop af
 		nop
 		nop
 	ENDC

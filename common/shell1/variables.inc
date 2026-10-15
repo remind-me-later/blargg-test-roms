@@ -26,12 +26,12 @@ ENDC
 
 PUSHS UNION "Shell variables{RAM_OWNER}", WRAMX[BSS_START], BANK[1]
 
-wGbId:              db  ; DMG/CGB hardware identifier, from A at reset
+wGbId:              db ; DMG/CGB hardware identifier, from A at reset
 
 wPrintCharNoCrc:    ds 3 ; RAM routine: JP to the print routine, or RET
 
-wResult:            db  ; test code, set by set_test
-wTestName:          dw  ; text of the test, set by set_test
+wResult:            db ; test code, set by set_test
+wTestName:          dw ; text of the test, set by set_test
 
 IF !DEF(BUILD_MULTI)
 	; The tests of a multi-test ROM don't use the console

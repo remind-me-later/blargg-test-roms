@@ -11,22 +11,22 @@ DEF NEWLINE EQU 10
 
 ; Initializes printing. HL = print routine
 InitPrinting:
-	ld   a,l
-	ld   [wPrintCharNoCrc+1],a
-	ld   a,h
-	ld   [wPrintCharNoCrc+2],a
-	jr   ShowPrinting
+	ld a, l
+	ld [wPrintCharNoCrc+1], a
+	ld a, h
+	ld [wPrintCharNoCrc+2], a
+	jr ShowPrinting
 
 
 ; Hides/shows further printing
 ; Preserved: BC, DE, HL
 HidePrinting:
-	ld   a,$C9     ; RET
-	jr   ShowPrinting.set
+	ld a, $C9 ; RET
+	jr ShowPrinting.set
 ShowPrinting:
-	ld   a,$C3     ; JP (nn)
+	ld a, $C3 ; JP (nn)
 .set:
-	ld   [wPrintCharNoCrc],a
+	ld [wPrintCharNoCrc], a
 	ret
 
 
@@ -35,10 +35,10 @@ ShowPrinting:
 ; Preserved: AF, BC, DE, HL
 PrintChar:
 	push af
-	cp   NEWLINE
-	call nz,UpdateCRC
+	cp NEWLINE
+	call nz, UpdateCRC
 	call wPrintCharNoCrc
-	pop  af
+	pop af
 	ret
 
 
@@ -46,9 +46,9 @@ PrintChar:
 ; Preserved: AF, BC, DE, HL
 PrintSpace:
 	push af
-	ld   a,' '
+	ld a, ' '
 	call wPrintCharNoCrc
-	pop  af
+	pop af
 	ret
 
 
@@ -56,9 +56,9 @@ PrintSpace:
 ; Preserved: AF, BC, DE, HL
 PrintNewline:
 	push af
-	ld   a,NEWLINE
+	ld a, NEWLINE
 	call wPrintCharNoCrc
-	pop  af
+	pop af
 	ret
 
 
@@ -75,13 +75,13 @@ MACRO print_str ; string,string2
 		db \3
 	ENDC
 	db 0
-	pop  hl
+	pop hl
 ENDM
 
 PrintStr_:
-	pop  hl
+	pop hl
 	call PrintStrHL
-	jp   hl
+	jp hl
 
 
 ; Prints zero-terminated string pointed to by HL.
@@ -89,12 +89,12 @@ PrintStr_:
 ; Preserved: AF, BC, DE
 PrintStrHL:
 	push af
-	jr   .next
+	jr .next
 .print:
 	call PrintChar
 .next:
-	ld   a,[hli]
-	or   a
-	jr   nz,.print
-	pop  af
+	ld a, [hli]
+	or a
+	jr nz, .print
+	pop af
 	ret

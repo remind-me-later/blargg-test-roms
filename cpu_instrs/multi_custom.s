@@ -3,10 +3,10 @@
 PUSHS
 SECTION "vector handlers", ROM0[$00]
 REPT 11
-	inc  a
+	inc a
 	ret
-	ds   6,0
+	ds 6, 0
 ENDR
-	inc  a
+	inc a
 	ret
 POPS

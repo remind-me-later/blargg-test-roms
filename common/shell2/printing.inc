@@ -17,5 +17,5 @@ MACRO print_str ; string,string2
 		db \3
 	ENDC
 	db 0
-	pop  hl
+	pop hl
 ENDM

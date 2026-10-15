@@ -6,7 +6,7 @@
 MACRO set_test ; code[,text[,text2[,text3]]]
 	push hl
 	call SetTest_
-	jr   .setTest\@
+	jr .setTest\@
 	db \1
 	IF _NARG > 1
 		db \2
@@ -19,7 +19,7 @@ MACRO set_test ; code[,text[,text2[,text3]]]
 	ENDC
 	db 0
 .setTest\@:
-	pop  hl
+	pop hl
 ENDM
 
 ; If checksum doesn't match expected, reports failed test.
@@ -29,8 +29,8 @@ MACRO check_crc
 		call PrintNewline
 		call PrintCRC
 	ELSE
-		ld   bc,((\1) >>> 16) ^ $FFFF
-		ld   de,((\1) & $FFFF) ^ $FFFF
+		ld bc, ((\1) >>> 16) ^ $FFFF
+		ld de, ((\1) & $FFFF) ^ $FFFF
 		call CheckCRC_
 	ENDC
 ENDM
@@ -50,7 +50,7 @@ ENDM
 
 ; Updates checksum with bytes from addr to addr+size-1
 MACRO checksum_mem
-	ld   hl,\1
-	ld   bc,\2
+	ld hl, \1
+	ld bc, \2
 	call ChecksumMem_
 ENDM

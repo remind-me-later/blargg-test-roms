@@ -163,21 +163,21 @@ Instrs:
 InstrsEnd:
 
 TestInstr:
-	ld   c,$00
+	ld c, $00
 	call Test
-	ld   c,$F0
+	ld c, $F0
 	call Test
 	ret
 
 Test:
 	; Go through each value for A
-	ld   hl,Values
+	ld hl, Values
 ALoop:
-	ld   b,[hl]
+	ld b, [hl]
 	push hl
 
 	; Go through each value for other registers
-	ld   hl,Values
+	ld hl, Values
 ValuesLoop:
 	push bc
 	push hl
@@ -185,46 +185,46 @@ ValuesLoop:
 	push bc
 
 	; BC
-	ld   a,[hli]
-	ld   b,a
-	ld   a,[hli]
-	ld   c,a
+	ld a, [hli]
+	ld b, a
+	ld a, [hli]
+	ld c, a
 
 	; HL
-	ld   a,[hli]
-	ld   d,a
-	ld   a,[hli]
-	ld   e,a
+	ld a, [hli]
+	ld d, a
+	ld a, [hli]
+	ld e, a
 	push de
 
 	; DE
-	ld   a,[hli]
-	ld   d,a
-	ld   a,[hli]
-	ld   e,a
+	ld a, [hli]
+	ld d, a
+	ld a, [hli]
+	ld e, a
 
-	pop  hl
-	pop  af
+	pop hl
+	pop af
 
 ;    call PrintRegs
-	jp   wInstr
+	jp wInstr
 InstrDone:
 
 	; Checksum registers
 	call ChecksumAFBCDEHL
 
-	pop  hl
-	pop  bc
-	inc  hl
-	ld   a,l
-	cp   LOW(ValuesEnd)
-	jr   nz,ValuesLoop
+	pop hl
+	pop bc
+	inc hl
+	ld a, l
+	cp LOW(ValuesEnd)
+	jr nz, ValuesLoop
 
-	pop  hl
-	inc  hl
-	ld   a,l
-	cp   LOW(ValuesEnd)
-	jr   nz,ALoop
+	pop hl
+	inc hl
+	ld a, l
+	cp LOW(ValuesEnd)
+	jr nz, ALoop
 
 	ret
 

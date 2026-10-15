@@ -7,79 +7,79 @@ INCLUDE "shell.inc"
 INCLUDE "instr_test.s"
 
 Instrs:
-	db $0A, 0, 0     ; LD   A,(BC)
-	db $1A, 0, 0     ; LD   A,(DE)
-	db $02, 0, 0     ; LD   (BC),A
-	db $12, 0, 0     ; LD   (DE),A
-	db $2A, 0, 0     ; LD   A,(HL+)
-	db $3A, 0, 0     ; LD   A,(HL-)
-	db $22, 0, 0     ; LD   (HL+),A
-	db $32, 0, 0     ; LD   (HL-),A
-	db $B6, 0, 0     ; OR   (HL)
-	db $BE, 0, 0     ; CP   (HL)
-	db $86, 0, 0     ; ADD  (HL)
-	db $8E, 0, 0     ; ADC  (HL)
-	db $96, 0, 0     ; SUB  (HL)
-	db $9E, 0, 0     ; SBC  (HL)
-	db $A6, 0, 0     ; AND  (HL)
-	db $AE, 0, 0     ; XOR  (HL)
-	db $35, 0, 0     ; DEC  (HL)
-	db $34, 0, 0     ; INC  (HL)
-	db $CB, $06, 0   ; RLC  (HL)
-	db $CB, $0E, 0   ; RRC  (HL)
-	db $CB, $16, 0   ; RL   (HL)
-	db $CB, $1E, 0   ; RR   (HL)
-	db $CB, $26, 0   ; SLA  (HL)
-	db $CB, $2E, 0   ; SRA  (HL)
-	db $CB, $36, 0   ; SWAP (HL)
-	db $CB, $3E, 0   ; SRL  (HL)
-	db $CB, $46, 0   ; BIT  0,(HL)
-	db $CB, $4E, 0   ; BIT  1,(HL)
-	db $CB, $56, 0   ; BIT  2,(HL)
-	db $CB, $5E, 0   ; BIT  3,(HL)
-	db $CB, $66, 0   ; BIT  4,(HL)
-	db $CB, $6E, 0   ; BIT  5,(HL)
-	db $CB, $76, 0   ; BIT  6,(HL)
-	db $CB, $7E, 0   ; BIT  7,(HL)
-	db $CB, $86, 0   ; RES  0,(HL)
-	db $CB, $8E, 0   ; RES  1,(HL)
-	db $CB, $96, 0   ; RES  2,(HL)
-	db $CB, $9E, 0   ; RES  3,(HL)
-	db $CB, $A6, 0   ; RES  4,(HL)
-	db $CB, $AE, 0   ; RES  5,(HL)
-	db $CB, $B6, 0   ; RES  6,(HL)
-	db $CB, $BE, 0   ; RES  7,(HL)
-	db $CB, $C6, 0   ; SET  0,(HL)
-	db $CB, $CE, 0   ; SET  1,(HL)
-	db $CB, $D6, 0   ; SET  2,(HL)
-	db $CB, $DE, 0   ; SET  3,(HL)
-	db $CB, $E6, 0   ; SET  4,(HL)
-	db $CB, $EE, 0   ; SET  5,(HL)
-	db $CB, $F6, 0   ; SET  6,(HL)
-	db $CB, $FE, 0   ; SET  7,(HL)
-	db $27, 0, 0     ; DAA
+	db $0A, 0, 0   ; LD   A,(BC)
+	db $1A, 0, 0   ; LD   A,(DE)
+	db $02, 0, 0   ; LD   (BC),A
+	db $12, 0, 0   ; LD   (DE),A
+	db $2A, 0, 0   ; LD   A,(HL+)
+	db $3A, 0, 0   ; LD   A,(HL-)
+	db $22, 0, 0   ; LD   (HL+),A
+	db $32, 0, 0   ; LD   (HL-),A
+	db $B6, 0, 0   ; OR   (HL)
+	db $BE, 0, 0   ; CP   (HL)
+	db $86, 0, 0   ; ADD  (HL)
+	db $8E, 0, 0   ; ADC  (HL)
+	db $96, 0, 0   ; SUB  (HL)
+	db $9E, 0, 0   ; SBC  (HL)
+	db $A6, 0, 0   ; AND  (HL)
+	db $AE, 0, 0   ; XOR  (HL)
+	db $35, 0, 0   ; DEC  (HL)
+	db $34, 0, 0   ; INC  (HL)
+	db $CB, $06, 0 ; RLC  (HL)
+	db $CB, $0E, 0 ; RRC  (HL)
+	db $CB, $16, 0 ; RL   (HL)
+	db $CB, $1E, 0 ; RR   (HL)
+	db $CB, $26, 0 ; SLA  (HL)
+	db $CB, $2E, 0 ; SRA  (HL)
+	db $CB, $36, 0 ; SWAP (HL)
+	db $CB, $3E, 0 ; SRL  (HL)
+	db $CB, $46, 0 ; BIT  0,(HL)
+	db $CB, $4E, 0 ; BIT  1,(HL)
+	db $CB, $56, 0 ; BIT  2,(HL)
+	db $CB, $5E, 0 ; BIT  3,(HL)
+	db $CB, $66, 0 ; BIT  4,(HL)
+	db $CB, $6E, 0 ; BIT  5,(HL)
+	db $CB, $76, 0 ; BIT  6,(HL)
+	db $CB, $7E, 0 ; BIT  7,(HL)
+	db $CB, $86, 0 ; RES  0,(HL)
+	db $CB, $8E, 0 ; RES  1,(HL)
+	db $CB, $96, 0 ; RES  2,(HL)
+	db $CB, $9E, 0 ; RES  3,(HL)
+	db $CB, $A6, 0 ; RES  4,(HL)
+	db $CB, $AE, 0 ; RES  5,(HL)
+	db $CB, $B6, 0 ; RES  6,(HL)
+	db $CB, $BE, 0 ; RES  7,(HL)
+	db $CB, $C6, 0 ; SET  0,(HL)
+	db $CB, $CE, 0 ; SET  1,(HL)
+	db $CB, $D6, 0 ; SET  2,(HL)
+	db $CB, $DE, 0 ; SET  3,(HL)
+	db $CB, $E6, 0 ; SET  4,(HL)
+	db $CB, $EE, 0 ; SET  5,(HL)
+	db $CB, $F6, 0 ; SET  6,(HL)
+	db $CB, $FE, 0 ; SET  7,(HL)
+	db $27, 0, 0   ; DAA
 InstrsEnd:
 
 TestInstr:
-	ld   c,$00
+	ld c, $00
 	call Test
-	ld   c,$10
+	ld c, $10
 	call Test
-	ld   c,$E0
+	ld c, $E0
 	call Test
-	ld   c,$F0
+	ld c, $F0
 	call Test
 	ret
 
 Test:
 	; Go through each value for A
-	ld   hl,Values
+	ld hl, Values
 ALoop:
-	ld   b,[hl]
+	ld b, [hl]
 	push hl
 
 	; Go through each value for (HL)
-	ld   hl,Values
+	ld hl, Values
 ValuesLoop:
 	push bc
 	push hl
@@ -87,58 +87,58 @@ ValuesLoop:
 	push bc
 
 	; BC
-	ld   a,[hli]
-	ld   bc,wRpTemp
-	ld   [wRpTemp],a
+	ld a, [hli]
+	ld bc, wRpTemp
+	ld [wRpTemp], a
 
 	; DE
-	ld   a,[hli]
-	ld   de,wRpTemp+1
-	ld   [wRpTemp+1],a
+	ld a, [hli]
+	ld de, wRpTemp+1
+	ld [wRpTemp+1], a
 
 	; HL
-	ld   a,[hl]
-	ld   hl,wRpTemp+2
-	ld   [wRpTemp+2],a
+	ld a, [hl]
+	ld hl, wRpTemp+2
+	ld [wRpTemp+2], a
 
 	; AF
-	pop  af
+	pop af
 
 ;    call PrintRegs
-	jp   wInstr
+	jp wInstr
 InstrDone:
 
 	; Checksum AF, HL, and (HL)
 	push hl
 	push af
 	call UpdateCRCFast
-	pop  hl
-	ld   a,l
+	pop hl
+	ld a, l
 	call UpdateCRCFast
-	pop  bc
-	ld   a,b
+	pop bc
+	ld a, b
 	call UpdateCRCFast
-	ld   a,c
+	ld a, c
 	call UpdateCRCFast
-	ld   a,[wRpTemp]
+	ld a, [wRpTemp]
 	call UpdateCRCFast
-	ld   a,[wRpTemp+1]
+	ld a, [wRpTemp+1]
 	call UpdateCRCFast
-	ld   a,[wRpTemp+2]
+	ld a, [wRpTemp+2]
 	call UpdateCRCFast
 
-	pop  hl
-	pop  bc
-	inc  hl
-	ld   a,l
-	cp   LOW(ValuesEnd)
-	jr   nz,ValuesLoop
+	pop hl
+	pop bc
+	inc hl
+	ld a, l
+	cp LOW(ValuesEnd)
+	jr nz, ValuesLoop
 
-	pop  hl
-	inc  hl
-	ld   a,l
-	cp   LOW(ValuesEnd)
-	jr   nz,ALoop
+	pop hl
+	inc hl
+	ld a, l
+	cp LOW(ValuesEnd)
+	jr nz, ALoop
 
 	ret
 

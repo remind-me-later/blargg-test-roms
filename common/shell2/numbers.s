@@ -17,76 +17,76 @@ PrintA:
 	push af
 PrintA_:
 	call PrintHex
-	ld   a,' '
+	ld a, ' '
 	call PrintCharNoCRC
-	pop  af
+	pop af
 	ret
 
 PrintAF:
 	push af
 	call PrintHex
-	pop  af
+	pop af
 PrintF:
 	push bc
 	push af
-	pop  bc
+	pop bc
 	call PrintC
-	pop  bc
+	pop bc
 	ret
 
 PrintB:
 	push af
-	ld   a,b
-	jr   PrintA_
+	ld a, b
+	jr PrintA_
 
 PrintC:
 	push af
-	ld   a,c
-	jr   PrintA_
+	ld a, c
+	jr PrintA_
 
 PrintD:
 	push af
-	ld   a,d
-	jr   PrintA_
+	ld a, d
+	jr PrintA_
 
 PrintE:
 	push af
-	ld   a,e
-	jr   PrintA_
+	ld a, e
+	jr PrintA_
 
 PrintH:
 	push af
-	ld   a,h
-	jr   PrintA_
+	ld a, h
+	jr PrintA_
 
 PrintL:
 	push af
-	ld   a,l
-	jr   PrintA_
+	ld a, l
+	jr PrintA_
 
 PrintBC:
 	push af
 	push bc
 PrintBC_:
-	ld   a,b
+	ld a, b
 	call PrintHex
-	ld   a,c
-	pop  bc
-	jr   PrintA_
+	ld a, c
+	pop bc
+	jr PrintA_
 
 PrintDE:
 	push af
 	push bc
-	ld   b,d
-	ld   c,e
-	jr   PrintBC_
+	ld b, d
+	ld c, e
+	jr PrintBC_
 
 PrintHL:
 	push af
 	push bc
-	ld   b,h
-	ld   c,l
-	jr   PrintBC_
+	ld b, h
+	ld c, l
+	jr PrintBC_
 
 ; Prints A as two hex chars and updates checksum
 ; Preserved: BC, DE, HL
@@ -96,23 +96,23 @@ PrintHexNoCRC:
 	push af
 	swap a
 	call .nibble
-	pop  af
+	pop af
 
 .nibble:
-	and  $0F
-	cp   10
-	jr   c,.print
-	add  7
+	and $0F
+	cp 10
+	jr c, .print
+	add 7
 .print:
-	add  '0'
-	jp   PrintCharNoCRC
+	add '0'
+	jp PrintCharNoCRC
 
 ; Prints A as 2 decimal digits
 ; Preserved: AF, BC, DE, HL
 PrintDec2:
 	push af
 	push bc
-	jr   PrintDec.tens
+	jr PrintDec.tens
 
 ; Prints A as 1-3 digit decimal value
 ; Preserved: AF, BC, DE, HL
@@ -120,32 +120,32 @@ PrintDec:
 	push af
 	push bc
 
-	cp   10
-	jr   c,.ones
-	ld   c,100
-	cp   c
-	call nc,.digit
+	cp 10
+	jr c, .ones
+	ld c, 100
+	cp c
+	call nc, .digit
 .tens:
-	ld   c,10
+	ld c, 10
 	call .digit
 .ones:
-	add  '0'
+	add '0'
 	call PrintChar
 
-	pop  bc
-	pop  af
+	pop bc
+	pop af
 	ret
 
 .digit:
-	ld   b,'0'-1
+	ld b, '0'-1
 .subtract:
-	inc  b
-	sub  c
-	jr   nc,.subtract
-	add  c
+	inc b
+	sub c
+	jr nc, .subtract
+	add c
 
-	ld   c,a
-	ld   a,b
+	ld c, a
+	ld a, b
 	call PrintChar
-	ld   a,c
+	ld a, c
 	ret

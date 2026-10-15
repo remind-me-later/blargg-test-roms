@@ -11,9 +11,9 @@ StdPrint:
 	ret
 
 PostExit:
-	jp   MULTI_RETURN
+	jp MULTI_RETURN
 Forever:
-	jr   Forever
+	jr Forever
 
 PlayByte:
 	ret
@@ -25,25 +25,25 @@ INCLUDE "console.s"
 InitRuntime:
 	call ConsoleInit
 IF DEF(TEST_NAME)
-	print_str "{TEST_NAME}",NEWLINE,NEWLINE
+	print_str "{TEST_NAME}", NEWLINE, NEWLINE
 ENDC
 	ret
 
 StdPrint:
 	push af
-	sta  rSB
-	wreg rSC,SC_START | SC_INTERNAL
+	sta rSB
+	wreg rSC, SC_START | SC_INTERNAL
 	delay 2304
-	pop  af
-	jp   ConsolePrint
+	pop af
+	jp ConsolePrint
 
 PostExit:
 	call ConsoleShow
 	call PlayByte
 Forever:
-	wreg rAUDENA,AUDENA_OFF    ; sound off
+	wreg rAUDENA, AUDENA_OFF ; sound off
 .loop:
-	jr   .loop
+	jr .loop
 
 PlayByte:
 	ret

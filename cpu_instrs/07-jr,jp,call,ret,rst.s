@@ -52,66 +52,66 @@ ENDC
 InstrsEnd:
 
 TestInstr:
-	wreg rIE,0 ; disable interrupts, since RETI does EI
+	wreg rIE, 0 ; disable interrupts, since RETI does EI
 
 	; Go through all 16 combinations of flags
-	ld   bc,$1200
+	ld bc, $1200
 .flags:
 	; Fill 4 bytes of new stack
-	ld   a,$12
-	ld   [$DF80-2],a
-	ld   a,$34
-	ld   [$DF80-3],a
-	ld   a,$56
-	ld   [$DF80-4],a
-	ld   a,$78
-	ld   [$DF80-5],a
+	ld a, $12
+	ld [$DF80-2], a
+	ld a, $34
+	ld [$DF80-3], a
+	ld a, $56
+	ld [$DF80-4], a
+	ld a, $78
+	ld [$DF80-5], a
 
 	; Set AF
 	push bc
-	pop  af
+	pop af
 
 	; Switch to new stack
-	ld   [wTemp],sp
-	ld   sp,$DF80
+	ld [wTemp], sp
+	ld sp, $DF80
 
 	; Set return address
-	ld   de,wInstr+3
+	ld de, wInstr+3
 	push de
 
-	jp   wInstr
+	jp wInstr
 InstrDone:
-	inc  a
+	inc a
 Taken:
-	di             ; RETI enables interrupts
+	di ; RETI enables interrupts
 
 	; Save new SP and switch to yet another stack
-	ld   [wTemp+2],sp
-	ld   sp,$DF70
+	ld [wTemp+2], sp
+	ld sp, $DF70
 
 	; Checksum A and SP
 	call UpdateCRCFast
-	ld   a,[wTemp+2]
+	ld a, [wTemp+2]
 	call UpdateCRCFast
-	ld   a,[wTemp+3]
+	ld a, [wTemp+3]
 	call UpdateCRCFast
 
 	; Checksum 4 bytes of stack
-	ld   a,[$DF80-2]
+	ld a, [$DF80-2]
 	call UpdateCRCFast
-	ld   a,[$DF80-3]
+	ld a, [$DF80-3]
 	call UpdateCRCFast
-	ld   a,[$DF80-4]
+	ld a, [$DF80-4]
 	call UpdateCRCFast
-	ld   a,[$DF80-5]
+	ld a, [$DF80-5]
 	call UpdateCRCFast
 
 	ldsp wTemp
 
-	ld   a,c
-	add  $10
-	ld   c,a
-	jr   nz,TestInstr.flags
+	ld a, c
+	add $10
+	ld c, a
+	jr nz, TestInstr.flags
 
 	ret
 
