@@ -25,7 +25,7 @@ INCLUDE "console.s"
 init_runtime:
      call console_init
 IF DEF(TEST_NAME)
-     print_str "{TEST_NAME}",newline,newline
+     print_str "{TEST_NAME}",NEWLINE,NEWLINE
 ENDC
      ret
 

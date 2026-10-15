@@ -12,7 +12,7 @@
 ; and jumps there; when the test exits, it jumps to $3F00, which restores the
 ; state and returns to the driver with the result of the test in A.
 
-DEF MULTI_DRIVER = 1
+DEF MULTI_DRIVER EQU 1
 
 INCLUDE "shell.inc"
 INCLUDE "apu.s"
@@ -25,10 +25,10 @@ DEF dp = dp+2
 
 ; Cartridge RAM, where the state of the driver is kept while a test runs: SP,
 ; then the RAM from nv_ram_base and the direct page, which the tests clear.
-DEF saved_sp = $BC00
-DEF saved_state = $BC02
-DEF state_size = $9C
-DEF dp_state_size = 6
+DEF saved_sp EQU $BC00
+DEF saved_state EQU $BC02
+DEF STATE_SIZE EQU $9C
+DEF DP_STATE_SIZE EQU 6
 
 ; The way back from the tests, at a fixed address
 PUSHS
@@ -79,9 +79,9 @@ main:
      or   a
      jr   z,.all_passed
      call print_newline
-     print_str "Run failed tests",newline
-     print_str "individually for",newline
-     print_str "more details.",newline
+     print_str "Run failed tests",NEWLINE
+     print_str "individually for",NEWLINE
+     print_str "more details.",NEWLINE
 
 .all_passed:
      ; Beep
@@ -115,10 +115,10 @@ run_test:
      ; Save the variables of the driver
      push de
      ld   hl,saved_state
-     ld   bc,state_size
+     ld   bc,STATE_SIZE
      ld   de,nv_ram_base
      call copy_bytes
-     ld   bc,dp_state_size
+     ld   bc,DP_STATE_SIZE
      ld   de,dp_base
      call copy_bytes
      pop  hl
@@ -140,10 +140,10 @@ test_exited:
 
      ; Restore the variables of the driver
      ld   de,saved_state
-     ld   bc,state_size
+     ld   bc,STATE_SIZE
      ld   hl,nv_ram_base
      call copy_bytes
-     ld   bc,dp_state_size
+     ld   bc,DP_STATE_SIZE
      ld   hl,dp_base
      call copy_bytes
 

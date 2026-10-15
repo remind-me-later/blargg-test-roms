@@ -7,8 +7,6 @@
 ; post_exit:        ; called at end of std_exit
 ; report_byte:      ; report A to user
 
-DEF RUNTIME_INCLUDED = 1
-
 IF !DEF(bss)
      ; address of next normal variable
      DEF bss = $D800
@@ -20,14 +18,14 @@ IF !DEF(dp)
 ENDC
 
 ; DMG/CGB hardware identifier
-DEF gb_id_cgb = $10  ; mask for testing CGB bit
-DEF gb_id_devcart = $04 ; mask for testing "on devcart" bit
+DEF GB_ID_CGB EQU $10  ; mask for testing CGB bit
+DEF GB_ID_DEVCART EQU $04 ; mask for testing "on devcart" bit
 
 DEF gb_id = bss
 DEF bss = bss+1
 
 ; Stack is normally here
-DEF std_stack = $DFFF
+DEF STD_STACK EQU $DFFF
 
 ; Copies $1000 bytes from HL to $C000, then jumps to it.
 ; A is preserved for jumped-to code.
@@ -89,7 +87,7 @@ std_reset:
 
      ; Init hardware
      di
-     ld   sp,std_stack
+     ld   sp,STD_STACK
 
      ; Save DMG/CGB id
      ld   [gb_id],a
@@ -124,7 +122,7 @@ std_reset:
 
 ; Exits code and reports value of A
 exit:
-     ld   sp,std_stack
+     ld   sp,STD_STACK
      push af
      call .report
      pop  af
@@ -144,7 +142,7 @@ exit:
 
      ; 1: "Failed"
      jr   nz,.failed_n
-     print_str "Failed",newline
+     print_str "Failed",NEWLINE
      ret
 
      ; n: "Failed #n"

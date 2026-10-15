@@ -1,6 +1,5 @@
 ; After powering sound off then on, NR12, NR14, and NR44
 ; are clear.
-DEF REQUIRE_CGB = 1
 DEF TEST_NAME EQUS "11-regs after power"
 INCLUDE "shell.inc"
 INCLUDE "apu.s"

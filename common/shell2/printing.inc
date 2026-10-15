@@ -2,7 +2,7 @@
 ; prints to output device
 
 ; Character that does equivalent of print_newline
-DEF newline = 10
+DEF NEWLINE EQU 10
 
 ; Prints immediate string
 ; Preserved: AF, BC, DE, HL

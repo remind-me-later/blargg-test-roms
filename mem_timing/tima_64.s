@@ -32,4 +32,4 @@ sync_tima_64:
 
 ; Read from this to get count that's incremented
 ; every 64 cycles.
-DEF tima_64 = rTIMA
+DEF tima_64 EQU rTIMA

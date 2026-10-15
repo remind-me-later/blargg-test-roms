@@ -2,7 +2,6 @@
 ; and NR44 is unchanged. While powered off, writes to
 ; NR41 are NOT ignored.
 
-DEF REQUIRE_DMG = 1
 DEF TEST_NAME EQUS "11-regs after power"
 INCLUDE "shell.inc"
 INCLUDE "apu.s"

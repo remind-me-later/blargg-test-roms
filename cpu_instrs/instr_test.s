@@ -10,7 +10,7 @@ INCLUDE "cpu_speed.s"
 INCLUDE "apu.s"
 INCLUDE "crc_fast.s"
 
-DEF instr = $DEF8
+DEF instr EQU $DEF8
 DEF rp_temp = (instr-4)
 
 DEF temp = bss

@@ -26,7 +26,7 @@ console_init:
 
      ; CGB-specific inits
      ld   a,[gb_id]
-     and  gb_id_cgb
+     and  GB_ID_CGB
      call nz,.init_cgb
 
      ; Clear nametable
@@ -42,7 +42,7 @@ console_init:
      call .load_tiles
 
      ; Init state
-     setb console_pos,console_width
+     setb console_pos,CONSOLE_WIDTH
      setb console_mode,0
      setb console_scroll,-8
      call console_scroll_up_
@@ -210,13 +210,13 @@ console_scroll_up_:
 
      ; Start new clear line
      ld   a,' '
-     ld   hl,console_buf + console_width - 1
-     ld   b,console_width
+     ld   hl,console_buf + CONSOLE_WIDTH - 1
+     ld   b,CONSOLE_WIDTH
 .clear:
      ld   [hld],a
      dec  b
      jr   nz,.clear
-     setb console_pos,LOW((console_buf + console_width))
+     setb console_pos,LOW((console_buf + CONSOLE_WIDTH))
 
      pop  hl
      pop  bc
@@ -247,7 +247,7 @@ console_flush_:
      add  hl,hl
 
      ; Copy line
-     ld   de,console_buf + console_width
+     ld   de,console_buf + CONSOLE_WIDTH
 .copy:
      dec  e
      ld   a,[de]

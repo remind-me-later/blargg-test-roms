@@ -11,7 +11,7 @@
 ; the driver copies the block to $C000 and jumps there; when the test exits,
 ; it jumps to $3FFD, which comes back to the driver with its result in A.
 
-DEF MULTI_DRIVER = 1
+DEF MULTI_DRIVER EQU 1
 
 ; The tests use the RAM at $D800 and $FF80: the driver keeps its variables
 ; below them.
@@ -24,9 +24,9 @@ INCLUDE "cpu_speed.s"
 
 ; The tests can leave SP anywhere, so the driver has a stack of its own and
 ; saves SP while a test runs.
-DEF stack_size = $40
+DEF STACK_SIZE EQU $40
 DEF stack_bottom = bss
-DEF bss = bss+stack_size
+DEF bss = bss+STACK_SIZE
 DEF stack_top = bss
 DEF saved_sp = bss+0
 DEF bss = bss+2

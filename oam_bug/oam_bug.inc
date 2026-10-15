@@ -8,7 +8,7 @@ INCLUDE "shell.inc"
 INCLUDE "ppu.s"
 
 ; Object attribute memory
-DEF OAM_START = $FE00
+DEF OAM_START EQU $FE00
 
 ; Stack pointer saved by save_sp
 DEF saved_sp = dp+0

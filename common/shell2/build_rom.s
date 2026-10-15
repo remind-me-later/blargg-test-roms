@@ -50,5 +50,5 @@ SECTION "unused", ROM0[$150]
 
 ;;;; Shell
 
-DEF NEED_CONSOLE = 1
+DEF NEED_CONSOLE EQU 1
 INCLUDE "shell.s"

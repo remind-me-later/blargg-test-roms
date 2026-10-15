@@ -16,7 +16,7 @@ std_reset:
 
      ; Init hardware
      di
-     ld   sp,std_stack
+     ld   sp,STD_STACK
 
      ; Save DMG/CGB id
 IF DEF(CHECK_GB_ID)
@@ -31,7 +31,7 @@ ENDC
      ld   [gb_id],a
 
      ; Clear memory except very top of stack
-     ld   bc,std_stack-bss_base - 2
+     ld   bc,STD_STACK-bss_base - 2
      ld   hl,bss_base
      call clear_mem
      ld   bc,$FFFF-dp_base
@@ -54,7 +54,7 @@ ENDC
      call init_testing
 
      IF DEF(TEST_NAME)
-          print_str "{TEST_NAME}",newline,newline
+          print_str "{TEST_NAME}",NEWLINE,NEWLINE
      ENDC
 
      call reset_crc ; in case init_runtime prints anything
@@ -71,7 +71,7 @@ ENDC
 
 ; Exits code and reports value of A
 exit:
-     ld   sp,std_stack
+     ld   sp,STD_STACK
      push af
      call .report
      call console_show
@@ -92,7 +92,7 @@ exit:
 
      ; 1: "Failed"
      jr   nz,.failed_n
-     print_str "Failed",newline
+     print_str "Failed",NEWLINE
      ret
 
      ; n: "Failed #n"

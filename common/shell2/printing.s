@@ -7,7 +7,7 @@
 ; Preserved: AF, BC, DE, HL
 print_char:
      push af
-     cp   newline
+     cp   NEWLINE
      call nz,update_crc
      call print_char_nocrc
      pop  af
@@ -26,7 +26,7 @@ print_space:
 ; Preserved: AF, BC, DE, HL
 print_newline:
      push af
-     ld   a,newline
+     ld   a,NEWLINE
      call print_char_nocrc
      pop  af
      ret

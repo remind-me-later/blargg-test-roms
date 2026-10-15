@@ -5,8 +5,8 @@
 ; driver (multi.s, in bank 0) copies to $C000 before running it. The test
 ; ends by jumping back to the driver at MULTI_RETURN.
 
-DEF CUSTOM_PRINT = 1
-DEF CUSTOM_EXIT = 1
-DEF MULTI_RETURN = $3F00
+DEF CUSTOM_PRINT EQU 1
+DEF CUSTOM_EXIT EQU 1
+DEF MULTI_RETURN EQU $3F00
 
 INCLUDE "shell.s"

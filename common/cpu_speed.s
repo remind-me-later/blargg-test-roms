@@ -5,7 +5,7 @@
 cpu_norm:
      ; Do nothing if not CGB
      ld   a,[gb_id]
-     and  gb_id_cgb
+     and  GB_ID_CGB
      ret  z
 
      lda  rSPD
@@ -19,7 +19,7 @@ cpu_norm:
 cpu_fast:
      ; Do nothing if not CGB
      ld   a,[gb_id]
-     and  gb_id_cgb
+     and  GB_ID_CGB
      ret  z
 
      lda  rSPD

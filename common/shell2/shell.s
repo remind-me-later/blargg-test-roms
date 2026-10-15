@@ -1,7 +1,7 @@
 ; Common routines and runtime
 
 ; A few bytes of RAM that aren't cleared
-DEF nv_ram_base = $D800
+DEF nv_ram_base EQU $D800
 DEF nv_ram = nv_ram_base
 
 ; Address of next normal variable
@@ -9,21 +9,21 @@ DEF bss_base = nv_ram_base+$80
 DEF bss = bss_base
 
 ; Address of next direct-page ($FFxx) variable
-DEF dp_base = $FF80
+DEF dp_base EQU $FF80
 DEF dp = dp_base
 
 ; Top of stack
-DEF std_stack = $DFFF+1
+DEF STD_STACK EQU $DFFF+1
 
 ; Final exit result byte is written here
-DEF final_result = $A000
+DEF final_result EQU $A000
 
 ; Text output is written here as zero-terminated string
-DEF text_out_base = $A004
+DEF text_out_base EQU $A004
 
 ; DMG/CGB hardware identifier
-DEF gb_id_cgb = $10 ; mask for testing CGB bit
-DEF gb_id_devcart = $04 ; mask for testing "on devcart" bit
+DEF GB_ID_CGB EQU $10 ; mask for testing CGB bit
+DEF GB_ID_DEVCART EQU $04 ; mask for testing "on devcart" bit
 DEF gb_id = nv_ram
 DEF nv_ram = nv_ram+1
 

@@ -2,7 +2,7 @@
 ; CPU. First value is CPU speed (0=slow, 1=fast),
 ; second is number of cycles taken by interrupt.
 ; Should take 13 cycles at either speed.
-DEF REQUIRE_CGB = 1
+DEF REQUIRE_CGB EQU 1
 DEF TEST_NAME EQUS "interrupt time"
 
 INCLUDE "shell.inc"
@@ -12,7 +12,7 @@ INCLUDE "apu.s"
 
 ; $58: JP $DEC3
 ; $DEC3: RET
-DEF sint = $DEC3
+DEF sint EQU $DEC3
 
 main:
      call init_timer

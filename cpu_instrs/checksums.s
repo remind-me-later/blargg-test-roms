@@ -37,7 +37,7 @@ IF DEF(PRINT_CHECKSUMS)
      and  $03
      ld   a,','
      jr   nz,.print
-     print_str newline,'.',"byte"
+     print_str NEWLINE,'.',"byte"
      ld   a,' '
 .print:
      call print_char

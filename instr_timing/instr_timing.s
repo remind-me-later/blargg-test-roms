@@ -4,7 +4,7 @@
 DEF TEST_NAME EQUS "instr_timing"
 DEF ROM_NAME EQUS "INSTR_TIMING"
 ; The tables have to follow the shell code, in the block of the program
-DEF KEEP_PROGRAM_OPEN = 1
+DEF KEEP_PROGRAM_OPEN EQU 1
 INCLUDE "shell.inc"
 INCLUDE "timer.s"
 
@@ -51,7 +51,7 @@ test_main_ops:
      and  $C7
      jr   nz,.test
      ld   a,[gb_id]
-     and  gb_id_devcart
+     and  GB_ID_DEVCART
      ret  nz
 .test:
      ; Test with flags set so that branches are

@@ -8,10 +8,10 @@
 ; LY isn't supported (always reads back as the same
 ; value).
 
-DEF console_width = 20
+DEF CONSOLE_WIDTH EQU 20
 
 DEF console_buf = bss+0
-DEF console_pos = bss+console_width
-DEF console_mode = bss+console_width+1
-DEF console_scroll = bss+console_width+2
-DEF bss = bss+console_width+3
+DEF console_pos = bss+CONSOLE_WIDTH
+DEF console_mode = bss+CONSOLE_WIDTH+1
+DEF console_scroll = bss+CONSOLE_WIDTH+2
+DEF bss = bss+CONSOLE_WIDTH+3

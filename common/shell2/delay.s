@@ -53,6 +53,6 @@ delay_hl_51_cycles:
      ret
 
      ; delay_short_ macro calls into these
-     ds max_short_delay-10, $00 ; NOP repeated several times
+     ds MAX_SHORT_DELAY-10, $00 ; NOP repeated several times
 delay_unrolled_:
      ret

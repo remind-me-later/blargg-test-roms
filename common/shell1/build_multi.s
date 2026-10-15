@@ -5,6 +5,6 @@
 ; driver (multi.s, in bank 0) copies to $C000 before running it. The test
 ; ends by jumping back to the driver at MULTI_RETURN.
 
-DEF MULTI_RETURN = $3FFD
+DEF MULTI_RETURN EQU $3FFD
 
 INCLUDE "runtime.s"

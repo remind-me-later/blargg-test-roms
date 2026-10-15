@@ -1,6 +1,6 @@
 ; Tests branch instructions
 
-;DEF PRINT_CHECKSUMS = 1
+;DEF PRINT_CHECKSUMS EQU 1
 DEF TEST_NAME EQUS "07-jr,jp,call,ret,rst"
 INCLUDE "shell.inc"
 INCLUDE "instr_test.s"

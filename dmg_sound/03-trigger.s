@@ -1,6 +1,6 @@
 ; Verifies length counter clocking during fifth register writes
 
-;DEF CGB_02 = 1
+;DEF CGB_02 EQU 1
 DEF TEST_NAME EQUS "03-trigger"
 INCLUDE "shell.inc"
 INCLUDE "test_chan.s"

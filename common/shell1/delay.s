@@ -42,7 +42,7 @@ ENDM
 ; expressions, hence the split, which is kept so that the macros stay as
 ; they were.
 
-DEF max_short_delay = 28
+DEF MAX_SHORT_DELAY EQU 28
 
 MACRO? delay_long_
      ; 0+ to avoid assembler treating as memory read
@@ -79,7 +79,7 @@ MACRO? delay_nosave_
 ENDM
 
 MACRO? delay_
-     IF ((\2)*(max_short_delay+1))|(\1) > max_short_delay
+     IF ((\2)*(MAX_SHORT_DELAY+1))|(\1) > MAX_SHORT_DELAY
           push af
           delay_nosave_ (((\2)<<16)+(\1) - 7)&$FFFF, (((\2)<<16)+(\1) - 7)>>16
           pop  af
@@ -144,13 +144,13 @@ delay_hl_51_cycles:
      ret
 
 ; delay_short_ macro calls into these
-ds max_short_delay-10, $00 ; NOP repeated several times
+ds MAX_SHORT_DELAY-10, $00 ; NOP repeated several times
 delay_unrolled_:
      ret
 
 MACRO? delay_short_
      ASSERT (\1) >= 0, "Short delay must be >= 0"
-     ASSERT (\1) <= max_short_delay, "Short delay must be <= {d:max_short_delay}"
+     ASSERT (\1) <= MAX_SHORT_DELAY, "Short delay must be <= {d:MAX_SHORT_DELAY}"
 
      IF (\1) == 1
           nop
