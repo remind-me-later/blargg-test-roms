@@ -1,15 +1,15 @@
 # suite directory	shell	source file, or driver|test|test... for a multi-test ROM	output (relative path of the ROM)	pad byte	options
 cpu_instrs	shell1	01-special.s	cpu_instrs/individual/01-special.gb	0
 cpu_instrs	shell1	02-interrupts.s	cpu_instrs/individual/02-interrupts.gb	0
-cpu_instrs	shell1	03-op sp,hl.s	cpu_instrs/individual/03-op sp,hl.gb	0
-cpu_instrs	shell1	04-op r,imm.s	cpu_instrs/individual/04-op r,imm.gb	0
-cpu_instrs	shell1	05-op rp.s	cpu_instrs/individual/05-op rp.gb	0
-cpu_instrs	shell1	06-ld r,r.s	cpu_instrs/individual/06-ld r,r.gb	0
-cpu_instrs	shell1	07-jr,jp,call,ret,rst.s	cpu_instrs/individual/07-jr,jp,call,ret,rst.gb	0
-cpu_instrs	shell1	08-misc instrs.s	cpu_instrs/individual/08-misc instrs.gb	0
-cpu_instrs	shell1	09-op r,r.s	cpu_instrs/individual/09-op r,r.gb	0
-cpu_instrs	shell1	10-bit ops.s	cpu_instrs/individual/10-bit ops.gb	0
-cpu_instrs	shell1	11-op a,(hl).s	cpu_instrs/individual/11-op a,(hl).gb	0
+cpu_instrs	shell1	03-op_sp_hl.s	cpu_instrs/individual/03-op sp,hl.gb	0
+cpu_instrs	shell1	04-op_r_imm.s	cpu_instrs/individual/04-op r,imm.gb	0
+cpu_instrs	shell1	05-op_rp.s	cpu_instrs/individual/05-op rp.gb	0
+cpu_instrs	shell1	06-ld_r_r.s	cpu_instrs/individual/06-ld r,r.gb	0
+cpu_instrs	shell1	07-jr_jp_call_ret_rst.s	cpu_instrs/individual/07-jr,jp,call,ret,rst.gb	0
+cpu_instrs	shell1	08-misc_instrs.s	cpu_instrs/individual/08-misc instrs.gb	0
+cpu_instrs	shell1	09-op_r_r.s	cpu_instrs/individual/09-op r,r.gb	0
+cpu_instrs	shell1	10-bit_ops.s	cpu_instrs/individual/10-bit ops.gb	0
+cpu_instrs	shell1	11-op_a_hl.s	cpu_instrs/individual/11-op a,(hl).gb	0
 mem_timing	shell1	01-read_timing.s	mem_timing/individual/01-read_timing.gb	0
 mem_timing	shell1	02-write_timing.s	mem_timing/individual/02-write_timing.gb	0
 mem_timing	shell1	03-modify_timing.s	mem_timing/individual/03-modify_timing.gb	0
@@ -26,34 +26,34 @@ oam_bug	shell2	6-timing_no_bug.s	oam_bug/rom_singles/6-timing_no_bug.gb	0
 oam_bug	shell2	7-timing_effect.s	oam_bug/rom_singles/7-timing_effect.gb	0
 oam_bug	shell2	8-instr_effect.s	oam_bug/rom_singles/8-instr_effect.gb	0
 dmg_sound	shell2	01-registers.s	dmg_sound/rom_singles/01-registers.gb	0
-dmg_sound	shell2	02-len ctr.s	dmg_sound/rom_singles/02-len ctr.gb	0
+dmg_sound	shell2	02-len_ctr.s	dmg_sound/rom_singles/02-len ctr.gb	0
 dmg_sound	shell2	03-trigger.s	dmg_sound/rom_singles/03-trigger.gb	0
 dmg_sound	shell2	04-sweep.s	dmg_sound/rom_singles/04-sweep.gb	0
-dmg_sound	shell2	05-sweep details.s	dmg_sound/rom_singles/05-sweep details.gb	0
-dmg_sound	shell2	06-overflow on trigger.s	dmg_sound/rom_singles/06-overflow on trigger.gb	0
-dmg_sound	shell2	07-len sweep period sync.s	dmg_sound/rom_singles/07-len sweep period sync.gb	0
-dmg_sound	shell2	08-len ctr during power.s	dmg_sound/rom_singles/08-len ctr during power.gb	0
-dmg_sound	shell2	09-wave read while on.s	dmg_sound/rom_singles/09-wave read while on.gb	0
-dmg_sound	shell2	10-wave trigger while on.s	dmg_sound/rom_singles/10-wave trigger while on.gb	0
-dmg_sound	shell2	11-regs after power.s	dmg_sound/rom_singles/11-regs after power.gb	0
-dmg_sound	shell2	12-wave write while on.s	dmg_sound/rom_singles/12-wave write while on.gb	0
+dmg_sound	shell2	05-sweep_details.s	dmg_sound/rom_singles/05-sweep details.gb	0
+dmg_sound	shell2	06-overflow_on_trigger.s	dmg_sound/rom_singles/06-overflow on trigger.gb	0
+dmg_sound	shell2	07-len_sweep_period_sync.s	dmg_sound/rom_singles/07-len sweep period sync.gb	0
+dmg_sound	shell2	08-len_ctr_during_power.s	dmg_sound/rom_singles/08-len ctr during power.gb	0
+dmg_sound	shell2	09-wave_read_while_on.s	dmg_sound/rom_singles/09-wave read while on.gb	0
+dmg_sound	shell2	10-wave_trigger_while_on.s	dmg_sound/rom_singles/10-wave trigger while on.gb	0
+dmg_sound	shell2	11-regs_after_power.s	dmg_sound/rom_singles/11-regs after power.gb	0
+dmg_sound	shell2	12-wave_write_while_on.s	dmg_sound/rom_singles/12-wave write while on.gb	0
 cgb_sound	shell2	01-registers.s	cgb_sound/rom_singles/01-registers.gb	0
-cgb_sound	shell2	02-len ctr.s	cgb_sound/rom_singles/02-len ctr.gb	0
+cgb_sound	shell2	02-len_ctr.s	cgb_sound/rom_singles/02-len ctr.gb	0
 cgb_sound	shell2	03-trigger.s	cgb_sound/rom_singles/03-trigger.gb	0
 cgb_sound	shell2	04-sweep.s	cgb_sound/rom_singles/04-sweep.gb	0
-cgb_sound	shell2	05-sweep details.s	cgb_sound/rom_singles/05-sweep details.gb	0
-cgb_sound	shell2	06-overflow on trigger.s	cgb_sound/rom_singles/06-overflow on trigger.gb	0
-cgb_sound	shell2	07-len sweep period sync.s	cgb_sound/rom_singles/07-len sweep period sync.gb	0
-cgb_sound	shell2	08-len ctr during power.s	cgb_sound/rom_singles/08-len ctr during power.gb	0
-cgb_sound	shell2	09-wave read while on.s	cgb_sound/rom_singles/09-wave read while on.gb	0
-cgb_sound	shell2	10-wave trigger while on.s	cgb_sound/rom_singles/10-wave trigger while on.gb	0
-cgb_sound	shell2	11-regs after power.s	cgb_sound/rom_singles/11-regs after power.gb	0
+cgb_sound	shell2	05-sweep_details.s	cgb_sound/rom_singles/05-sweep details.gb	0
+cgb_sound	shell2	06-overflow_on_trigger.s	cgb_sound/rom_singles/06-overflow on trigger.gb	0
+cgb_sound	shell2	07-len_sweep_period_sync.s	cgb_sound/rom_singles/07-len sweep period sync.gb	0
+cgb_sound	shell2	08-len_ctr_during_power.s	cgb_sound/rom_singles/08-len ctr during power.gb	0
+cgb_sound	shell2	09-wave_read_while_on.s	cgb_sound/rom_singles/09-wave read while on.gb	0
+cgb_sound	shell2	10-wave_trigger_while_on.s	cgb_sound/rom_singles/10-wave trigger while on.gb	0
+cgb_sound	shell2	11-regs_after_power.s	cgb_sound/rom_singles/11-regs after power.gb	0
 cgb_sound	shell2	12-wave.s	cgb_sound/rom_singles/12-wave.gb	0
 interrupt_time	shell2	interrupt_time.s	interrupt_time/interrupt_time.gb	0
 halt_bug	shell2	halt_bug.s	halt_bug.gb	0
-cpu_instrs	shell1	multi.s|01-special.s|02-interrupts.s|03-op sp,hl.s|04-op r,imm.s|05-op rp.s|06-ld r,r.s|07-jr,jp,call,ret,rst.s|08-misc instrs.s|09-op r,r.s|10-bit ops.s|11-op a,(hl).s	cpu_instrs/cpu_instrs.gb	0	size=65536,checksum=bank0
+cpu_instrs	shell1	multi.s|01-special.s|02-interrupts.s|03-op_sp_hl.s|04-op_r_imm.s|05-op_rp.s|06-ld_r_r.s|07-jr_jp_call_ret_rst.s|08-misc_instrs.s|09-op_r_r.s|10-bit_ops.s|11-op_a_hl.s	cpu_instrs/cpu_instrs.gb	0	size=65536,checksum=bank0
 mem_timing	shell1	multi.s|01-read_timing.s|02-write_timing.s|03-modify_timing.s	mem_timing/mem_timing.gb	0	size=65536,checksum=bank0
-dmg_sound	shell2	multi.s|01-registers.s|02-len ctr.s|03-trigger.s|04-sweep.s|05-sweep details.s|06-overflow on trigger.s|07-len sweep period sync.s|08-len ctr during power.s|09-wave read while on.s|10-wave trigger while on.s|11-regs after power.s|12-wave write while on.s	dmg_sound/dmg_sound.gb	0	size=65536
-cgb_sound	shell2	multi.s|01-registers.s|02-len ctr.s|03-trigger.s|04-sweep.s|05-sweep details.s|06-overflow on trigger.s|07-len sweep period sync.s|08-len ctr during power.s|09-wave read while on.s|10-wave trigger while on.s|11-regs after power.s|12-wave.s	cgb_sound/cgb_sound.gb	0	size=65536
+dmg_sound	shell2	multi.s|01-registers.s|02-len_ctr.s|03-trigger.s|04-sweep.s|05-sweep_details.s|06-overflow_on_trigger.s|07-len_sweep_period_sync.s|08-len_ctr_during_power.s|09-wave_read_while_on.s|10-wave_trigger_while_on.s|11-regs_after_power.s|12-wave_write_while_on.s	dmg_sound/dmg_sound.gb	0	size=65536
+cgb_sound	shell2	multi.s|01-registers.s|02-len_ctr.s|03-trigger.s|04-sweep.s|05-sweep_details.s|06-overflow_on_trigger.s|07-len_sweep_period_sync.s|08-len_ctr_during_power.s|09-wave_read_while_on.s|10-wave_trigger_while_on.s|11-regs_after_power.s|12-wave.s	cgb_sound/cgb_sound.gb	0	size=65536
 oam_bug	shell2	multi.s|1-lcd_sync.s|2-causes.s|3-non_causes.s|4-scanline_timing.s|5-timing_bug.s|6-timing_no_bug.s|7-timing_effect.s|8-instr_effect.s	oam_bug/oam_bug.gb	0	size=65536
 mem_timing-2	shell2	multi.s|01-read_timing.s|02-write_timing.s|03-modify_timing.s	mem_timing-2/mem_timing.gb	0xFF	size=65536
