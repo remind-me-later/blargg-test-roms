@@ -1,6 +1,6 @@
 ; Tests LD r,r ($40-$7F)
 
-;.define PRINT_CHECKSUMS 1
+;DEF PRINT_CHECKSUMS = 1
 DEF TEST_NAME EQUS "\"06-ld r,r\""
 INCLUDE "shell.inc"
 INCLUDE "instr_test.s"

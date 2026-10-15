@@ -1,6 +1,6 @@
 ; Tests BC/DE/HL arithmetic
 
-;.define PRINT_CHECKSUMS 1
+;DEF PRINT_CHECKSUMS = 1
 DEF TEST_NAME EQUS "\"05-op rp\""
 INCLUDE "shell.inc"
 INCLUDE "instr_test.s"

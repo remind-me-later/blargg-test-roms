@@ -3,6 +3,8 @@
 
 DEF TEST_NAME EQUS "\"instr_timing\""
 DEF ROM_NAME EQUS "\"INSTR_TIMING\""
+; The tables have to follow the shell code, in the block of the program
+DEF KEEP_PROGRAM_OPEN = 1
 INCLUDE "shell.inc"
 INCLUDE "timer.s"
 
@@ -339,3 +341,5 @@ cb_op_times:
      db 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 4, 2
      db 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 4, 2
      db 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 4, 2
+
+ENDL

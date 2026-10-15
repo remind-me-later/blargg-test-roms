@@ -5,8 +5,7 @@ DEF test_name = bss+1
 DEF bss = bss+3
 
 ; Sets test code and optional error text.
-; Takes multiple strings due to wla's idiotic
-; default limit of 63 chars per string.
+; The text can be given as several strings, which are stored one after another.
 ; Preserved: AF, BC, DE, HL
 MACRO set_test ; code[,text[,text2[,text3]]]
      push hl
@@ -41,7 +40,7 @@ MACRO check_crc
 ENDM
 
 ; Checks CRC, differing based on DMG or CGB build
-MACRO check_crc_dmg_cgb
+MACRO? check_crc_dmg_cgb
      IF DEF(REQUIRE_DMG)
           check_crc \1
      ELSE

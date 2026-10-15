@@ -26,6 +26,9 @@ cloning, run
 roms.tsv lists the ROMs and their sources. CI (.github/workflows) builds
 them all and compares them with the ones of the gameboy-test-roms release.
 
+The tools run with -Weverything, and the sources give no warnings. To add
+options, set RGBASMFLAGS, RGBLINKFLAGS or RGBFIXFLAGS (CI sets -Werror).
+
 The GBS and devcart builds that WLA-DX had are not supported.
 
 

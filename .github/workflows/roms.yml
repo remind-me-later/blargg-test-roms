@@ -10,6 +10,10 @@ on:
 env:
   RGBDS_VERSION: v1.0.4
   TEST_ROMS_VERSION: v7.0
+  # The tools always run with -Weverything: a warning fails the build here.
+  RGBASMFLAGS: -Werror
+  RGBLINKFLAGS: -Werror
+  RGBFIXFLAGS: -Werror
 
 jobs:
   roms:

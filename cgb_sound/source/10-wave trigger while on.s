@@ -1,7 +1,7 @@
 ; Retriggers wave without stopping first
 
-;.define REQUIRE_DMG 1
-;.define REQUIRE_CGB 1
+;DEF REQUIRE_DMG = 1
+;DEF REQUIRE_CGB = 1
 DEF TEST_NAME EQUS "\"10-wave trigger while on\""
 INCLUDE "shell.inc"
 INCLUDE "apu.s"

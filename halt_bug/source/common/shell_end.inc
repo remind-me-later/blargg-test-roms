@@ -1,5 +1,5 @@
-; The code that goes after the program (WLA-DX placed it there with
-; `.section "runtime" returnOrg`). Included at the end of every program.
+; The shell code that goes after the program. RGBDS lays code out in source
+; order, so it is in this file, which every program includes at its end.
 
      ; Catch user code running off end
      jp   internal_error
@@ -176,3 +176,10 @@ init_runtime:
 
 play_byte:
      ret
+
+; Closes the block of the program, which runs from WRAM. The multi-test driver
+; runs from ROM, and a test that has data to put after the shell code (see
+; instr_timing) defines KEEP_PROGRAM_OPEN and closes the block itself.
+IF !DEF(MULTI_DRIVER) && !DEF(KEEP_PROGRAM_OPEN)
+     ENDL
+ENDC

@@ -1,7 +1,7 @@
 ; Tests most register instructions.
 ; Takes 15 seconds.
 
-;.define PRINT_CHECKSUMS 1
+;DEF PRINT_CHECKSUMS = 1
 DEF TEST_NAME EQUS "\"10-bit ops\""
 INCLUDE "shell.inc"
 INCLUDE "instr_test.s"

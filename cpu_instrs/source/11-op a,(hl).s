@@ -1,7 +1,7 @@
 ; Tests (HL/BC/DE) instructions.
 ; Takes 20 seconds.
 
-;.define PRINT_CHECKSUMS 1
+;DEF PRINT_CHECKSUMS = 1
 DEF TEST_NAME EQUS "\"11-op a,(hl)\""
 INCLUDE "shell.inc"
 INCLUDE "instr_test.s"

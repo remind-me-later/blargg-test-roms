@@ -1,8 +1,8 @@
 ; On CGB, length counters are reset when powered up.
 ; On DMG, they are unaffected, and not clocked.
 
-;.define REQUIRE_DMG 1
-;.define REQUIRE_CGB 1
+;DEF REQUIRE_DMG = 1
+;DEF REQUIRE_CGB = 1
 DEF TEST_NAME EQUS "\"08-len ctr during power\""
 INCLUDE "shell.inc"
 INCLUDE "apu.s"

@@ -10,6 +10,9 @@
 #   ./build.sh --only PREFIX    only the ROMs whose output path starts with PREFIX
 #                               (can be repeated)
 #
+# RGBASMFLAGS, RGBLINKFLAGS and RGBFIXFLAGS add options to the tools, which
+# always run with -Weverything: RGBASMFLAGS=-Werror makes a warning fatal.
+#
 # The exit status is 1 if a ROM fails to build or differs from its reference.
 
 set -euo pipefail
@@ -49,6 +52,11 @@ for tool in rgbasm rgblink rgbfix; do
     command -v "$tool" > /dev/null || { echo "$tool not found; install RGBDS" >&2; exit 2; }
 done
 
+# shellcheck disable=SC2206 # the flags are split on purpose
+asm_flags=(-Weverything ${RGBASMFLAGS:-})
+link_flags=(-Weverything ${RGBLINKFLAGS:-})
+fix_flags=(-Weverything ${RGBFIXFLAGS:-})
+
 wanted() {
     [ ${#only[@]} -eq 0 ] && return 0
     local prefix
@@ -85,19 +93,19 @@ build_rom() {
     IFS='|' read -r -a sources <<< "$files"
     mkdir -p "$(dirname "$out")"
     if [ ${#sources[@]} -eq 1 ]; then
-        (cd "$here/$srcdir" && rgbasm -I common/ -I "$here/hardware.inc/" -o "$tmp/0.o" "${sources[0]}")
+        (cd "$here/$srcdir" && rgbasm "${asm_flags[@]}" -I common/ -I "$here/hardware.inc/" -o "$tmp/0.o" "${sources[0]}")
         objs=("$tmp/0.o")
     else
         local i
-        (cd "$here/$srcdir" && rgbasm -I common/ -I "$here/hardware.inc/" -o "$tmp/driver.o" "${sources[0]}")
+        (cd "$here/$srcdir" && rgbasm "${asm_flags[@]}" -I common/ -I "$here/hardware.inc/" -o "$tmp/driver.o" "${sources[0]}")
         objs=("$tmp/driver.o")
         for ((i = 1; i < ${#sources[@]}; i++)); do
-            (cd "$here/$srcdir" && rgbasm -I common/ -I "$here/hardware.inc/" -D BUILD_MULTI=1 -D MULTI_TEST=$((i - 1)) \
+            (cd "$here/$srcdir" && rgbasm "${asm_flags[@]}" -I common/ -I "$here/hardware.inc/" -D BUILD_MULTI=1 -D MULTI_TEST=$((i - 1)) \
                 -o "$tmp/test$i.o" "${sources[i]}")
             objs+=("$tmp/test$i.o")
         done
     fi
-    rgblink -p "$pad" -o "$out" "${objs[@]}"
+    rgblink "${link_flags[@]}" -p "$pad" -o "$out" "${objs[@]}"
 
     local size
     size=$(option size "$options")
@@ -110,14 +118,14 @@ build_rom() {
     fi
 
     if [ "$(option checksum "$options")" = bank0 ]; then
-        rgbfix -f h "$out"
+        rgbfix "${fix_flags[@]}" -f h "$out"
         local sum
         sum=$(head -c 16384 "$out" | od -An -v -tu1 -w16 \
             | awk '{ for (i = 1; i <= NF; i++) s += $i } END { print s % 65536 }')
         printf "$(printf '\\x%02x\\x%02x' $((sum >> 8)) $((sum & 255)))" \
             | dd of="$out" bs=1 seek=334 conv=notrunc status=none
     else
-        rgbfix -f hg "$out"
+        rgbfix "${fix_flags[@]}" -f hg "$out"
     fi
 }
 

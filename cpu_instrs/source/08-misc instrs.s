@@ -1,6 +1,6 @@
 ; Tests miscellaneous instructions
 
-;.define PRINT_CHECKSUMS 1
+;DEF PRINT_CHECKSUMS = 1
 DEF TEST_NAME EQUS "\"08-misc instrs\""
 INCLUDE "shell.inc"
 INCLUDE "instr_test.s"
