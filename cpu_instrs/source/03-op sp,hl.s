@@ -33,17 +33,17 @@ hl_loop:
      ld   d,[hl]
      inc  hl
      push hl
-     
+
      ; Go through each value for SP
      ld   hl,values
 values_loop:
      push bc
      push de
      push hl
-     
+
      push bc
      pop  af
-     
+
      ; Switch stack
      ld   [temp],sp
      ld   a,[hli]
@@ -51,30 +51,30 @@ values_loop:
      ld   l,a
 ;    call print_regs
      ld   sp,hl
-     
+
      ; Set registers
      ld   h,d
      ld   l,e
      ld   a,$12
      ld   bc,$5691
      ld   de,$9ABC
-     
+
      jp   instr
 instr_done:
      ; Save new SP and switch to yet another stack
      ld   [temp+2],sp
      ld   sp,$DF70
-     
+
      call checksum_af_bc_de_hl
-     
+
      ; Checksum SP
      ld   a,[temp+2]
      call update_crc_fast
      ld   a,[temp+3]
      call update_crc_fast
-     
+
      ldsp temp
-     
+
      pop  hl
      pop  de
      pop  bc
@@ -83,12 +83,12 @@ instr_done:
      ld   a,l
      cp   LOW(values_end)
      jr   nz,values_loop
-     
+
      pop  hl
      ld   a,l
      cp   LOW(values_end)
      jr   nz,hl_loop
-     
+
      ret
 
 values:

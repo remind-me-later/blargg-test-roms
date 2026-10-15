@@ -112,7 +112,7 @@ MACRO delay_short_
      IF (\1) > max_short_delay
           FAIL "assertion failed"
      ENDC
-     
+
      IF (\1) == 1
           nop
      ENDC

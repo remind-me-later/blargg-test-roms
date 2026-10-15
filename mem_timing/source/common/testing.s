@@ -92,24 +92,24 @@ test_failed:
 ; Preserved: AF, BC, DE, HL
 print_crc:
      push af
-     
+
      ; Must read checksum entirely before printing,
      ; since printing updates it.
      lda  checksum
      cpl
      push af
-     
+
      lda  checksum+1
      cpl
      push af
-     
+
      lda  checksum+2
      cpl
      push af
-     
+
      lda  checksum+3
      cpl
-     
+
      call print_hex
      pop  af
      call print_hex
@@ -117,7 +117,7 @@ print_crc:
      call print_hex
      pop  af
      call print_a
-     
+
      pop  af
      ret
 
@@ -140,21 +140,21 @@ check_crc_:
      lda  checksum+0
      cp   e
      jr   nz,:+
-     
+
      lda  checksum+1
      cp   d
      jr   nz,:+
-     
+
      lda  checksum+2
      cp   c
      jr   nz,:+
-     
+
      lda  checksum+3
      cp   b
      jr   nz,:+
-     
+
      jp   reset_crc
-     
+
 :    call print_crc
      jp   test_failed
 

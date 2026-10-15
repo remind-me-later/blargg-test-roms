@@ -29,7 +29,7 @@ IF DEF(PRINT_CHECKSUMS)
      push af
      lda  checksum+0
      push af
-     
+
      ld   a,[next_checksum]
      inc  a
      ld   [next_checksum],a
@@ -51,10 +51,10 @@ IF DEF(PRINT_CHECKSUMS)
      call print_char
      pop  af
      call print_hex
-     
+
      xor  a
      ret
-     
+
 .print_byte:
      push af
      ld   a,'$'
@@ -65,7 +65,7 @@ IF DEF(PRINT_CHECKSUMS)
      call print_char
      ret
 ELSE
-     
+
      push bc
      push de
      push hl
@@ -88,7 +88,7 @@ ELSE
      ld   [next_checksum],a
      ld   a,h
      ld   [next_checksum+1],a
-     
+
      ld   a,b
      cp   0
      pop  hl

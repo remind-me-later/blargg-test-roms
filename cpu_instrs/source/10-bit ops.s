@@ -14,7 +14,7 @@ instrs:
      db $CB, $44, 0 ; BIT  0,H
      db $CB, $45, 0 ; BIT  0,L
      db $CB, $47, 0 ; BIT  0,A
-     
+
      db $CB, $48, 0 ; BIT  1,B
      db $CB, $49, 0 ; BIT  1,C
      db $CB, $4A, 0 ; BIT  1,D
@@ -22,7 +22,7 @@ instrs:
      db $CB, $4C, 0 ; BIT  1,H
      db $CB, $4D, 0 ; BIT  1,L
      db $CB, $4F, 0 ; BIT  1,A
-     
+
      db $CB, $50, 0 ; BIT  2,B
      db $CB, $51, 0 ; BIT  2,C
      db $CB, $52, 0 ; BIT  2,D
@@ -30,7 +30,7 @@ instrs:
      db $CB, $54, 0 ; BIT  2,H
      db $CB, $55, 0 ; BIT  2,L
      db $CB, $57, 0 ; BIT  2,A
-     
+
      db $CB, $58, 0 ; BIT  3,B
      db $CB, $59, 0 ; BIT  3,C
      db $CB, $5A, 0 ; BIT  3,D
@@ -38,7 +38,7 @@ instrs:
      db $CB, $5C, 0 ; BIT  3,H
      db $CB, $5D, 0 ; BIT  3,L
      db $CB, $5F, 0 ; BIT  3,A
-     
+
      db $CB, $60, 0 ; BIT  4,B
      db $CB, $61, 0 ; BIT  4,C
      db $CB, $62, 0 ; BIT  4,D
@@ -46,7 +46,7 @@ instrs:
      db $CB, $64, 0 ; BIT  4,H
      db $CB, $65, 0 ; BIT  4,L
      db $CB, $67, 0 ; BIT  4,A
-     
+
      db $CB, $68, 0 ; BIT  5,B
      db $CB, $69, 0 ; BIT  5,C
      db $CB, $6A, 0 ; BIT  5,D
@@ -54,7 +54,7 @@ instrs:
      db $CB, $6C, 0 ; BIT  5,H
      db $CB, $6D, 0 ; BIT  5,L
      db $CB, $6F, 0 ; BIT  5,A
-     
+
      db $CB, $70, 0 ; BIT  6,B
      db $CB, $71, 0 ; BIT  6,C
      db $CB, $72, 0 ; BIT  6,D
@@ -62,7 +62,7 @@ instrs:
      db $CB, $74, 0 ; BIT  6,H
      db $CB, $75, 0 ; BIT  6,L
      db $CB, $77, 0 ; BIT  6,A
-     
+
      db $CB, $78, 0 ; BIT  7,B
      db $CB, $79, 0 ; BIT  7,C
      db $CB, $7A, 0 ; BIT  7,D
@@ -70,7 +70,7 @@ instrs:
      db $CB, $7C, 0 ; BIT  7,H
      db $CB, $7D, 0 ; BIT  7,L
      db $CB, $7F, 0 ; BIT  7,A
-     
+
      db $CB, $80, 0 ; RES  0,B
      db $CB, $81, 0 ; RES  0,C
      db $CB, $82, 0 ; RES  0,D
@@ -78,7 +78,7 @@ instrs:
      db $CB, $84, 0 ; RES  0,H
      db $CB, $85, 0 ; RES  0,L
      db $CB, $87, 0 ; RES  0,A
-     
+
      db $CB, $88, 0 ; RES  1,B
      db $CB, $89, 0 ; RES  1,C
      db $CB, $8A, 0 ; RES  1,D
@@ -86,7 +86,7 @@ instrs:
      db $CB, $8C, 0 ; RES  1,H
      db $CB, $8D, 0 ; RES  1,L
      db $CB, $8F, 0 ; RES  1,A
-     
+
      db $CB, $90, 0 ; RES  2,B
      db $CB, $91, 0 ; RES  2,C
      db $CB, $92, 0 ; RES  2,D
@@ -94,7 +94,7 @@ instrs:
      db $CB, $94, 0 ; RES  2,H
      db $CB, $95, 0 ; RES  2,L
      db $CB, $97, 0 ; RES  2,A
-     
+
      db $CB, $98, 0 ; RES  3,B
      db $CB, $99, 0 ; RES  3,C
      db $CB, $9A, 0 ; RES  3,D
@@ -102,7 +102,7 @@ instrs:
      db $CB, $9C, 0 ; RES  3,H
      db $CB, $9D, 0 ; RES  3,L
      db $CB, $9F, 0 ; RES  3,A
-     
+
      db $CB, $A0, 0 ; RES  4,B
      db $CB, $A1, 0 ; RES  4,C
      db $CB, $A2, 0 ; RES  4,D
@@ -110,7 +110,7 @@ instrs:
      db $CB, $A4, 0 ; RES  4,H
      db $CB, $A5, 0 ; RES  4,L
      db $CB, $A7, 0 ; RES  4,A
-     
+
      db $CB, $A8, 0 ; RES  5,B
      db $CB, $A9, 0 ; RES  5,C
      db $CB, $AA, 0 ; RES  5,D
@@ -118,7 +118,7 @@ instrs:
      db $CB, $AC, 0 ; RES  5,H
      db $CB, $AD, 0 ; RES  5,L
      db $CB, $AF, 0 ; RES  5,A
-     
+
      db $CB, $B0, 0 ; RES  6,B
      db $CB, $B1, 0 ; RES  6,C
      db $CB, $B2, 0 ; RES  6,D
@@ -126,7 +126,7 @@ instrs:
      db $CB, $B4, 0 ; RES  6,H
      db $CB, $B5, 0 ; RES  6,L
      db $CB, $B7, 0 ; RES  6,A
-     
+
      db $CB, $B8, 0 ; RES  7,B
      db $CB, $B9, 0 ; RES  7,C
      db $CB, $BA, 0 ; RES  7,D
@@ -134,7 +134,7 @@ instrs:
      db $CB, $BC, 0 ; RES  7,H
      db $CB, $BD, 0 ; RES  7,L
      db $CB, $BF, 0 ; RES  7,A
-     
+
      db $CB, $C0, 0 ; SET  0,B
      db $CB, $C1, 0 ; SET  0,C
      db $CB, $C2, 0 ; SET  0,D
@@ -142,7 +142,7 @@ instrs:
      db $CB, $C4, 0 ; SET  0,H
      db $CB, $C5, 0 ; SET  0,L
      db $CB, $C7, 0 ; SET  0,A
-     
+
      db $CB, $C8, 0 ; SET  1,B
      db $CB, $C9, 0 ; SET  1,C
      db $CB, $CA, 0 ; SET  1,D
@@ -150,7 +150,7 @@ instrs:
      db $CB, $CC, 0 ; SET  1,H
      db $CB, $CD, 0 ; SET  1,L
      db $CB, $CF, 0 ; SET  1,A
-     
+
      db $CB, $D0, 0 ; SET  2,B
      db $CB, $D1, 0 ; SET  2,C
      db $CB, $D2, 0 ; SET  2,D
@@ -158,7 +158,7 @@ instrs:
      db $CB, $D4, 0 ; SET  2,H
      db $CB, $D5, 0 ; SET  2,L
      db $CB, $D7, 0 ; SET  2,A
-     
+
      db $CB, $D8, 0 ; SET  3,B
      db $CB, $D9, 0 ; SET  3,C
      db $CB, $DA, 0 ; SET  3,D
@@ -166,7 +166,7 @@ instrs:
      db $CB, $DC, 0 ; SET  3,H
      db $CB, $DD, 0 ; SET  3,L
      db $CB, $DF, 0 ; SET  3,A
-     
+
      db $CB, $E0, 0 ; SET  4,B
      db $CB, $E1, 0 ; SET  4,C
      db $CB, $E2, 0 ; SET  4,D
@@ -174,7 +174,7 @@ instrs:
      db $CB, $E4, 0 ; SET  4,H
      db $CB, $E5, 0 ; SET  4,L
      db $CB, $E7, 0 ; SET  4,A
-     
+
      db $CB, $E8, 0 ; SET  5,B
      db $CB, $E9, 0 ; SET  5,C
      db $CB, $EA, 0 ; SET  5,D
@@ -182,7 +182,7 @@ instrs:
      db $CB, $EC, 0 ; SET  5,H
      db $CB, $ED, 0 ; SET  5,L
      db $CB, $EF, 0 ; SET  5,A
-     
+
      db $CB, $F0, 0 ; SET  6,B
      db $CB, $F1, 0 ; SET  6,C
      db $CB, $F2, 0 ; SET  6,D
@@ -190,7 +190,7 @@ instrs:
      db $CB, $F4, 0 ; SET  6,H
      db $CB, $F5, 0 ; SET  6,L
      db $CB, $F7, 0 ; SET  6,A
-     
+
      db $CB, $F8, 0 ; SET  7,B
      db $CB, $F9, 0 ; SET  7,C
      db $CB, $FA, 0 ; SET  7,D
@@ -206,71 +206,71 @@ test_instr:
      ld   c,$F0
      call test
      ret
-     
+
 test:
      ; Go through each value for A
      ld   hl,values
 a_loop:
      ld   b,[hl]
      push hl
-     
+
      ; Go through each value for other registers
      ld   hl,values
 values_loop:
      push bc
      push hl
-     
+
      push bc
-     
+
      ; BC
      ld   a,[hli]
      ld   b,a
      ld   a,[hli]
      ld   c,a
-     
+
      ; HL
      ld   a,[hli]
      ld   d,a
      ld   a,[hli]
      ld   e,a
      push de
-     
+
      ; DE
      ld   a,[hli]
      ld   d,a
      ld   a,[hli]
      ld   e,a
-     
+
      pop  hl
      pop  af
-     
+
 ;    call print_regs
      jp   instr
 instr_done:
-     
+
      ; Checksum registers
      call checksum_af_bc_de_hl
-     
+
      pop  hl
      pop  bc
      inc  hl
      ld   a,l
      cp   LOW(values_end)
      jr   nz,values_loop
-     
+
      pop  hl
      inc  hl
      ld   a,l
      cp   LOW(values_end)
      jr   nz,a_loop
-     
+
      ret
 
 values:
      db $00, $01, $02, $04, $08, $10, $20, $40, $80, $FF
 values_end:
      db $00, $01, $02, $04, $08, $10, $20, $40, $80, $FF
-     
+
 checksums:
      db $46, $51, $4A, $16, $D4, $18, $B2, $4E, $ED, $B5, $15, $EA, $74, $66, $66, $3E
      db $C2, $F3, $7F, $6A, $63, $CA, $62, $21, $72, $1E, $E4, $83, $6A, $56, $41, $1D

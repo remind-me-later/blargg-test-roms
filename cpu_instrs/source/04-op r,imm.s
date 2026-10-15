@@ -23,7 +23,7 @@ instrs:
      db $E6, 0, 0 ; AND  $00
      db $EE, 0, 0 ; XOR  $00
 instrs_end:
-     
+
 test_instr:
      ld   c,$00
      call test
@@ -34,20 +34,20 @@ test_instr:
      ld   c,$F0
      call test
      ret
-     
+
 test:
      ; Go through each value for A
      ld   hl,values
 a_loop:
      ld   b,[hl]
      push hl
-     
+
      ; Go through each value for immediate data
      ld   hl,values
 values_loop:
      push bc
      push hl
-     
+
      ; Set registers
      push bc
      ld   a,[hl]
@@ -56,29 +56,29 @@ values_loop:
      ld   de,$5678
      ld   hl,rp_temp
      pop  af
-     
+
 ;    call print_regs
      jp   instr
 instr_done:
-     
+
      ; Checksum registers and (hl)
      call checksum_af_bc_de_hl
      ld   a,[rp_temp]
      call update_crc_fast
-     
+
      pop  hl
      pop  bc
      inc  hl
      ld   a,l
      cp   LOW(values_end)
      jr   nz,values_loop
-     
+
      pop  hl
      inc  hl
      ld   a,l
      cp   LOW(values_end)
      jr   nz,a_loop
-     
+
      ret
 
 values:

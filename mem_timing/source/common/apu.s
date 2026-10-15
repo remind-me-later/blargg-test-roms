@@ -136,18 +136,18 @@ get_len_a:
 sync_length:
      push af
      push hl
-     
+
      ld   hl,rAUDENA
      wreg rAUD2ENV,$08  ; silent without disabling channel
      wreg rAUD2HIGH,$40  ; avoids extra length clock on trigger
      wreg rAUD2LEN,-2   ; length = 2, in case clock occurs immediately
      wreg rAUD2HIGH,$C0  ; start length
-     
+
      ; Coarse sync
      ld   a,$02
 :    and  [hl]
      jr   nz,:-
-     
+
      ; Fine sync. Slowly moves "forward" until
      ; length clock occurs just before reading NR52.
 :    delay 4097-20
@@ -157,7 +157,7 @@ sync_length:
      delay 2        ; 2
      and  $02       ; 2
      jr   nz,:-      ; 3
-     
+
      pop  hl
      pop  af
      ret

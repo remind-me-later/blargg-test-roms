@@ -4,27 +4,27 @@ DEF REQUIRE_CGB = 1
 DEF TEST_NAME EQUS "\"11-regs after power\""
 INCLUDE "shell.inc"
 INCLUDE "apu.s"
-     
+
 main:
      call sync_apu
-     
+
      ld   a,$FF
      call fill_apu_regs
-     
+
      ; Power down for a moment
      wreg rAUDENA,AUDENA_OFF
      wreg rAUD4LEN,-$12
      wreg rAUD1ENV,$F0
      delay_msec 100
      wreg rAUDENA,AUDENA_ON
-     
+
      set_test 2,"Powering off should clear NR12"
      call sync_apu
      wreg rAUD1HIGH,$80
      lda  rAUDENA
      and  $01
      jp   nz,test_failed
-     
+
      set_test 3,"Powering off should clear NR13"
      call sync_apu
      wreg rAUD1SWEEP,$11
@@ -34,7 +34,7 @@ main:
      lda  rAUDENA
      and  $01
      jp   z,test_failed
-     
+
      set_test 4,"Powering off should clear NR41"
      call sync_apu
      delay_clocks 8192 ; avoids extra length clocking
@@ -48,7 +48,7 @@ main:
      lda  rAUDENA
      and  $08
      jp   nz,test_failed
-     
+
      jp   tests_passed
 
 INCLUDE "shell_end.inc"

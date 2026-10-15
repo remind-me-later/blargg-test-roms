@@ -36,7 +36,7 @@ IF !DEF(BUILD_MULTI)
 SECTION "copy to WRAM", ROM0[$2150]
 copy_to_wram_then_run:
      ld   b,a
-     
+
      ld   de,$C000
 :    ld   a,[hli]
      ld   [de],a
@@ -45,7 +45,7 @@ copy_to_wram_then_run:
      inc  d
      dec  c
      jr   nz,:-
-     
+
      ld   a,b
      jp   $C000
 
@@ -53,7 +53,7 @@ IF !DEF(MULTI_DRIVER)
 
 reset:
      di
-     
+
      ; Run code from $C000, as is done on devcart. This
      ; ensures minimal difference in how it behaves.
      ld   hl,$4000

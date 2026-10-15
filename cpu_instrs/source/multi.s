@@ -49,7 +49,7 @@ main:
      ld   sp,stack_top
      ld   b,0       ; test number
      ld   c,0       ; failed tests
-     
+
 .next_test:
      ; Select the bank of the test, four to a bank
      ld   a,b
@@ -57,7 +57,7 @@ main:
      srl  a
      inc  a
      ld   [rROMB],a
-     
+
      ; DE = address of its block
      ld   a,b
      swap a
@@ -65,15 +65,15 @@ main:
      or   $40
      ld   d,a
      ld   e,0
-     
+
      ; The blocks end at the first one that doesn't start with a JP
      ld   a,[de]
      cp   $C3
      jp   nz,.finished
-     
+
      push bc
      call print_test_number
-     
+
      ; Run it
      ld   hl,sp+0
      ld   a,l
@@ -106,16 +106,16 @@ main:
      jr   nz,.failed
      print_str "Passed all tests"
      jr   .done
-     
+
 .failed:
      print_str "Failed "
      ld   a,c
      call print_dec
      print_str " tests."
-     
+
 .done:
      call print_newline
-     
+
      ; Beep
      call sound_off
      call sound_on
@@ -151,7 +151,7 @@ report_test:
      print_str "ok  "
      call console_flush
      ret
-     
+
 .failed:
      inc  c
      ld   a,b

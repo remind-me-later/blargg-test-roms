@@ -14,7 +14,7 @@ instrs:
      db $28, $01, $3C ; JR   Z,*+3
      db $30, $01, $3C ; JR   NC,*+3
      db $38, $01, $3C ; JR   C,*+3
-     
+
      db $C2, LOW(taken), HIGH(taken) ; JP   NZ,taken
      db $C3, LOW(taken), HIGH(taken) ; JP   taken
      db $CA, LOW(taken), HIGH(taken) ; JP   Z,taken
@@ -26,7 +26,7 @@ instrs:
      db $CD, LOW(taken), HIGH(taken) ; CALL taken
      db $D4, LOW(taken), HIGH(taken) ; CALL NC,taken
      db $DC, LOW(taken), HIGH(taken) ; CALL C,taken
-     
+
      ; RET cond
      ; INC A
      db $C0, $3C, 0 ; RET  NZ
@@ -35,7 +35,7 @@ instrs:
      db $D0, $3C, 0 ; RET  NC
      db $D8, $3C, 0 ; RET  C
      db $D9, $3C, 0 ; RETI
-     
+
      ; RST
      ; can only easily test this one on devcart
      db $C7, 0, 0 ; RST $00
@@ -53,7 +53,7 @@ instrs_end:
 
 test_instr:
      wreg rIE,0 ; disable interrupts, since RETI does EI
-     
+
      ; Go through all 16 combinations of flags
      ld   bc,$1200
 :
@@ -66,36 +66,36 @@ test_instr:
      ld   [$DF80-4],a
      ld   a,$78
      ld   [$DF80-5],a
-     
+
      ; Set AF
      push bc
      pop  af
-     
+
      ; Switch to new stack
      ld   [temp],sp
      ld   sp,$DF80
-     
+
      ; Set return address
      ld   de,instr+3
      push de
-     
+
      jp   instr
 instr_done:
      inc  a
 taken:
      di             ; RETI enables interrupts
-     
+
      ; Save new SP and switch to yet another stack
      ld   [temp+2],sp
      ld   sp,$DF70
-     
+
      ; Checksum A and SP
      call update_crc_fast
      ld   a,[temp+2]
      call update_crc_fast
      ld   a,[temp+3]
      call update_crc_fast
-     
+
      ; Checksum 4 bytes of stack
      ld   a,[$DF80-2]
      call update_crc_fast
@@ -105,14 +105,14 @@ taken:
      call update_crc_fast
      ld   a,[$DF80-5]
      call update_crc_fast
-     
+
      ldsp temp
-     
+
      ld   a,c
      add  $10
      ld   c,a
      jr   nz,:-
-     
+
      ret
 
 checksums:

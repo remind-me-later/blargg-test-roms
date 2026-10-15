@@ -4,12 +4,12 @@ DEF REQUIRE_CGB = 1
 DEF TEST_NAME EQUS "\"12-wave\""
 INCLUDE "shell.inc"
 INCLUDE "apu.s"
-     
+
 main:
      ld   hl,wave
      call load_wave
      wreg rAUD3LEVEL,0
-     
+
      set_test 2,"Timer period or phase resetting is wrong"
      wreg rAUD3ENA,$80
      wreg rAUD3LOW,$00
@@ -19,7 +19,7 @@ main:
      ld   c,$31
      ld   de,-$FE
      call test_wave
-     
+
      set_test 3,"Current byte readable at any wave addr"
      wreg rAUD3ENA,$80
      wreg rAUD3LOW,$00
@@ -27,7 +27,7 @@ main:
      ld   c,$3C
      ld   de,-$FE
      call test_wave
-     
+
      set_test 5,"Normal access when chan disabled"
      wreg rAUD3ENA,$80
      wreg rAUD3LOW,$00
@@ -37,7 +37,7 @@ main:
      ld   c,$31
      ld   de,0
      call test_wave
-     
+
      set_test 6,"Write test"
      wreg rAUD3ENA,$80
      wreg rAUD3LOW,$F0
@@ -48,7 +48,7 @@ main:
      ld   a,[$FF34]
      cp   $BC
      jp   nz,test_failed
-     
+
      set_test 7,"Timer period change"
      wreg rAUD3ENA,$80
      wreg rAUD3LOW,$00
@@ -57,7 +57,7 @@ main:
      ld   c,$30
      ld   de,-$E
      call test_wave
-     
+
      set_test 8,"Frequency 0 is valid"
      wreg rAUD3ENA,$80
      wreg rAUD3LOW,$00
@@ -65,7 +65,7 @@ main:
      ld   c,$30
      ld   de,-$FE
      call test_wave
-     
+
      set_test 9,"Maintains phase properly when vol = 0"
      wreg rAUD3ENA,$80
      wreg rAUD3LEVEL,0
@@ -74,7 +74,7 @@ main:
      ld   c,$30
      ld   de,-$1E
      call test_wave
-     
+
      set_test 10,"Maintains phase properly when stereo = 0"
      wreg rAUDTERM,$00
      wreg rAUD3ENA,$80
@@ -83,22 +83,22 @@ main:
      ld   c,$30
      ld   de,-$1E
      call test_wave
-     
+
      jp   tests_passed
-     
+
 test_wave:
 :    inc  de             ; 8
      ld   a,[$FF00+c]    ; 8
      or   a              ; 4
      jr   z,:-            ; 12
-     
+
      ;call     print_a
      ;call     print_de
-     
+
      cp   $11
      jp   nz,test_failed
-     
-     
+
+
      ; Error if not in 0...4 range
      ld   a,d
      cp   0

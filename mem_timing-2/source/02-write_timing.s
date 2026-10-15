@@ -28,7 +28,7 @@ instructions_end:
 main:
      call init_tima_64
      set_test 0
-     
+
      ; Test instructions
      ld   hl,instructions
 :    call .test_instr
@@ -38,7 +38,7 @@ main:
      ld   a,l
      cp   LOW(instructions_end)
      jr   nz,:-
-     
+
      jp   tests_done
 
 .print_failed:
@@ -73,7 +73,7 @@ main:
      ld   a,[hli]
      ld   [instr+2],a
      push hl
-     
+
      ; Test for writes on each cycle
      ld   b,0
 :    push bc
@@ -90,7 +90,7 @@ main:
      cp   10
      jr   nz,:-
      ld   b,0
-     
+
 .found:
      ld   a,b
      pop  hl

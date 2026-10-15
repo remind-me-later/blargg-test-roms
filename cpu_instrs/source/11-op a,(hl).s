@@ -59,7 +59,7 @@ instrs:
      db $CB, $FE, 0   ; SET  7,(HL)
      db $27, 0, 0     ; DAA
 instrs_end:
-     
+
 test_instr:
      ld   c,$00
      call test
@@ -77,37 +77,37 @@ test:
 a_loop:
      ld   b,[hl]
      push hl
-     
+
      ; Go through each value for (HL)
      ld   hl,values
 values_loop:
      push bc
      push hl
-     
+
      push bc
-     
+
      ; BC
      ld   a,[hli]
      ld   bc,rp_temp
      ld   [rp_temp],a
-     
+
      ; DE
      ld   a,[hli]
      ld   de,rp_temp+1
      ld   [rp_temp+1],a
-     
+
      ; HL
      ld   a,[hl]
      ld   hl,rp_temp+2
      ld   [rp_temp+2],a
-     
+
      ; AF
      pop  af
-     
+
 ;    call print_regs
      jp   instr
 instr_done:
-     
+
      ; Checksum AF, HL, and (HL)
      push hl
      push af
@@ -126,20 +126,20 @@ instr_done:
      call update_crc_fast
      ld   a,[rp_temp+2]
      call update_crc_fast
-     
+
      pop  hl
      pop  bc
      inc  hl
      ld   a,l
      cp   LOW(values_end)
      jr   nz,values_loop
-     
+
      pop  hl
      inc  hl
      ld   a,l
      cp   LOW(values_end)
      jr   nz,a_loop
-     
+
      ret
 
 values:

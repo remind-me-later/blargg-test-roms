@@ -11,14 +11,14 @@ init_tima_64:
 sync_tima_64:
      push af
      push hl
-     
+
      ; Coarse
      ld   hl,rTIMA
      ld   a,0
      ld   [hl],a
 :    or   [hl]
      jr   z,:-
-     
+
      ; Fine
 :    delay 65-12
      xor  a
@@ -26,7 +26,7 @@ sync_tima_64:
      or   [hl]
      delay 4
      jr   z,:-
-     
+
      pop  hl
      pop  af
      ret

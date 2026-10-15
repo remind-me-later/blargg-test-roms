@@ -73,21 +73,21 @@ print_bc_:
      ld   a,c
      pop  bc
      jr   print_a_
-     
+
 print_de:
      push af
      push bc
      ld   b,d
      ld   c,e
      jr   print_bc_
-     
+
 print_hl:
      push af
      push bc
      ld   b,h
      ld   c,l
      jr   print_bc_
-     
+
 
 ; Prints A as two hex chars and updates checksum
 ; Preserved: BC, DE, HL
@@ -98,7 +98,7 @@ print_hex_nocrc:
      swap a
      call :+
      pop  af
-     
+
 :    and  $0F
      cp   10
      jr   c,:+
@@ -148,7 +148,7 @@ print_dec2:
 print_dec:
      push af
      push bc
-     
+
      cp   10
      jr   c,:++
      ld   c,100
@@ -158,18 +158,18 @@ print_dec:
      call .digit
 :    add  '0'
      call print_char
-     
+
      pop  bc
      pop  af
      ret
-     
+
 .digit:
      ld   b,'0'-1
 :    inc  b
      sub  c
      jr   nc,:-
      add  c
-     
+
      ld   c,a
      ld   a,b
      call print_char

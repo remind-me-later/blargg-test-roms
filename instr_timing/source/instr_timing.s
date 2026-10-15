@@ -73,19 +73,19 @@ test_main_ops:
      ld   h,HIGH(op_times_taken)
      cp   [hl]
      ret  z
-     
+
      ; If opcode already failed and timed the
      ; same again, avoid re-reporting.
      cp   d
      ret  z
-     
+
      call print_failed_opcode
      ret
 
 .copy_and_exec:
      push de
      push hl
-     
+
      ld   h,HIGH(op_lens)
      ld   c,[hl]
      ld   a,l
@@ -104,7 +104,7 @@ test_main_ops:
 .one_byte:
      ld   a,e
      call time_instruction
-     
+
      pop  hl
      pop  de
      ret
@@ -126,13 +126,13 @@ test_cb_ops:
      call .copy_and_exec_cb
      cp   [hl]
      jr   nz,:+
-     
+
      ; Test with flags set
      ld   e,$FF
      call .copy_and_exec_cb
      cp   [hl]
      jr   nz,:+
-     
+
      ret
 :    print_str "CB "
      call print_failed_opcode
@@ -140,7 +140,7 @@ test_cb_ops:
 
 .copy_and_exec_cb:
      push hl
-     
+
      ; Copy instr to exec space
      ld   a,l
      ld   hl,instr+1
@@ -148,7 +148,7 @@ test_cb_ops:
      ld   a,$CB
      ld   [instr],a
      call time_instruction
-     
+
      pop  hl
      ret
 
@@ -166,7 +166,7 @@ print_failed_opcode:
      ld   a,':'
      call print_char
      pop  af
-     
+
      ; Print actual and correct times
      call print_dec
      ld   a,'-'
@@ -175,10 +175,10 @@ print_failed_opcode:
      call print_dec
      ld   a,' '
      call print_char
-     
+
      ; Remember that failure occurred
      set_test 1
-     
+
      ret
 
 
@@ -188,23 +188,23 @@ print_failed_opcode:
 ; A  <- number of cycles instruction took
 time_instruction:
      ld   c,a
-     
+
      ; Write JP instr_end to HL and instr_addr
      ld   a,$C3     ; JP
      ld   [hli],a
      ld   [instr_addr],a
-     
+
      ld   a,LOW(instr_end)
      ld   [instr_addr+1],a
      ld   [hli],a
-     
+
      ld   a,HIGH(instr_end)
      ld   [instr_addr+2],a
      ld   [hl],a
-     
+
      ; Save sp
      ld   [saved_sp],sp
-     
+
      ; Set regs and stack contents
      push bc
      ld   bc,instr_addr
@@ -213,7 +213,7 @@ time_instruction:
      call start_timer
      pop  af
      push hl
-     
+
      ; Environment instruction executes in:
      ; 1 byte: OP
      ; 2 byte: OP 00
@@ -224,16 +224,16 @@ time_instruction:
      ; instr_addr contains JP instr_end, that
      ; can be trashed. Instructions which trash
      ; this don't execute it.
-     
+
      jp   instr
 instr_end:     ; instruction jumps here when done
      di
-     
+
      ; Restore sp
      ld   sp,saved_sp
      pop  hl
      ld   sp,hl
-     
+
      call stop_timer
      sub  24
      ret
@@ -320,7 +320,7 @@ op_times_taken:
      db 5, 3, 4, 0, 6, 4, 2, 4, 5, 4, 4, 0, 6, 0, 2, 4
      db 3, 3, 2, 0, 0, 4, 2, 4, 4, 1, 4, 0, 0, 0, 2, 4
      db 3, 3, 2, 1, 0, 4, 2, 4, 3, 2, 4, 1, 0, 0, 2, 4
-     
+
 ; Timings for CB-prefixed opcodes
 cb_op_times:
      db 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 4, 2

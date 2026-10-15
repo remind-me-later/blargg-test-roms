@@ -5,7 +5,7 @@
 ; Preserved: BC, DE, HL
 console_wait_vbl:
      push bc
-     
+
      ; Wait for start of vblank, with
      ; timeout in case LY doesn't work
      ; or LCD is disabled.
@@ -18,7 +18,7 @@ console_wait_vbl:
      cp   144
      jr   nz,:-
 .timeout:
-     
+
      pop  bc
      ret
 
@@ -26,16 +26,16 @@ console_wait_vbl:
 ; Initializes text console
 console_init:
      call console_hide
-     
+
      ; CGB-specific inits
      ld   a,[gb_id]
      and  gb_id_cgb
      call nz,.init_cgb
-     
+
      ; Clear nametable
      ld   a,' '
      call .fill_nametable
-     
+
      ; Load tiles
      ld   hl,TILEBLOCK0+$200
      ld   c,0
@@ -43,7 +43,7 @@ console_init:
      ld   hl,TILEBLOCK0+$A00
      ld   c,$FF
      call .load_tiles
-     
+
      ; Init state
      ld   a,console_width
      ld   [console_pos],a
@@ -79,13 +79,13 @@ console_init:
      wreg rBGPD,$00
      dec  b
      jr   nz,:-
-     
+
      ; Clear attributes
      ld   a,1
      ld   [rVBK],a
      ld   a,0
      call .fill_nametable
-     
+
      ld   a,0
      ld   [rVBK],a
      ret
@@ -112,13 +112,13 @@ console_init:
 ; Preserved: AF, BC, DE, HL
 console_show:
      push af
-     
+
      ; Enable LCD
      call console_wait_vbl
      wreg rLCDC,LCDC_ON | LCDC_BLOCK01 | LCDC_BG_ON
      wreg rSCX,0
      wreg rBGP,$E4
-     
+
      jp   console_apply_scroll_
 
 
@@ -126,11 +126,11 @@ console_show:
 ; Preserved: AF, BC, DE, HL
 console_hide:
      push af
-     
+
      ; LCD off
      call console_wait_vbl
      wreg rLCDC,LCDC_OFF | LCDC_BLOCK01 | LCDC_BG_ON
-     
+
      pop  af
      ret
 
@@ -160,29 +160,29 @@ console_set_mode:
 ; Preserved: AF, BC, DE, HL
 console_print:
      push af
-     
+
      cp   10
      jr   z,console_newline_
-     
+
      push hl
      push af
      ld   hl,console_pos
      ld   a,[hli]
      cp   LOW(console_buf)
      jr   nz,.not_at_end
-     
+
      ; Newline if at end of current line. If this
      ; were done after writing to buffer, calling
      ; console_newline would print extra newline.
      ; Doing it before eliminates this.
-     
+
      ; Ignore any spaces at end of line
      pop  af
      cp   ' '
      jr   z,.ignore_space
      call console_newline
      push af
-     
+
 .not_at_end:
      pop  af
      or   [hl]      ; apply current attributes
@@ -190,7 +190,7 @@ console_print:
      dec  [hl]      ; console_pos = console_pos - 1
      ld   l,[hl]    ; hl = position in buffer
      ld   [hl],a
-     
+
 .ignore_space:
      pop  hl
      pop  af
@@ -212,12 +212,12 @@ console_newline_:
 console_scroll_up_:
      push bc
      push hl
-     
+
      ; Scroll up 8 pixels
      ld   a,[console_scroll]
      add  8
      ld   [console_scroll],a
-     
+
      ; Start new clear line
      ld   a,' '
      ld   hl,console_buf + console_width - 1
@@ -227,7 +227,7 @@ console_scroll_up_:
      jr   nz,:-
      ld   a,LOW((console_buf + console_width))
      ld   [console_pos],a
-     
+
      pop  hl
      pop  bc
      ret
@@ -245,18 +245,18 @@ console_apply_scroll_:
      sta  rSCY
      pop  af
      ret
-     
+
 console_flush_:
      push de
      push hl
-     
+
      ; Address of row in nametable
      ld   a,[console_scroll]
      ld   l,a
      ld   h,(HIGH(TILEMAP0)) >> 2
      add  hl,hl
      add  hl,hl
-     
+
      ; Copy line
      ld   de,console_buf + console_width
 :    dec  e
@@ -265,7 +265,7 @@ console_flush_:
      ld   a,e
      cp   LOW(console_buf)
      jr   nz,:-
-     
+
      pop  hl
      pop  de
      ret

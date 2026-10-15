@@ -45,18 +45,18 @@ main:
      ld   sp,$C000
      setb first_failed,0
      setb test_number,-1
-     
+
 .next_test:
      lda  test_number
      inc  a
      sta  test_number
-     
+
      ; Select the bank of the test, four to a bank
      srl  a
      srl  a
      inc  a
      ld   [rROMB],a
-     
+
      ; DE = address of its block
      lda  test_number
      swap a
@@ -64,12 +64,12 @@ main:
      or   $40
      ld   d,a
      ld   e,0
-     
+
      ; The blocks end at the first one that doesn't start with a JP
      ld   a,[de]
      cp   $C3
      jp   nz,.finished
-     
+
      call print_test_number
      call run_test
      call report_test
@@ -84,7 +84,7 @@ main:
      print_str "Run failed tests",newline
      print_str "individually for",newline
      print_str "more details.",newline
-     
+
 .all_passed:
      ; Beep
      call sound_off
@@ -97,7 +97,7 @@ main:
      delay_msec 250
      dec  c
      jr   nz,:-
-     
+
      ; Exit with the number of the first test that failed
      lda  first_failed
      ld   [test_code],a
@@ -112,7 +112,7 @@ run_test:
      ld   [saved_sp],a
      ld   a,h
      ld   [saved_sp+1],a
-     
+
      ; Save the variables of the driver
      push de
      ld   hl,saved_state
@@ -123,7 +123,7 @@ run_test:
      ld   de,dp_base
      call copy_bytes
      pop  hl
-     
+
      ; Copy the block and run it
      ld   c,$10
      jp   copy_to_wram_then_run
@@ -138,7 +138,7 @@ test_exited:
      ld   sp,hl
      ld   a,d
      push af
-     
+
      ; Restore the variables of the driver
      ld   de,saved_state
      ld   bc,state_size
@@ -147,7 +147,7 @@ test_exited:
      ld   bc,dp_state_size
      ld   hl,dp_base
      call copy_bytes
-     
+
      call cpu_norm
      pop  af
      ret
@@ -183,7 +183,7 @@ report_test:
      print_str "ok  "
      call console_flush
      ret
-     
+
 .failed:
      push af
      lda  first_failed

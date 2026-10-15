@@ -17,7 +17,7 @@ init_timer:
      sta  rIE
      wreg rTMA,0     ; max period
      wreg rTAC,$05   ; 262144 Hz
-     
+
      ; Be sure timer doesn't expire
      ; immediately or take too long
      wreg rIF,0
@@ -38,13 +38,13 @@ init_timer:
 ; Preserved: AF, BC, DE, HL
 start_timer:
      push af
-     
+
 :    xor  a         ; 1
      sta  rTIMA      ; 3
      lda  rTIMA      ; 3
      or   a         ; 1
      jr   nz,:-      ; 3
-     
+
      pop  af
      ret
 
@@ -65,9 +65,9 @@ stop_timer:
 ; DE = cycles (0 to 1019).
 ; Preserved: BC, HL
 stop_timer_word:
-     
+
      ld   d,0
-     
+
      ; Get main count (TIMA*4)
      lda  rTIMA
      sub  5
@@ -76,7 +76,7 @@ stop_timer_word:
      add  a
      rl   d
      ld   e,a
-     
+
      ; One iteration per remaining cycle
 :    xor  a         ; 1
      sta  rTIMA      ; 3
@@ -84,5 +84,5 @@ stop_timer_word:
      dec  de        ; 2
      or   a         ; 1
      jr   nz,:-      ; 3
-     
+
      ret

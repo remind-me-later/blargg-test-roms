@@ -5,7 +5,7 @@ INCLUDE "oam_bug.inc"
 
 main:
      save_sp
-     
+
      set_test 2,"INC/DEC rp pattern is wrong"
      call begin
      ld   de,$FE00

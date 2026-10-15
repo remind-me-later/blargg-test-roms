@@ -16,7 +16,7 @@ main:
 test:
      add  $99
      ld   b,a
-     
+
      ; Reload wave and have its first
      ; sample read occur 2 clocks earlier
      ; each loop iteration
@@ -27,14 +27,14 @@ test:
      ld   a,b
      sta  rAUD3LOW      ; period
      wreg rAUD3HIGH,$87  ; start
-     
+
      ; Read from wave
      wreg rAUD3LOW,-2   ; period = 4
      delay_clocks 176
      lda  rAUD3WAVE_0
-     
+
      call print_a
-     
+
      ret
 
 wave:

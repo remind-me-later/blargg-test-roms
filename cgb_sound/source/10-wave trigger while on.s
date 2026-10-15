@@ -15,7 +15,7 @@ main:
 test:
      add  $99
      ld   b,a
-     
+
      ; Reload wave and have its first
      ; sample read occur 2 clocks earlier
      ; each loop iteration
@@ -26,13 +26,13 @@ test:
      ld   a,b
      sta  rAUD3LOW      ; period
      wreg rAUD3HIGH,$87  ; start
-     
+
      ; Retrigger wave
      wreg rAUD3LOW,-2   ; period = 4
      delay_clocks 168
      wreg rAUD3HIGH,$87  ; restart
      delay_clocks 40
-     
+
      ; Print wave RAM
      wreg rAUD3ENA,0
      ld   c,$30
@@ -42,7 +42,7 @@ test:
      bit  6,c
      jr   z,:-
      call print_newline
-     
+
      ret
 
 wave:

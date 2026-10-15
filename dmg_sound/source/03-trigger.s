@@ -8,7 +8,7 @@ INCLUDE "test_chan.s"
 main:
      test_all_chans
      jp   tests_passed
-     
+
 begin:
      call sync_apu
      wchn 1,-60
@@ -28,7 +28,7 @@ end_passive:
      cp   b
      jp   nz,test_failed
      ret
-     
+
 test_chan:
      set_test 2,"Enabling in second half of length period ","shouldn't clock length"
      call begin
@@ -37,7 +37,7 @@ test_chan:
      wchn 4,$40     ; enable
      ld   a,2
      call end_nodelay
-     
+
      set_test 3,"Enabling in first half of length period should clock length"
      call begin
      wchn 1,-2      ; length = 2
@@ -45,7 +45,7 @@ test_chan:
      wchn 4,$40     ; enable
      ld   a,1
      call end_nodelay
-     
+
 IF DEF(CGB_02)
      set_test 4,"Keeping disabled should clock length; ","disabling or keeping enabled shouldn't"
      call begin
@@ -53,7 +53,7 @@ IF DEF(CGB_02)
      wchn 4,$00     ; disabled -> disabled clocks as well
      ld   a,1
      call end
-     
+
      call begin
      wchn 4,$40     ; enable length
      wchn 1,-2      ; length = 2
@@ -82,7 +82,7 @@ ENDC
      lda  rAUDENA      ; channel now disabled
      and  b
      jp   nz,test_failed
-     
+
      set_test 6,"If length already reached zero, shouldn't clock"
      call begin
      wchn 1,-1      ; length = 1
@@ -93,7 +93,7 @@ ENDC
      wchn 4,$40     ; no clock; length still 0
      lda  chan_maxlen ; end triggers channel, which loads it with max length
      call end
-     
+
      set_test 7,"Trigger should un-freeze length that reached zero"
      call begin
      wchn 1,-1      ; length = 1
@@ -106,7 +106,7 @@ ENDC
      lda  chan_maxlen
      sub  2
      call end_nodelay
-     
+
      set_test 8,"Trigger that un-freezes enabled length should clock it"
      call begin
      wchn 1,-1      ; length = 1
@@ -124,7 +124,7 @@ ENDC
      lda  chan_maxlen
      dec  a
      call end_nodelay
-     
+
      set_test 9,"Triggering that clocks length of 1 ","should clock twice and shouldn't freeze"
      call begin
      wchn 1,-1      ; length = 1
@@ -135,7 +135,7 @@ ENDC
      lda  chan_maxlen
      dec  a
      call end_nodelay
-     
+
      set_test 10,"Trigger shouldn't otherwise affect length"
      call begin
      wchn 1,0       ; length = max
@@ -143,7 +143,7 @@ ENDC
      wchn 4,$80     ; trigger
      lda  chan_maxlen
      call end_nodelay
-     
+
 IF !DEF(CGB_02)
      call begin
      wchn 1,0       ; length = max
@@ -157,7 +157,7 @@ IF !DEF(CGB_02)
      ld   a,2
      call end
 ENDC
-     
+
      set_test 11,"Disabled DAC shouldn't stop other trigger effects"
      call begin
      wchn 0,$00     ; disable wave DAC

@@ -32,7 +32,7 @@ update_crc:
      push bc
      push de
      push hl
-     
+
      ld   hl,checksum+3
      ld   b,[hl]
      dec  l
@@ -41,7 +41,7 @@ update_crc:
      ld   d,[hl]
      dec  l
      xor  [hl]
-     
+
      ld   h,8
 :    srl  b
      rr   c
@@ -62,7 +62,7 @@ update_crc:
      xor  $20
 :    dec  h
      jr   nz,:--
-     
+
      ld   h,HIGH(checksum)
      ld   [hli],a
      ld   [hl],d
@@ -70,7 +70,7 @@ update_crc:
      ld   [hl],c
      inc  l
      ld   [hl],b
-     
+
      pop  hl
      pop  de
      pop  bc

@@ -6,10 +6,10 @@ INCLUDE "shell.inc"
 INCLUDE "apu.s"
 
 main:
-     
+
      ; DMG-06:
-     ; 0555 0666 071C 0787 07C1 07E0 07F0  
-     
+     ; 0555 0666 071C 0787 07C1 07E0 07F0
+
      wreg rAUD1ENV,8
      ld   d,$01
 shift_loop:
@@ -34,10 +34,10 @@ shift_loop:
      jr   z,shift_loop
      call print_newline
      check_crc $F604603B
-     
+
      ; DMG-05, DMG-06, DMG-09,  CGB-04, CGB-05:
      ; 0556 0667 071D 0788 07C2 07E1 07F1
-     
+
      wreg rAUD1ENV,8
      ld   d,$01
 shift_loop2:
@@ -61,7 +61,7 @@ shift_loop2:
      bit  3,d
      jr   z,shift_loop2
      check_crc $5A1697EE
-     
+
      jp   tests_passed
 
 INCLUDE "shell_end.inc"

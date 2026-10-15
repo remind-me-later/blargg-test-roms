@@ -60,14 +60,14 @@ ENDM
      ; hours working around).
 
      DEF max_short_delay = 28
-     
+
      MACRO delay_long_
           ; 0+ to avoid assembler treating as memory read
           ld   a,0+((((\2)<<16)+(\1)) - 11) >> 16
           call delay_65536a_9_cycles_
           delay_nosave_ ((((\2)<<16)+(\1)) - 11)&$FFFF, 0
      ENDM
-     
+
      ; Doesn't save AF, allowing minimization of AF save/restore
      MACRO delay_nosave_
           ; 65536+11     = maximum delay using delay_256a_9_cycles_
@@ -94,7 +94,7 @@ ENDM
                ENDC
           ENDC
      ENDM
-     
+
      MACRO delay_
           IF ((\2)*(max_short_delay+1))|(\1) > max_short_delay
                push af
@@ -168,7 +168,7 @@ MACRO delay_short_
      IF (\1) > max_short_delay
           FAIL "assertion failed"
      ENDC
-     
+
      IF (\1) == 1
           nop
      ENDC

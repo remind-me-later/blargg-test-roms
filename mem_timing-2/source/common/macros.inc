@@ -46,12 +46,12 @@ ENDM
 ; Preserved: BC, DE, HL
 MACRO for_loop ; routine,start,end,step
      ld   a,\2
-     
+
 for_loop\@:
      push af
      call \1
      pop  af
-     
+
      add  \4
      cp   LOW((\3 + \4))
      jr   nz,for_loop\@
@@ -68,23 +68,23 @@ ENDM
 ; Preserved: DE, HL
 MACRO for_loop16 ; routine,start,end,step
      ld   bc,\2
-     
+
 for_loop16\@:
      push bc
      call \1
      pop  bc
-     
+
      ld   a,c
      add  LOW(\4)
      ld   c,a
-     
+
      ld   a,b
      adc  HIGH(\4)
      ld   b,a
-     
+
      cp   HIGH((\3+\4))
      jr   nz,for_loop16\@
-     
+
      ld   a,c
      cp   LOW((\3+\4))
      jr   nz,for_loop16\@

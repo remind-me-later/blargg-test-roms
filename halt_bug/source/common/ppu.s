@@ -5,10 +5,10 @@ wait_vbl:
      lda  rLCDC
      rla
      ret  nc
-     
+
      ; Wait for start of vblank
 :    lda  rLY
      cp   144
      jr   nz,:-
-     
+
      ret

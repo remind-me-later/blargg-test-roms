@@ -11,7 +11,7 @@ instrs:
      db $2F, 0, 0 ; CPL
      db $37, 0, 0 ; SCF
      db $3F, 0, 0 ; CCF
-     
+
      db $B0, 0, 0 ; OR   B
      db $B1, 0, 0 ; OR   C
      db $B2, 0, 0 ; OR   D
@@ -19,7 +19,7 @@ instrs:
      db $B4, 0, 0 ; OR   H
      db $B5, 0, 0 ; OR   L
      db $B7, 0, 0 ; OR   A
-     
+
      db $B8, 0, 0 ; CP   B
      db $B9, 0, 0 ; CP   C
      db $BA, 0, 0 ; CP   D
@@ -27,7 +27,7 @@ instrs:
      db $BC, 0, 0 ; CP   H
      db $BD, 0, 0 ; CP   L
      db $BF, 0, 0 ; CP   A
-     
+
      db $80, 0, 0 ; ADD  B
      db $81, 0, 0 ; ADD  C
      db $82, 0, 0 ; ADD  D
@@ -35,7 +35,7 @@ instrs:
      db $84, 0, 0 ; ADD  H
      db $85, 0, 0 ; ADD  L
      db $87, 0, 0 ; ADD  A
-     
+
      db $88, 0, 0 ; ADC  B
      db $89, 0, 0 ; ADC  C
      db $8A, 0, 0 ; ADC  D
@@ -43,7 +43,7 @@ instrs:
      db $8C, 0, 0 ; ADC  H
      db $8D, 0, 0 ; ADC  L
      db $8F, 0, 0 ; ADC  A
-     
+
      db $90, 0, 0 ; SUB  B
      db $91, 0, 0 ; SUB  C
      db $92, 0, 0 ; SUB  D
@@ -51,7 +51,7 @@ instrs:
      db $94, 0, 0 ; SUB  H
      db $95, 0, 0 ; SUB  L
      db $97, 0, 0 ; SUB  A
-     
+
      db $98, 0, 0 ; SBC  B
      db $99, 0, 0 ; SBC  C
      db $9A, 0, 0 ; SBC  D
@@ -59,7 +59,7 @@ instrs:
      db $9C, 0, 0 ; SBC  H
      db $9D, 0, 0 ; SBC  L
      db $9F, 0, 0 ; SBC  A
-     
+
      db $A0, 0, 0 ; AND  B
      db $A1, 0, 0 ; AND  C
      db $A2, 0, 0 ; AND  D
@@ -67,7 +67,7 @@ instrs:
      db $A4, 0, 0 ; AND  H
      db $A5, 0, 0 ; AND  L
      db $A7, 0, 0 ; AND  A
-     
+
      db $A8, 0, 0 ; XOR  B
      db $A9, 0, 0 ; XOR  C
      db $AA, 0, 0 ; XOR  D
@@ -75,7 +75,7 @@ instrs:
      db $AC, 0, 0 ; XOR  H
      db $AD, 0, 0 ; XOR  L
      db $AF, 0, 0 ; XOR  A
-     
+
      db $05, 0, 0 ; DEC  B
      db $0D, 0, 0 ; DEC  C
      db $15, 0, 0 ; DEC  D
@@ -83,7 +83,7 @@ instrs:
      db $25, 0, 0 ; DEC  H
      db $2D, 0, 0 ; DEC  L
      db $3D, 0, 0 ; DEC  A
-     
+
      db $04, 0, 0 ; INC  B
      db $0C, 0, 0 ; INC  C
      db $14, 0, 0 ; INC  D
@@ -91,12 +91,12 @@ instrs:
      db $24, 0, 0 ; INC  H
      db $2C, 0, 0 ; INC  L
      db $3C, 0, 0 ; INC  A
-     
+
      db $07, 0, 0 ; RLCA
      db $17, 0, 0 ; RLA
      db $0F, 0, 0 ; RRCA
      db $1F, 0, 0 ; RRA
-     
+
      db $CB, $00, 0 ; RLC  B
      db $CB, $01, 0 ; RLC  C
      db $CB, $02, 0 ; RLC  D
@@ -104,7 +104,7 @@ instrs:
      db $CB, $04, 0 ; RLC  H
      db $CB, $05, 0 ; RLC  L
      db $CB, $07, 0 ; RLC  A
-     
+
      db $CB, $08, 0 ; RRC  B
      db $CB, $09, 0 ; RRC  C
      db $CB, $0A, 0 ; RRC  D
@@ -112,7 +112,7 @@ instrs:
      db $CB, $0C, 0 ; RRC  H
      db $CB, $0D, 0 ; RRC  L
      db $CB, $0F, 0 ; RRC  A
-     
+
      db $CB, $10, 0 ; RL   B
      db $CB, $11, 0 ; RL   C
      db $CB, $12, 0 ; RL   D
@@ -120,7 +120,7 @@ instrs:
      db $CB, $14, 0 ; RL   H
      db $CB, $15, 0 ; RL   L
      db $CB, $17, 0 ; RL   A
-     
+
      db $CB, $18, 0 ; RR   B
      db $CB, $19, 0 ; RR   C
      db $CB, $1A, 0 ; RR   D
@@ -128,7 +128,7 @@ instrs:
      db $CB, $1C, 0 ; RR   H
      db $CB, $1D, 0 ; RR   L
      db $CB, $1F, 0 ; RR   A
-     
+
      db $CB, $20, 0 ; SLA  B
      db $CB, $21, 0 ; SLA  C
      db $CB, $22, 0 ; SLA  D
@@ -136,7 +136,7 @@ instrs:
      db $CB, $24, 0 ; SLA  H
      db $CB, $25, 0 ; SLA  L
      db $CB, $27, 0 ; SLA  A
-     
+
      db $CB, $28, 0 ; SRA  B
      db $CB, $29, 0 ; SRA  C
      db $CB, $2A, 0 ; SRA  D
@@ -144,7 +144,7 @@ instrs:
      db $CB, $2C, 0 ; SRA  H
      db $CB, $2D, 0 ; SRA  L
      db $CB, $2F, 0 ; SRA  A
-     
+
      db $CB, $30, 0 ; SWAP B
      db $CB, $31, 0 ; SWAP C
      db $CB, $32, 0 ; SWAP D
@@ -152,7 +152,7 @@ instrs:
      db $CB, $34, 0 ; SWAP H
      db $CB, $35, 0 ; SWAP L
      db $CB, $37, 0 ; SWAP A
-     
+
      db $CB, $38, 0 ; SRL  B
      db $CB, $39, 0 ; SRL  C
      db $CB, $3A, 0 ; SRL  D
@@ -168,71 +168,71 @@ test_instr:
      ld   c,$F0
      call test
      ret
-     
+
 test:
      ; Go through each value for A
      ld   hl,values
 a_loop:
      ld   b,[hl]
      push hl
-     
+
      ; Go through each value for other registers
      ld   hl,values
 values_loop:
      push bc
      push hl
-     
+
      push bc
-     
+
      ; BC
      ld   a,[hli]
      ld   b,a
      ld   a,[hli]
      ld   c,a
-     
+
      ; HL
      ld   a,[hli]
      ld   d,a
      ld   a,[hli]
      ld   e,a
      push de
-     
+
      ; DE
      ld   a,[hli]
      ld   d,a
      ld   a,[hli]
      ld   e,a
-     
+
      pop  hl
      pop  af
-     
+
 ;    call print_regs
      jp   instr
 instr_done:
-     
+
      ; Checksum registers
      call checksum_af_bc_de_hl
-     
+
      pop  hl
      pop  bc
      inc  hl
      ld   a,l
      cp   LOW(values_end)
      jr   nz,values_loop
-     
+
      pop  hl
      inc  hl
      ld   a,l
      cp   LOW(values_end)
      jr   nz,a_loop
-     
+
      ret
 
 values:
      db $00, $01, $0F, $10, $1F, $7F, $80, $F0, $FF
 values_end:
      db $00, $01, $0F, $10, $1F, $7F, $80, $F0, $FF
-     
+
 checksums:
      db $7C, $55, $BD, $05, $BA, $C7, $AC, $D1, $74, $6D, $82, $4A, $0F, $06, $2A, $C5
      db $FA, $97, $9B, $9D, $C3, $32, $A0, $78, $00, $C1, $9F, $69, $C0, $D1, $C2, $A1

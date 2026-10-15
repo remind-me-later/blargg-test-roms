@@ -36,7 +36,7 @@ IF !DEF(BUILD_MULTI)
 SECTION "copy to WRAM", ROM0[$200]
 copy_to_wram_then_run:
      ld   b,a
-     
+
      ld   de,$C000
      ld   c,$10
 :    ld   a,[hli]
@@ -46,7 +46,7 @@ copy_to_wram_then_run:
      inc  d
      dec  c
      jr   nz,:-
-     
+
      ld   a,b
      jp   $C000
 
@@ -82,40 +82,40 @@ INCLUDE "crc.s"
 INCLUDE "printing.s"
 INCLUDE "numbers.s"
 INCLUDE "testing.s"
-     
+
 ; Sets up hardware and runs main
 std_reset:
 
      ; Init hardware
      di
      ld   sp,std_stack
-     
+
      ; Save DMG/CGB id
      ld   [gb_id],a
-     
+
      ; Init hardware
      wreg rTAC,$00
      wreg rIF,$00
      wreg rIE,$00
-     
+
      wreg rAUDENA,AUDENA_OFF    ; sound off
      wreg rAUDENA,AUDENA_ON  ; sound on
      wreg rAUDTERM,$FF  ; mono
      wreg rAUDVOL,$77  ; volume
-     
+
      ; TODO: clear all memory?
-     
+
      ld   hl,std_print
      call init_printing
      call init_testing
      call init_runtime
      call reset_crc ; in case init_runtime prints anything
-     
+
      delay_msec 250
-     
+
      ; Run user code
      call main
-     
+
      ; Default is to successful exit
      ld   a,0
      jp   exit
@@ -133,18 +133,18 @@ exit:
      call print_newline
      call show_printing
      pop  af
-     
+
      ; Report exit status
      cp   1
-     
+
      ; 0: ""
      ret  c
-     
+
      ; 1: "Failed"
      jr   nz,:+
      print_str "Failed",newline
      ret
-     
+
      ; n: "Failed #n"
 :    print_str "Failed #"
      call print_dec

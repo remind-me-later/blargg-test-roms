@@ -4,7 +4,7 @@
 DEF TEST_NAME EQUS "\"05-op rp\""
 INCLUDE "shell.inc"
 INCLUDE "instr_test.s"
-     
+
 instrs:
      db $0B, 0, 0     ; DEC  BC
      db $1B, 0, 0     ; DEC  DE
@@ -37,41 +37,41 @@ hl_loop:
      ld   d,[hl]
      inc  hl
      push hl
-     
+
      ; Go through each value for BC, DE, A
      ld   hl,values
 values_loop:
      push bc
      push de
      push hl
-     
+
      push de
      push bc
-     
+
      ; BC
      ld   c,[hl]
      inc  hl
      ld   b,[hl]
      inc  hl
-     
+
      ; DE
      ld   e,[hl]
      inc  hl
      ld   d,[hl]
      inc  hl
-     
+
      ; HL, AF
      pop  af
      ld   a,[hl]
      pop  hl
-     
+
 ;    call print_regs
      jp   instr
 instr_done:
-     
+
      ; Checksum registers
      call checksum_af_bc_de_hl
-     
+
      pop  hl
      pop  de
      pop  bc
@@ -80,12 +80,12 @@ instr_done:
      ld   a,l
      cp   LOW(values_end)
      jr   nz,values_loop
-     
+
      pop  hl
      ld   a,l
      cp   LOW(values_end)
      jr   nz,hl_loop
-     
+
      ret
 
 values:

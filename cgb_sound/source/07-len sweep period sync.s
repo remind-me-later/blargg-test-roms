@@ -9,9 +9,9 @@ test_timing:
      ld   a,[rAUDENA]
      and  $01
      jr   nz,:-
-     
+
      ;call     print_de
-     
+
      ; Error if not in 0...4 range
      ld   a,d
      cp   0
@@ -22,7 +22,7 @@ test_timing:
      ret
 
 main:
-     
+
      set_test 2,"Length period is wrong"
      call sync_apu
      wreg rAUD1HIGH,$40  ; avoids extra length clock
@@ -31,7 +31,7 @@ main:
      wreg rAUD1HIGH,$C0  ; start length
      ld   de,-$170
      call test_timing
-     
+
      set_test 3,"Sweep period is wrong"
      call sync_sweep
      wreg rAUD1SWEEP,$10  ; sweep period = 1
@@ -40,7 +40,7 @@ main:
      wreg rAUD1HIGH,$87  ; start
      ld   de,-$2E4
      call test_timing
-     
+
      set_test 4,"Sweep clock is synchronized with length"
      call sync_sweep
      wreg rAUD1HIGH,$40  ; avoids extra length clock
@@ -49,42 +49,42 @@ main:
      wreg rAUD1HIGH,$C0  ; start length
      ld   de,-$170
      call test_timing
-     
+
      set_test 5,"Powering up APU MODs next frame time with 8192"
      call sync_apu
      ld   de,-$16F
      call test_power
-     
+
      call sync_apu
      ld   de,-$B5
      call test_power_off
-     
+
      call sync_apu
      delay_clocks 8192
      ld   de,-$B5
      call test_power
-     
+
      call sync_apu
      delay_clocks 8192
      ld   de,-$B5
      call test_power_off
-     
+
      call sync_apu
      ld   de,-$B5
      wreg rAUDENA,AUDENA_OFF  ; power off
      delay_clocks 8192
      call test_power
-     
+
      set_test 6,"Powering up APU resets 128 Hz sweep divider"
      call sync_sweep
      ld   de,-$229
      call test_power2
-     
+
      call sync_sweep
      delay_apu 1
      ld   de,-$229
      call test_power2
-     
+
      jp   tests_passed
 
 test_power_off:

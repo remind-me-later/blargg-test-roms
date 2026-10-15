@@ -5,7 +5,7 @@ INCLUDE "shell.inc"
 
 main:
      wreg rIE,$04
-     
+
      set_test 2,"EI"
      ei
      ld   bc,0
@@ -26,7 +26,7 @@ interrupt_addr:
      lda  rIF
      and  $04
      jp   nz,test_failed
-     
+
      set_test 3,"DI"
      di
      ld   bc,0
@@ -40,7 +40,7 @@ interrupt_addr:
      lda  rIF
      and  $04
      jp   z,test_failed
-     
+
      set_test 4,"Timer doesn't work"
      wreg rTAC,$05
      wreg rTIMA,0
@@ -55,7 +55,7 @@ interrupt_addr:
      and  $04
      jp   z,test_failed
      pop  af
-     
+
      set_test 5,"HALT"
      wreg rTAC,$05
      wreg rTIMA,0
@@ -65,7 +65,7 @@ interrupt_addr:
      lda  rIF
      and  $04
      jp   z,test_failed
-     
+
      jp   tests_passed
 
 ; The multi-test ROM has this vector already, from test 07

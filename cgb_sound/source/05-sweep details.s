@@ -34,7 +34,7 @@ main:
      wreg rAUD1SWEEP,$11  ; non-zero period so calc will occur when timer reloads
      delay_apu $11
      call should_be_almost_off
-     
+
      set_test 3,"Makes private copy of frequency on trigger"
      call begin
      wreg rAUD1SWEEP,$12
@@ -43,7 +43,7 @@ main:
      wreg rAUD1LOW,$00
      delay_apu $39
      call should_be_almost_off
-     
+
      set_test 4,"Exiting negate mode after calculation disables channel"
      call begin
      wreg rAUD1SWEEP,$09  ; since shift > 0, calculates sweep value at init
@@ -52,7 +52,7 @@ main:
      delay_apu 2
      wreg rAUD1SWEEP,$10  ; neg->pos, so disables channel
      call should_be_off
-     
+
      set_test 5,"Ending negate after it maybe changed freq disables chan"
      call begin
      wreg rAUD1SWEEP,$10  ; enable sweep
@@ -63,7 +63,7 @@ main:
      delay_apu 2
      wreg rAUD1SWEEP,$10  ; neg->pos, so disables channel
      call should_be_off
-     
+
      set_test 6,"Ending negate mode any other way doesn't disable channel"
      call begin
      wreg rAUD1SWEEP,$1F  ; use negate mode once
@@ -84,7 +84,7 @@ main:
      wreg rAUD1SWEEP,$79  ; period and shift can be changed without channel disabling
      delay_apu 5
      call should_be_almost_off
-     
+
      set_test 7,"Subtract mode uses two's complement"
      call begin
      delay 2048      ; avoids extra length clocking on CGB-02
@@ -96,7 +96,7 @@ main:
      wreg rAUD1HIGH,$C5
      delay_apu $1F
      call should_be_almost_off
-     
+
      set_test 8,"Subtract mode uses two's complement (upper bound)"
      call begin
      wreg rAUD1SWEEP,$1C
@@ -106,7 +106,7 @@ main:
      wreg rAUD1SWEEP,$01
      wreg rAUD1HIGH,$C5
      call should_be_off
-     
+
      set_test 9,"Update channel frequency only when period is reloaded"
      call begin
      wreg rAUD1SWEEP,$74
@@ -118,7 +118,7 @@ main:
      wreg rAUD1SWEEP,$11
      wreg rAUD1HIGH,$85  ; just before next reload, so freq is still $506
      call should_be_almost_off
-     
+
      jp   tests_passed
 
 INCLUDE "shell_end.inc"

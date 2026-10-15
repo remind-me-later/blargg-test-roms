@@ -13,7 +13,7 @@ init_crc_fast:
      ld   c,a
      ld   d,a
      ld   e,l
-     
+
      ld   h,8
 :    rra
      rr   c
@@ -32,10 +32,10 @@ init_crc_fast:
      xor  $20
      ld   e,a
      ld   a,b
-     
+
 :    dec  h
      jr   nz,:--
-     
+
      ld   h,HIGH(crc_tables)
      ld   [hl],e
      inc  h
@@ -44,10 +44,10 @@ init_crc_fast:
      ld   [hl],c
      inc  h
      ld   [hl],a
-     
+
      inc  l
      jr   nz,.next
-     
+
      jp   init_crc
 
 
@@ -65,22 +65,22 @@ MACRO update_crc_fast_inline
      xor  l              ; 1
      ld   l,a            ; 1
      ld   h,HIGH(crc_tables)  ; 2
-     
+
      lda  checksum+1     ; 3
      xor  [hl]           ; 2
      inc  h              ; 1
      sta  checksum       ; 3
-     
+
      lda  checksum+2     ; 3
      xor  [hl]           ; 2
      inc  h              ; 1
      sta  checksum+1     ; 3
-     
+
      lda  checksum+3     ; 3
      xor  [hl]           ; 2
      inc  h              ; 1
      sta  checksum+2     ; 3
-     
+
      ld   a,[hl]         ; 2
      sta  checksum+3     ; 3
 ENDM

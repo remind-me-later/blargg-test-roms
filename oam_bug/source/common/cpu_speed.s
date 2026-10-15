@@ -7,7 +7,7 @@ cpu_norm:
      ld   a,[gb_id]
      and  gb_id_cgb
      ret  z
-     
+
      lda  rSPD
      rlca
      ret  nc
@@ -21,7 +21,7 @@ cpu_fast:
      ld   a,[gb_id]
      and  gb_id_cgb
      ret  z
-     
+
      lda  rSPD
      rlca
      ret  c

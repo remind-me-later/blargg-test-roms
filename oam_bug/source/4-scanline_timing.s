@@ -24,7 +24,7 @@ main:
      delay 70224-2
      inc  de
      call should_corrupt
-     
+
      set_test 4,"INC DE at last corruption"
      call begin
      ld   de,$FE00
@@ -33,7 +33,7 @@ main:
      delay 70224-2+18
      inc  de
      call should_corrupt
-     
+
      set_test 5,"INC DE just after last corruption"
      call begin
      ld   de,$FE00
@@ -42,7 +42,7 @@ main:
      delay 70224-2+19
      inc  de
      call should_not_corrupt
-     
+
      jp   tests_passed
 
 begin:

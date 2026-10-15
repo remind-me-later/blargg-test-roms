@@ -47,7 +47,7 @@ test:
      ld   [$FF91],a
      ld   a,$BA
      ld   [$FF92],a
-     
+
      ; Fill stack
      ld   a,$13
      ld   [$DF80],a
@@ -57,7 +57,7 @@ test:
      ld   [$DF80-2],a
      ld   a,$DF
      ld   [$DF80-3],a
-     
+
      ; Set registers
      ld   b,$12
      push bc
@@ -65,25 +65,25 @@ test:
      ld   de,$9ABC
      ld   hl,$DEF0
      pop  af
-     
+
      ; Switch stack
      ld   [temp],sp
      ld   sp,$DF80-2
-     
+
      jp   instr
 instr_done:
      ; Save new SP and switch to another stack
      ld   [temp+2],sp
      ld   sp,$DF70
-     
+
      call checksum_af_bc_de_hl
-     
+
      ; Checksum SP
      ld   a,[temp+2]
      call update_crc_fast
      ld   a,[temp+3]
      call update_crc_fast
-     
+
      ; Checksum RAM
      ld   a,[$FF90]
      call update_crc_fast
@@ -91,7 +91,7 @@ instr_done:
      call update_crc_fast
      ld   a,[$FF92]
      call update_crc_fast
-     
+
      ; Checksum stack
      ld   a,[$DF80]
      call update_crc_fast
@@ -101,10 +101,10 @@ instr_done:
      call update_crc_fast
      ld   a,[$DF80-3]
      call update_crc_fast
-     
+
      ; Restore SP
      ldsp temp
-     
+
      ret
 
 checksums:

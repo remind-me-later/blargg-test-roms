@@ -16,7 +16,7 @@ main:
      ldh  a,[rLY]   ; just before LY increments
      cp   0
      jp   nz,test_failed
-     
+
      set_test 3,"Turning LCD on starts too early in scanline"
      call disable_lcd
      ld   a,$81
@@ -25,7 +25,7 @@ main:
      ldh  a,[rLY]   ; just after LY increments
      cp   1
      jp   nz,test_failed
-     
+
      jp   tests_passed
 
 INCLUDE "shell_end.inc"

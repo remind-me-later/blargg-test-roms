@@ -30,7 +30,7 @@ main:
      call init_crc_fast
      call checksums_init
      set_test 0
-     
+
      ld   hl,instrs
 :    ; Copy instruction
      ld   a,[hli]
@@ -48,13 +48,13 @@ main:
      ld   [instr+4],a
      ld   a,HIGH(instr_done)
      ld   [instr+5],a
-     
+
      call reset_crc
      call test_instr
-     
+
      call checksums_compare
      jr   z,passed
-     
+
      set_test 1
      ld   a,[instr]
      call print_a
@@ -73,30 +73,30 @@ passed:
      ld   a,h
      cp   HIGH(instrs_end)
      jr   nz,:--
-     
+
      jp   tests_done
 
 
 ; Updates checksum with AF, BC, DE, and HL
 checksum_af_bc_de_hl:
      push hl
-     
+
      push af
      update_crc_fast_inline
      pop  hl
      ld   a,l
      update_crc_fast_inline
-     
+
      ld   a,b
      update_crc_fast_inline
      ld   a,c
      update_crc_fast_inline
-     
+
      ld   a,d
      update_crc_fast_inline
      ld   a,e
      update_crc_fast_inline
-     
+
      pop  de
      ld   a,d
      update_crc_fast_inline

@@ -6,12 +6,12 @@ INCLUDE "oam_bug.inc"
 main:
      call disable_lcd
      call fill_oam
-     
+
      call test
-     
+
      call disable_lcd
      call cp_oam
-     
+
      call print_oam
      check_crc $7BB4F198
      jp   tests_passed
@@ -19,14 +19,14 @@ main:
 test:
      ld   de,$FE00
      wreg rLCDC,LCDC_ON | LCDC_BG_ON
-     
+
      ; Have first INC DE at scanline 0 beginning
      delay 70224 - 7
-     
+
      ; Run for several frames
      ld   h,10
 .loop:
-     
+
      ; Try to trigger just before and just after
      ; window where corruption occurs, for every
      ; scanline
@@ -37,7 +37,7 @@ test:
      delay 114-22-4
      dec  b
      jr   nz,:-
-     
+
      ; Try to trigger constantly during vblank
      ld   b,10
      jr   :++
@@ -49,12 +49,12 @@ test:
      jr   nz,:-
      dec  b
      jr   nz,:---
-     
+
      delay 4
-     
+
      dec  h
      jr   nz,.loop
-     
+
      ret
 
 INCLUDE "shell_end.inc"

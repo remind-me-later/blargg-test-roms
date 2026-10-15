@@ -16,7 +16,7 @@ DEF sint = $DEC3
 
 main:
      call init_timer
-     
+
      ld   d,0
      call test_interrupt
      ld   d,8
@@ -26,19 +26,19 @@ main:
      call test_interrupt
      ld   d,8
      call test_interrupt
-     
+
      ; The released ROM expects this checksum; the source said $C86CC74D.
      check_crc $B511F33D
      jp   tests_passed
-     
+
 test_interrupt:
      call get_cpu_speed
      call print_a
      call print_d
-     
+
      ld   a,$C9     ; RET
      ld   [sint],a
-     
+
      wreg rIE,$08
      wreg rIF,$00
      call start_timer
@@ -50,7 +50,7 @@ test_interrupt:
      sub  3+4       ; instruction overhead
      call print_a
      call print_newline
-     
+
      ret
 
 ; RST handler that matches the one in my devcart

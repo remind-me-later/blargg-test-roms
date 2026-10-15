@@ -13,11 +13,11 @@ main:
      ld   bc,$0000
      print_str "IE IF IF DE"
      call print_newline
-     
+
      ; Needs the LCD on
      call wait_vbl
      wreg rLCDC,LCDC_ON | LCDC_BLOCK01 | LCDC_BG_ON
-     
+
      ld   bc,$0110
      call test
      ld   bc,$0100
@@ -36,7 +36,7 @@ main:
      call test
      ld   bc,$E1E1
      call test
-     
+
      check_crc $B29060A6
      jp   tests_passed
 
@@ -46,13 +46,13 @@ main:
 test:
      call print_b
      call print_c
-     
+
      di
      wreg rIE,$01
      wreg rIF,$00
      halt
      nop
-     
+
      ld   a,b
      ldh  [rIE],a
      ld   de,$1234
@@ -63,7 +63,7 @@ test:
      halt
      ld   de,$0C04
      nop
-     
+
      delay_msec 100
      lda  rIF
      call print_a

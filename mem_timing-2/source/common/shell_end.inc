@@ -17,7 +17,7 @@ std_reset:
      ; Init hardware
      di
      ld   sp,std_stack
-     
+
      ; Save DMG/CGB id
      ld   b,a
      and  $EA
@@ -25,7 +25,7 @@ std_reset:
      ld   b,0
 :    ld   a,b
      ld   [gb_id],a
-     
+
      ; Clear memory except very top of stack
      ld   bc,std_stack-bss_base - 2
      ld   hl,bss_base
@@ -33,33 +33,33 @@ std_reset:
      ld   bc,$FFFF-dp_base
      ld   hl,dp_base
      call clear_mem
-     
+
      ; Init hardware
      wreg rTAC,$00
      wreg rIF,$00
      wreg rIE,$00
-     
+
      wreg rAUDENA,AUDENA_OFF    ; sound off
      wreg rAUDENA,AUDENA_ON  ; sound on
      wreg rAUDTERM,$FF  ; mono
      wreg rAUDVOL,$77  ; volume
-     
+
      call init_runtime
      call init_text_out
      call console_init
      call init_testing
-     
+
      IF DEF(TEST_NAME)
           print_str TEST_NAME,newline,newline
      ENDC
-     
+
      call reset_crc ; in case init_runtime prints anything
-     
+
      delay_msec 250
-     
+
      ; Run user code
      call main
-     
+
      ; Default is to successful exit
      ld   a,0
      jp   exit
@@ -78,18 +78,18 @@ exit:
 :    push af
      call print_newline
      pop  af
-     
+
      ; Report exit status
      cp   1
-     
+
      ; 0: ""
      ret  c
-     
+
      ; 1: "Failed"
      jr   nz,:+
      print_str "Failed",newline
      ret
-     
+
      ; n: "Failed #n"
 :    print_str "Failed #"
      call print_dec
@@ -103,7 +103,7 @@ clear_mem:
      dec  bc
      inc  c
      inc  b
-     
+
      ld   a,0
 :    ld   [hli],a
      dec  c
@@ -122,7 +122,7 @@ internal_error:
 
 ; build_devcart and build_multi customize this
 IF !DEF(CUSTOM_PRINT)
-     
+
      ; Initializes text output to cartridge RAM
      init_text_out:
           ; Enable cartridge RAM and set text output pointer
@@ -134,8 +134,8 @@ IF !DEF(CUSTOM_PRINT)
           setb text_out_base,0
           setb final_result,$80
           ret
-     
-     
+
+
      ; Appends character to text output string
      ; Preserved: AF, BC, DE, HL
      write_text_out:
@@ -156,7 +156,7 @@ IF !DEF(CUSTOM_PRINT)
           ld   [hl],a
           pop  hl
           ret
-     
+
      print_char_nocrc:
           call write_text_out
           jp   console_print

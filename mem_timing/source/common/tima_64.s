@@ -10,20 +10,20 @@ init_tima_64:
 sync_tima_64:
      push af
      push hl
-     
+
      ld   a,0
      ld   hl,rTIMA
      ld   [hl],a
 :    or   [hl]
      jr   z,:-
-     
+
 :    delay 65-12
      xor  a
      ld   [hl],a
      or   [hl]
      delay 4
      jr   z,:-
-     
+
      pop  hl
      pop  af
      ret
