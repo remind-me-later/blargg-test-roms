@@ -23,7 +23,7 @@ constantly monitor the display.
 Failure information
 -------------------
 For more information about a failure code or information printed, see
-the test's source code in source/. To find failure code N, search for
+the test's source code in this directory. To find failure code N, search for
 "set_test N", which will usually be before the subtest which failed.
 
 

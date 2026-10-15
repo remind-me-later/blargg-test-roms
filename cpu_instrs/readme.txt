@@ -54,7 +54,7 @@ Failure codes
 -------------
 Failed tests may print a failure code, and also short description of the
 problem. For more information about a failure code, look in the
-corresponding source file in source/; the point in the code where
+corresponding source file in this directory; the point in the code where
 "set_test n" occurs is where that failure code will be generated.
 Failure code 1 is a general failure of the test; any further information
 will be printed.
@@ -78,21 +78,22 @@ tests which print lots of information that scrolls off screen.
 
 Source code
 -----------
-Source code is included for all tests, in source/. It builds the
+Source code is included for all tests, in this directory. It builds the
 individual test ROMs, and with multi.s, the multi test.
 
 Code is written for the RGBDS assembler (it was converted from WLA-DX,
-and gives the same ROMs). To assemble a particular test, from source/,
+and gives the same ROMs). To assemble a particular test, from this directory,
 execute
 
-	rgbasm -I ../../common/shell1/ -I ../../common/ -I ../../hardware.inc/ \
+	rgbasm -I ../common/shell1/ -I ../common/ -I ../hardware.inc/ \
 	       -o test.o "source_filename.s"
 	rgblink -o test.gb test.o
 	rgbfix -f hg test.gb
 
 build.sh, in the main directory of the repository, builds all the ROMs
-and compares them with the released ones. The hardware definitions (rLCDC,
-rAUDENA...) come from hardware.inc, a submodule of the repository.
+and, with --check, compares them with the ones of the gameboy-test-roms
+release (fetch-reference.sh downloads them). The hardware definitions
+(rLCDC, rAUDENA...) come from hardware.inc, a submodule of the repository.
 
 Test code uses a common shell framework contained in common/shell1/ and
 common/ (see readme.txt there).

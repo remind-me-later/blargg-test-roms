@@ -2,9 +2,9 @@
 ; ends with INCLUDE "shell_end.inc", which adds the shell code that has to
 ; follow it in the ROM.
 ;
-; Assemble from the source/ directory of the suite, with the shared
+; Assemble from the directory of the suite, with the shared
 ; directories on the include path:
-;   rgbasm -I ../../common/shell2/ -I ../../common/ -I ../../hardware.inc/ -o test.o test.s
+;   rgbasm -I ../common/shell2/ -I ../common/ -I ../hardware.inc/ -o test.o test.s
 ;
 ; The suite has a suite.inc, which defines
 ;   CART_TYPE, RAM_SIZE   bytes of the cartridge header
