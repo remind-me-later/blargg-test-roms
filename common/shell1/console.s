@@ -279,4 +279,4 @@ console_flush_:
 
 
 ASCII:
-     INCBIN "console.bin"
+     INCLUDE "console_font.inc"

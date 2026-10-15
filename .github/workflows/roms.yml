@@ -1,7 +1,7 @@
 name: ROMs
 
 # Builds the test ROMs with RGBDS and checks that they are, byte for byte, the
-# ones of the gameboy-test-roms release and the ones in this repository.
+# ones of the gameboy-test-roms release (pinned in fetch-reference.sh).
 
 on:
   push:
@@ -9,7 +9,6 @@ on:
 
 env:
   RGBDS_VERSION: v1.0.4
-  TEST_ROMS_VERSION: v7.0
   # The tools always run with -Weverything: a warning fails the build here.
   RGBASMFLAGS: -Werror
   RGBLINKFLAGS: -Werror
@@ -32,15 +31,9 @@ jobs:
           echo "$RUNNER_TEMP/rgbds" >> "$GITHUB_PATH"
 
       - name: Download the gameboy-test-roms release
-        run: |
-          curl -fsSL -o "$RUNNER_TEMP/roms.zip" \
-            "https://github.com/c-sp/gameboy-test-roms/releases/download/${TEST_ROMS_VERSION}/game-boy-test-roms-${TEST_ROMS_VERSION}.zip"
-          unzip -q "$RUNNER_TEMP/roms.zip" 'blargg/*' -d "$RUNNER_TEMP/roms"
+        run: ./fetch-reference.sh
 
       - name: Build and compare with the release
         run: |
           rgbasm --version
-          ./build.sh --check "$RUNNER_TEMP/roms/blargg"
-
-      - name: Build and compare with the ROMs of the repository
-        run: ./build.sh --check
+          ./build.sh --check

@@ -5,8 +5,9 @@
 #
 #   ./build.sh                  build every ROM listed in roms.tsv into build/
 #   ./build.sh --check [DIR]    also compare each ROM, byte for byte, with the one
-#                               at the same path under DIR (default: this directory,
-#                               which holds the ROMs released with the sources)
+#                               at the same path under DIR, which holds the ROMs
+#                               of the gameboy-test-roms release (default:
+#                               reference/, made by ./fetch-reference.sh)
 #   ./build.sh --only PREFIX    only the ROMs whose output path starts with PREFIX
 #                               (can be repeated)
 #
@@ -19,7 +20,7 @@ set -euo pipefail
 
 here=$(cd "$(dirname "$0")" && pwd)
 check=0
-ref=$here
+ref=$here/reference
 only=()
 
 usage() {
@@ -32,7 +33,7 @@ while [ $# -gt 0 ]; do
         --check)
             check=1
             if [ $# -gt 1 ] && [[ $2 != -* ]]; then
-                ref=$(cd "$2" && pwd)
+                ref=$2
                 shift
             fi
             ;;
@@ -42,6 +43,14 @@ while [ $# -gt 0 ]; do
     esac
     shift
 done
+
+if [ $check -eq 1 ]; then
+    if [ ! -d "$ref" ]; then
+        echo "no ROMs to compare with in $ref (./fetch-reference.sh downloads them)" >&2
+        exit 2
+    fi
+    ref=$(cd "$ref" && pwd)
+fi
 
 if [ ! -f "$here/hardware.inc/hardware.inc" ]; then
     echo "hardware.inc is missing; run: git submodule update --init" >&2
