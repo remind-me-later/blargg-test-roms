@@ -49,3 +49,5 @@ cgb_sound/source	09-wave read while on.s	cgb_sound/rom_singles/09-wave read whil
 cgb_sound/source	10-wave trigger while on.s	cgb_sound/rom_singles/10-wave trigger while on.gb	0
 cgb_sound/source	11-regs after power.s	cgb_sound/rom_singles/11-regs after power.gb	0
 cgb_sound/source	12-wave.s	cgb_sound/rom_singles/12-wave.gb	0
+interrupt_time/source	interrupt_time.s	interrupt_time/interrupt_time.gb	0
+halt_bug/source	halt_bug.s	halt_bug.gb	0

@@ -2,16 +2,17 @@
 ; CPU. First value is CPU speed (0=slow, 1=fast),
 ; second is number of cycles taken by interrupt.
 ; Should take 13 cycles at either speed.
-.define REQUIRE_CGB 1
+DEF REQUIRE_CGB = 1
+DEF TEST_NAME EQUS "\"interrupt time\""
 
-.include "shell.inc"
-.include "cpu_speed.s"
-.include "timer.s"
-.include "apu.s"
+INCLUDE "shell.inc"
+INCLUDE "cpu_speed.s"
+INCLUDE "timer.s"
+INCLUDE "apu.s"
 
 ; $58: JP $DEC3
 ; $DEC3: RET
-.define sint $DEC3
+DEF sint = $DEC3
 
 main:
      call init_timer
@@ -26,7 +27,8 @@ main:
      ld   d,8
      call test_interrupt
      
-     check_crc $C86CC74D
+     ; The released ROM expects this checksum; the source said $C86CC74D.
+     check_crc $B511F33D
      jp   tests_passed
      
 test_interrupt:
@@ -35,14 +37,14 @@ test_interrupt:
      call print_d
      
      ld   a,$C9     ; RET
-     ld   (sint),a
+     ld   [sint],a
      
      wreg IE,$08
-     wreg IF,$00
+     wreg rIF,$00
      call start_timer
      ei
      ld   a,d
-     ld   (IF),a    ; $00 = 0 clocks, $08 = 13 clocks
+     ld   [rIF],a    ; $00 = 0 clocks, $08 = 13 clocks
      di
      call stop_timer
      sub  3+4       ; instruction overhead
@@ -52,6 +54,9 @@ test_interrupt:
      ret
 
 ; RST handler that matches the one in my devcart
-.bank 0 slot 0
-.org $58
+PUSHS
+SECTION "vector 1", ROM0[$58]
      jp   $DEC3
+POPS
+
+INCLUDE "shell_end.inc"
