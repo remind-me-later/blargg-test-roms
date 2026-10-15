@@ -3,14 +3,15 @@
 ; With LCD off, turning it on synchronizes to beginning
 ; of first visible scanline
 
-.include "oam_bug.inc"
+DEF TEST_NAME EQUS "\"4-scanline_timing\""
+INCLUDE "oam_bug.inc"
 
 main:
      set_test 2,"INC DE just before first corruption"
      call begin
      ld   de,$FE00
      ld   a,$81
-     ldh  (LCDC-$FF00),a ; LCD on
+     ldh  [LCDC],a ; LCD on
      delay 70224-3
      inc  de
      call should_not_corrupt
@@ -19,7 +20,7 @@ main:
      call begin
      ld   de,$FE00
      ld   a,$81
-     ldh  (LCDC-$FF00),a ; LCD on
+     ldh  [LCDC],a ; LCD on
      delay 70224-2
      inc  de
      call should_corrupt
@@ -28,7 +29,7 @@ main:
      call begin
      ld   de,$FE00
      ld   a,$81
-     ldh  (LCDC-$FF00),a ; LCD on
+     ldh  [LCDC],a ; LCD on
      delay 70224-2+18
      inc  de
      call should_corrupt
@@ -37,7 +38,7 @@ main:
      call begin
      ld   de,$FE00
      ld   a,$81
-     ldh  (LCDC-$FF00),a ; LCD on
+     ldh  [LCDC],a ; LCD on
      delay 70224-2+19
      inc  de
      call should_not_corrupt
@@ -60,3 +61,5 @@ should_corrupt:
      call cp_oam
      jp   z,test_failed
      ret
+
+INCLUDE "shell_end.inc"

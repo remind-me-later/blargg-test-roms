@@ -1,6 +1,7 @@
 ; Verifies no corruption when done at "safe" times
 
-.include "oam_bug.inc"
+DEF TEST_NAME EQUS "\"6-timing_no_bug\""
+INCLUDE "oam_bug.inc"
 
 main:
      call disable_lcd
@@ -24,34 +25,36 @@ test:
      
      ; Run for several frames
      ld   h,10
-@loop:
+.loop:
      
      ; Try to trigger just before and just after
      ; window where corruption occurs, for every
      ; scanline
      ld   b,144
--    inc  de
+:    inc  de
      delay 18
      dec  de
      delay 114-22-4
      dec  b
-     jr   nz,-
+     jr   nz,:-
      
      ; Try to trigger constantly during vblank
      ld   b,10
-     jr   +
---   delay 13
-+    ld   c,12
--    inc  de
+     jr   :++
+:    delay 13
+:    ld   c,12
+:    inc  de
      dec  c
      dec  de
-     jr   nz,-
+     jr   nz,:-
      dec  b
-     jr   nz,--
+     jr   nz,:---
      
      delay 4
      
      dec  h
-     jr   nz,@loop
+     jr   nz,.loop
      
      ret
+
+INCLUDE "shell_end.inc"

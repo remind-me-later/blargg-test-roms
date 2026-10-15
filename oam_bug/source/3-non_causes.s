@@ -1,6 +1,7 @@
 ; Things that don't cause corruption
 
-.include "oam_bug.inc"
+DEF TEST_NAME EQUS "\"3-non_causes\""
+INCLUDE "oam_bug.inc"
 
 main:
      save_sp
@@ -10,12 +11,12 @@ main:
      call fill_oam
      ld   bc,2 * 70224/11 ; a couple of frames
      ld   de,$FE00
--    inc  de
+:    inc  de
      dec  bc
      dec  de
      ld   a,b
      or   c
-     jr   nz,-
+     jr   nz,:-
      call end
      
      set_test 3,"LD DE,$FF00 : DEC DE"
@@ -84,3 +85,5 @@ end:
      call cp_oam
      jp   nz,test_failed
      ret
+
+INCLUDE "shell_end.inc"

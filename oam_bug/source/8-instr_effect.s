@@ -1,6 +1,7 @@
 ; Verifies corruption pattern for each instruction
 
-.include "oam_bug.inc"
+DEF TEST_NAME EQUS "\"8-instr_effect\""
+INCLUDE "oam_bug.inc"
 
 main:
      save_sp
@@ -35,11 +36,11 @@ main:
      set_test 5,"LD A,(HL+/-) pattern is wrong"
      call begin
      ld   hl,$FEF0
-     ld   a,(hl+)
+     ld   a,[hli]
      call end
 
      ld   hl,$FEF0
-     ld   a,(hl-)
+     ld   a,[hld]
      call end
      check_crc $06BE41A4
 
@@ -55,9 +56,11 @@ begin:
 end:
      call disable_lcd
      call cp_oam
-     jr   z,+
+     jr   z,:+
      call print_oam
      call print_newline
-+
+:
      call begin
      ret
+
+INCLUDE "shell_end.inc"

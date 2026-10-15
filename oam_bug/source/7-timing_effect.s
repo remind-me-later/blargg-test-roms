@@ -1,6 +1,7 @@
 ; Verifies corruption for each timing
 
-.include "oam_bug.inc"
+DEF TEST_NAME EQUS "\"7-timing_effect\""
+INCLUDE "oam_bug.inc"
 
 main:
      loop_n_times test,116
@@ -18,13 +19,13 @@ test:
      call cp_oam
      pop  bc
      
-     jr   z,+
+     jr   z,:+
      call print_b
      call print_newline
      call print_oam
      call print_newline
      
-+    ret
+:    ret
 
 corrupt_oam:
      wreg LCDC,$81
@@ -36,3 +37,5 @@ corrupt_oam:
      inc  de
 
      ret
+
+INCLUDE "shell_end.inc"

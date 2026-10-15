@@ -17,3 +17,11 @@ instr_timing/source	instr_timing.s	instr_timing/instr_timing.gb	0
 mem_timing-2/source	01-read_timing.s	mem_timing-2/rom_singles/01-read_timing.gb	0xFF
 mem_timing-2/source	02-write_timing.s	mem_timing-2/rom_singles/02-write_timing.gb	0xFF
 mem_timing-2/source	03-modify_timing.s	mem_timing-2/rom_singles/03-modify_timing.gb	0xFF
+oam_bug/source	1-lcd_sync.s	oam_bug/rom_singles/1-lcd_sync.gb	0
+oam_bug/source	2-causes.s	oam_bug/rom_singles/2-causes.gb	0
+oam_bug/source	3-non_causes.s	oam_bug/rom_singles/3-non_causes.gb	0
+oam_bug/source	4-scanline_timing.s	oam_bug/rom_singles/4-scanline_timing.gb	0
+oam_bug/source	5-timing_bug.s	oam_bug/rom_singles/5-timing_bug.gb	0
+oam_bug/source	6-timing_no_bug.s	oam_bug/rom_singles/6-timing_no_bug.gb	0
+oam_bug/source	7-timing_effect.s	oam_bug/rom_singles/7-timing_effect.gb	0
+oam_bug/source	8-instr_effect.s	oam_bug/rom_singles/8-instr_effect.gb	0

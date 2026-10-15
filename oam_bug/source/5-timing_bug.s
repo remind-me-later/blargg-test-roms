@@ -3,7 +3,8 @@
 ; * Beginning of second scanline
 ; * End of last scanline
 
-.include "oam_bug.inc"
+DEF TEST_NAME EQUS "\"5-timing_bug\""
+INCLUDE "oam_bug.inc"
 
 main:
      set_test 2,"Should corrupt at beginning of first scanline"
@@ -41,3 +42,5 @@ end:
      call cp_oam
      jp   z,test_failed
      ret
+
+INCLUDE "shell_end.inc"

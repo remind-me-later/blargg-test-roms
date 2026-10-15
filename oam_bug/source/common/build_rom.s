@@ -1,70 +1,52 @@
 ; Build as GB ROM
 
-.memoryMap
-     defaultSlot 0
-     slot 0 $0000 size $4000
-     slot 1 $C000 size $4000
-.endMe
-
-.romBankSize   $4000
-.romBanks      2
-
-.cartridgeType 3 ; MBC1+RAM+battery
-.ramsize 02 ; 8K
-.computeChecksum
-.computeComplementCheck
-
 ;;;; GB ROM header
 
-     ; Reserve space for RST handlers
-     .org $70
+; Reserve space for the RST handlers
+SECTION "RST area", ROM0[$70]
+     ds   $90,0
 
-          ; Keep unused space filled, otherwise
-          ; wla moves code here
-          .ds $90,0
-     
+SECTION "header", ROM0[$100]
      ; GB header read by bootrom
-     .org $100
-          nop
-          jp   reset
-     
+     nop
+     jp   reset
+
      ; Nintendo logo required for proper boot
-     .byte $CE,$ED,$66,$66,$CC,$0D,$00,$0B
-     .byte $03,$73,$00,$83,$00,$0C,$00,$0D
-     .byte $00,$08,$11,$1F,$88,$89,$00,$0E
-     .byte $DC,$CC,$6E,$E6,$DD,$DD,$D9,$99
-     .byte $BB,$BB,$67,$63,$6E,$0E,$EC,$CC
-     .byte $DD,$DC,$99,$9F,$BB,$B9,$33,$3E
-     
+     db $CE,$ED,$66,$66,$CC,$0D,$00,$0B
+     db $03,$73,$00,$83,$00,$0C,$00,$0D
+     db $00,$08,$11,$1F,$88,$89,$00,$0E
+     db $DC,$CC,$6E,$E6,$DD,$DD,$D9,$99
+     db $BB,$BB,$67,$63,$6E,$0E,$EC,$CC
+     db $DD,$DC,$99,$9F,$BB,$B9,$33,$3E
+
      ; Internal name
-     .ifdef ROM_NAME
-          .byte ROM_NAME
-     .endif
-     
+IF DEF(ROM_NAME)
+     db ROM_NAME
+ELIF DEF(ROM_NAME_DEFAULT)
+     db ROM_NAME_DEFAULT
+ENDC
+     ds $143 - @, 0
+
      ; CGB/DMG requirements
-     .org $143
-          .ifdef REQUIRE_CGB
-               .byte $C0
-          .else
-               .ifndef REQUIRE_DMG
-                    .byte $80
-               .endif
-          .endif
-     
-     ; Keep unused space filled, otherwise
-     ; wla moves code here
-     .org $150
-          .ds $2150-$150,0
+IF DEF(REQUIRE_CGB)
+     db $C0
+ELIF DEF(REQUIRE_DMG)
+     db $00
+ELSE
+     db $80
+ENDC
+     ds $147 - @, 0
+
+     db 3    ; cartridge type
+     db 0    ; 32K ROM
+     db 2    ; RAM size
+     ds $150 - @, 0    ; rgbfix sets the checksums
+
+; Keep unused space filled up to the copy routine
+SECTION "unused", ROM0[$150]
+     ds   $2150-$150,$00
 
 ;;;; Shell
 
-.define NEED_CONSOLE 1
-.include "shell.s"
-
-init_runtime:
-     ret
-
-play_byte:
-     ret
-
-.ends
+DEF NEED_CONSOLE = 1
+INCLUDE "shell.s"

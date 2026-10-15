@@ -1,6 +1,7 @@
 ; Things that cause corruption
 
-.include "oam_bug.inc"
+DEF TEST_NAME EQUS "\"2-causes\""
+INCLUDE "oam_bug.inc"
 
 main:
      save_sp
@@ -59,14 +60,14 @@ main:
      set_test 10,"LD HL,$FE00 : LD A,(HL+)"
      call begin
      ld   hl,$FE00
-     ld   a,(hl+)
+     ld   a,[hli]
      restore_sp
      call end
      
      set_test 11,"LD HL,$FE00 : LD A,(HL-)"
      call begin
      ld   hl,$FE00
-     ld   a,(hl-)
+     ld   a,[hld]
      restore_sp
      call end
      
@@ -84,3 +85,5 @@ end:
      call cp_oam
      jp   z,test_failed
      ret
+
+INCLUDE "shell_end.inc"
