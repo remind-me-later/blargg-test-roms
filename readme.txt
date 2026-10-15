@@ -31,9 +31,10 @@ ROMs, to assemble to the same bytes; their names and comments are guesses.
 Each says so at its beginning.
 
 	oam_bug/source/oam_bug.inc        included by the oam_bug tests
-	dmg_sound/source/apu.s            included by the sound tests (also in
-	cgb_sound/source/apu.s            the sources of interrupt_time, halt_bug
-	                                  and the multi-test ROMs)
+	dmg_sound/source/apu.s            included by the sound tests (copies
+	cgb_sound/source/apu.s            are in the common/ of interrupt_time,
+	                                  oam_bug and mem_timing-2, for the
+	                                  multi-test ROMs)
 	dmg_sound/source/test_chan.s      included by the length counter and
 	cgb_sound/source/test_chan.s      trigger tests
 	halt_bug/source/halt_bug.s        halt_bug.gb had no source

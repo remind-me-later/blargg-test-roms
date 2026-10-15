@@ -127,7 +127,10 @@ while IFS=$'\t' read -r srcdir file out pad options; do
     fi
     built=$((built + 1))
     if [ $check -eq 1 ]; then
-        if cmp -s "$here/build/$out" "$ref/$out"; then
+        if [ ! -f "$ref/$out" ]; then
+            echo "MISSING    $out"
+            failed=$((failed + 1))
+        elif cmp -s "$here/build/$out" "$ref/$out"; then
             echo "identical  $out"
         else
             echo "DIFFERENT  $out"
@@ -137,6 +140,17 @@ while IFS=$'\t' read -r srcdir file out pad options; do
         echo "built      $out"
     fi
 done < "$here/roms.tsv"
+
+# Every ROM of the reference has to be built too
+if [ $check -eq 1 ] && [ ${#only[@]} -eq 0 ]; then
+    while IFS= read -r -d '' rom; do
+        rel=${rom#"$ref"/}
+        if [ ! -f "$here/build/$rel" ]; then
+            echo "NOT BUILT  $rel"
+            failed=$((failed + 1))
+        fi
+    done < <(find "$ref" \( -name build -o -name .git \) -prune -o -name '*.gb' -print0)
+fi
 
 echo "$built built, $failed failed"
 [ $failed -eq 0 ]
