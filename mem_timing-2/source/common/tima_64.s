@@ -15,17 +15,17 @@ sync_tima_64:
      ; Coarse
      ld   hl,TIMA
      ld   a,0
-     ld   (hl),a
--    or   (hl)
-     jr   z,-
+     ld   [hl],a
+:    or   [hl]
+     jr   z,:-
      
      ; Fine
--    delay 65-12
+:    delay 65-12
      xor  a
-     ld   (hl),a
-     or   (hl)
+     ld   [hl],a
+     or   [hl]
      delay 4
-     jr   z,-
+     jr   z,:-
      
      pop  hl
      pop  af
@@ -33,4 +33,4 @@ sync_tima_64:
 
 ; Read from this to get count that's incremented
 ; every 64 cycles.
-.define tima_64 TIMA
+DEF tima_64 = TIMA

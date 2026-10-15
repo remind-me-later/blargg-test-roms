@@ -14,3 +14,6 @@ mem_timing/source	01-read_timing.s	mem_timing/individual/01-read_timing.gb	0
 mem_timing/source	02-write_timing.s	mem_timing/individual/02-write_timing.gb	0
 mem_timing/source	03-modify_timing.s	mem_timing/individual/03-modify_timing.gb	0
 instr_timing/source	instr_timing.s	instr_timing/instr_timing.gb	0
+mem_timing-2/source	01-read_timing.s	mem_timing-2/rom_singles/01-read_timing.gb	0xFF
+mem_timing-2/source	02-write_timing.s	mem_timing-2/rom_singles/02-write_timing.gb	0xFF
+mem_timing-2/source	03-modify_timing.s	mem_timing-2/rom_singles/03-modify_timing.gb	0xFF

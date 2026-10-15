@@ -130,7 +130,7 @@ MACRO check_crc
           call print_newline
           call print_crc
      ELSE
-          ld   bc,((\1) >> 16) ^ $FFFF
+          ld   bc,((\1) >>> 16) ^ $FFFF
           ld   de,((\1) & $FFFF) ^ $FFFF
           call check_crc_
      ENDC
