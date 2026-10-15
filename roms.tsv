@@ -1,59 +1,59 @@
-# source directory	source file, or driver|test|test... for a multi-test ROM	output (relative path of the ROM)	pad byte	options
-cpu_instrs/source	01-special.s	cpu_instrs/individual/01-special.gb	0
-cpu_instrs/source	02-interrupts.s	cpu_instrs/individual/02-interrupts.gb	0
-cpu_instrs/source	03-op sp,hl.s	cpu_instrs/individual/03-op sp,hl.gb	0
-cpu_instrs/source	04-op r,imm.s	cpu_instrs/individual/04-op r,imm.gb	0
-cpu_instrs/source	05-op rp.s	cpu_instrs/individual/05-op rp.gb	0
-cpu_instrs/source	06-ld r,r.s	cpu_instrs/individual/06-ld r,r.gb	0
-cpu_instrs/source	07-jr,jp,call,ret,rst.s	cpu_instrs/individual/07-jr,jp,call,ret,rst.gb	0
-cpu_instrs/source	08-misc instrs.s	cpu_instrs/individual/08-misc instrs.gb	0
-cpu_instrs/source	09-op r,r.s	cpu_instrs/individual/09-op r,r.gb	0
-cpu_instrs/source	10-bit ops.s	cpu_instrs/individual/10-bit ops.gb	0
-cpu_instrs/source	11-op a,(hl).s	cpu_instrs/individual/11-op a,(hl).gb	0
-mem_timing/source	01-read_timing.s	mem_timing/individual/01-read_timing.gb	0
-mem_timing/source	02-write_timing.s	mem_timing/individual/02-write_timing.gb	0
-mem_timing/source	03-modify_timing.s	mem_timing/individual/03-modify_timing.gb	0
-instr_timing/source	instr_timing.s	instr_timing/instr_timing.gb	0
-mem_timing-2/source	01-read_timing.s	mem_timing-2/rom_singles/01-read_timing.gb	0xFF
-mem_timing-2/source	02-write_timing.s	mem_timing-2/rom_singles/02-write_timing.gb	0xFF
-mem_timing-2/source	03-modify_timing.s	mem_timing-2/rom_singles/03-modify_timing.gb	0xFF
-oam_bug/source	1-lcd_sync.s	oam_bug/rom_singles/1-lcd_sync.gb	0
-oam_bug/source	2-causes.s	oam_bug/rom_singles/2-causes.gb	0
-oam_bug/source	3-non_causes.s	oam_bug/rom_singles/3-non_causes.gb	0
-oam_bug/source	4-scanline_timing.s	oam_bug/rom_singles/4-scanline_timing.gb	0
-oam_bug/source	5-timing_bug.s	oam_bug/rom_singles/5-timing_bug.gb	0
-oam_bug/source	6-timing_no_bug.s	oam_bug/rom_singles/6-timing_no_bug.gb	0
-oam_bug/source	7-timing_effect.s	oam_bug/rom_singles/7-timing_effect.gb	0
-oam_bug/source	8-instr_effect.s	oam_bug/rom_singles/8-instr_effect.gb	0
-dmg_sound/source	01-registers.s	dmg_sound/rom_singles/01-registers.gb	0
-dmg_sound/source	02-len ctr.s	dmg_sound/rom_singles/02-len ctr.gb	0
-dmg_sound/source	03-trigger.s	dmg_sound/rom_singles/03-trigger.gb	0
-dmg_sound/source	04-sweep.s	dmg_sound/rom_singles/04-sweep.gb	0
-dmg_sound/source	05-sweep details.s	dmg_sound/rom_singles/05-sweep details.gb	0
-dmg_sound/source	06-overflow on trigger.s	dmg_sound/rom_singles/06-overflow on trigger.gb	0
-dmg_sound/source	07-len sweep period sync.s	dmg_sound/rom_singles/07-len sweep period sync.gb	0
-dmg_sound/source	08-len ctr during power.s	dmg_sound/rom_singles/08-len ctr during power.gb	0
-dmg_sound/source	09-wave read while on.s	dmg_sound/rom_singles/09-wave read while on.gb	0
-dmg_sound/source	10-wave trigger while on.s	dmg_sound/rom_singles/10-wave trigger while on.gb	0
-dmg_sound/source	11-regs after power.s	dmg_sound/rom_singles/11-regs after power.gb	0
-dmg_sound/source	12-wave write while on.s	dmg_sound/rom_singles/12-wave write while on.gb	0
-cgb_sound/source	01-registers.s	cgb_sound/rom_singles/01-registers.gb	0
-cgb_sound/source	02-len ctr.s	cgb_sound/rom_singles/02-len ctr.gb	0
-cgb_sound/source	03-trigger.s	cgb_sound/rom_singles/03-trigger.gb	0
-cgb_sound/source	04-sweep.s	cgb_sound/rom_singles/04-sweep.gb	0
-cgb_sound/source	05-sweep details.s	cgb_sound/rom_singles/05-sweep details.gb	0
-cgb_sound/source	06-overflow on trigger.s	cgb_sound/rom_singles/06-overflow on trigger.gb	0
-cgb_sound/source	07-len sweep period sync.s	cgb_sound/rom_singles/07-len sweep period sync.gb	0
-cgb_sound/source	08-len ctr during power.s	cgb_sound/rom_singles/08-len ctr during power.gb	0
-cgb_sound/source	09-wave read while on.s	cgb_sound/rom_singles/09-wave read while on.gb	0
-cgb_sound/source	10-wave trigger while on.s	cgb_sound/rom_singles/10-wave trigger while on.gb	0
-cgb_sound/source	11-regs after power.s	cgb_sound/rom_singles/11-regs after power.gb	0
-cgb_sound/source	12-wave.s	cgb_sound/rom_singles/12-wave.gb	0
-interrupt_time/source	interrupt_time.s	interrupt_time/interrupt_time.gb	0
-halt_bug/source	halt_bug.s	halt_bug.gb	0
-cpu_instrs/source	multi.s|01-special.s|02-interrupts.s|03-op sp,hl.s|04-op r,imm.s|05-op rp.s|06-ld r,r.s|07-jr,jp,call,ret,rst.s|08-misc instrs.s|09-op r,r.s|10-bit ops.s|11-op a,(hl).s	cpu_instrs/cpu_instrs.gb	0	size=65536,checksum=bank0
-mem_timing/source	multi.s|01-read_timing.s|02-write_timing.s|03-modify_timing.s	mem_timing/mem_timing.gb	0	size=65536,checksum=bank0
-dmg_sound/source	multi.s|01-registers.s|02-len ctr.s|03-trigger.s|04-sweep.s|05-sweep details.s|06-overflow on trigger.s|07-len sweep period sync.s|08-len ctr during power.s|09-wave read while on.s|10-wave trigger while on.s|11-regs after power.s|12-wave write while on.s	dmg_sound/dmg_sound.gb	0	size=65536
-cgb_sound/source	multi.s|01-registers.s|02-len ctr.s|03-trigger.s|04-sweep.s|05-sweep details.s|06-overflow on trigger.s|07-len sweep period sync.s|08-len ctr during power.s|09-wave read while on.s|10-wave trigger while on.s|11-regs after power.s|12-wave.s	cgb_sound/cgb_sound.gb	0	size=65536
-oam_bug/source	multi.s|1-lcd_sync.s|2-causes.s|3-non_causes.s|4-scanline_timing.s|5-timing_bug.s|6-timing_no_bug.s|7-timing_effect.s|8-instr_effect.s	oam_bug/oam_bug.gb	0	size=65536
-mem_timing-2/source	multi.s|01-read_timing.s|02-write_timing.s|03-modify_timing.s	mem_timing-2/mem_timing.gb	0xFF	size=65536
+# source directory	shell	source file, or driver|test|test... for a multi-test ROM	output (relative path of the ROM)	pad byte	options
+cpu_instrs/source	shell1	01-special.s	cpu_instrs/individual/01-special.gb	0
+cpu_instrs/source	shell1	02-interrupts.s	cpu_instrs/individual/02-interrupts.gb	0
+cpu_instrs/source	shell1	03-op sp,hl.s	cpu_instrs/individual/03-op sp,hl.gb	0
+cpu_instrs/source	shell1	04-op r,imm.s	cpu_instrs/individual/04-op r,imm.gb	0
+cpu_instrs/source	shell1	05-op rp.s	cpu_instrs/individual/05-op rp.gb	0
+cpu_instrs/source	shell1	06-ld r,r.s	cpu_instrs/individual/06-ld r,r.gb	0
+cpu_instrs/source	shell1	07-jr,jp,call,ret,rst.s	cpu_instrs/individual/07-jr,jp,call,ret,rst.gb	0
+cpu_instrs/source	shell1	08-misc instrs.s	cpu_instrs/individual/08-misc instrs.gb	0
+cpu_instrs/source	shell1	09-op r,r.s	cpu_instrs/individual/09-op r,r.gb	0
+cpu_instrs/source	shell1	10-bit ops.s	cpu_instrs/individual/10-bit ops.gb	0
+cpu_instrs/source	shell1	11-op a,(hl).s	cpu_instrs/individual/11-op a,(hl).gb	0
+mem_timing/source	shell1	01-read_timing.s	mem_timing/individual/01-read_timing.gb	0
+mem_timing/source	shell1	02-write_timing.s	mem_timing/individual/02-write_timing.gb	0
+mem_timing/source	shell1	03-modify_timing.s	mem_timing/individual/03-modify_timing.gb	0
+instr_timing/source	shell1	instr_timing.s	instr_timing/instr_timing.gb	0
+mem_timing-2/source	shell2	01-read_timing.s	mem_timing-2/rom_singles/01-read_timing.gb	0xFF
+mem_timing-2/source	shell2	02-write_timing.s	mem_timing-2/rom_singles/02-write_timing.gb	0xFF
+mem_timing-2/source	shell2	03-modify_timing.s	mem_timing-2/rom_singles/03-modify_timing.gb	0xFF
+oam_bug/source	shell2	1-lcd_sync.s	oam_bug/rom_singles/1-lcd_sync.gb	0
+oam_bug/source	shell2	2-causes.s	oam_bug/rom_singles/2-causes.gb	0
+oam_bug/source	shell2	3-non_causes.s	oam_bug/rom_singles/3-non_causes.gb	0
+oam_bug/source	shell2	4-scanline_timing.s	oam_bug/rom_singles/4-scanline_timing.gb	0
+oam_bug/source	shell2	5-timing_bug.s	oam_bug/rom_singles/5-timing_bug.gb	0
+oam_bug/source	shell2	6-timing_no_bug.s	oam_bug/rom_singles/6-timing_no_bug.gb	0
+oam_bug/source	shell2	7-timing_effect.s	oam_bug/rom_singles/7-timing_effect.gb	0
+oam_bug/source	shell2	8-instr_effect.s	oam_bug/rom_singles/8-instr_effect.gb	0
+dmg_sound/source	shell2	01-registers.s	dmg_sound/rom_singles/01-registers.gb	0
+dmg_sound/source	shell2	02-len ctr.s	dmg_sound/rom_singles/02-len ctr.gb	0
+dmg_sound/source	shell2	03-trigger.s	dmg_sound/rom_singles/03-trigger.gb	0
+dmg_sound/source	shell2	04-sweep.s	dmg_sound/rom_singles/04-sweep.gb	0
+dmg_sound/source	shell2	05-sweep details.s	dmg_sound/rom_singles/05-sweep details.gb	0
+dmg_sound/source	shell2	06-overflow on trigger.s	dmg_sound/rom_singles/06-overflow on trigger.gb	0
+dmg_sound/source	shell2	07-len sweep period sync.s	dmg_sound/rom_singles/07-len sweep period sync.gb	0
+dmg_sound/source	shell2	08-len ctr during power.s	dmg_sound/rom_singles/08-len ctr during power.gb	0
+dmg_sound/source	shell2	09-wave read while on.s	dmg_sound/rom_singles/09-wave read while on.gb	0
+dmg_sound/source	shell2	10-wave trigger while on.s	dmg_sound/rom_singles/10-wave trigger while on.gb	0
+dmg_sound/source	shell2	11-regs after power.s	dmg_sound/rom_singles/11-regs after power.gb	0
+dmg_sound/source	shell2	12-wave write while on.s	dmg_sound/rom_singles/12-wave write while on.gb	0
+cgb_sound/source	shell2	01-registers.s	cgb_sound/rom_singles/01-registers.gb	0
+cgb_sound/source	shell2	02-len ctr.s	cgb_sound/rom_singles/02-len ctr.gb	0
+cgb_sound/source	shell2	03-trigger.s	cgb_sound/rom_singles/03-trigger.gb	0
+cgb_sound/source	shell2	04-sweep.s	cgb_sound/rom_singles/04-sweep.gb	0
+cgb_sound/source	shell2	05-sweep details.s	cgb_sound/rom_singles/05-sweep details.gb	0
+cgb_sound/source	shell2	06-overflow on trigger.s	cgb_sound/rom_singles/06-overflow on trigger.gb	0
+cgb_sound/source	shell2	07-len sweep period sync.s	cgb_sound/rom_singles/07-len sweep period sync.gb	0
+cgb_sound/source	shell2	08-len ctr during power.s	cgb_sound/rom_singles/08-len ctr during power.gb	0
+cgb_sound/source	shell2	09-wave read while on.s	cgb_sound/rom_singles/09-wave read while on.gb	0
+cgb_sound/source	shell2	10-wave trigger while on.s	cgb_sound/rom_singles/10-wave trigger while on.gb	0
+cgb_sound/source	shell2	11-regs after power.s	cgb_sound/rom_singles/11-regs after power.gb	0
+cgb_sound/source	shell2	12-wave.s	cgb_sound/rom_singles/12-wave.gb	0
+interrupt_time/source	shell2	interrupt_time.s	interrupt_time/interrupt_time.gb	0
+halt_bug/source	shell2	halt_bug.s	halt_bug.gb	0
+cpu_instrs/source	shell1	multi.s|01-special.s|02-interrupts.s|03-op sp,hl.s|04-op r,imm.s|05-op rp.s|06-ld r,r.s|07-jr,jp,call,ret,rst.s|08-misc instrs.s|09-op r,r.s|10-bit ops.s|11-op a,(hl).s	cpu_instrs/cpu_instrs.gb	0	size=65536,checksum=bank0
+mem_timing/source	shell1	multi.s|01-read_timing.s|02-write_timing.s|03-modify_timing.s	mem_timing/mem_timing.gb	0	size=65536,checksum=bank0
+dmg_sound/source	shell2	multi.s|01-registers.s|02-len ctr.s|03-trigger.s|04-sweep.s|05-sweep details.s|06-overflow on trigger.s|07-len sweep period sync.s|08-len ctr during power.s|09-wave read while on.s|10-wave trigger while on.s|11-regs after power.s|12-wave write while on.s	dmg_sound/dmg_sound.gb	0	size=65536
+cgb_sound/source	shell2	multi.s|01-registers.s|02-len ctr.s|03-trigger.s|04-sweep.s|05-sweep details.s|06-overflow on trigger.s|07-len sweep period sync.s|08-len ctr during power.s|09-wave read while on.s|10-wave trigger while on.s|11-regs after power.s|12-wave.s	cgb_sound/cgb_sound.gb	0	size=65536
+oam_bug/source	shell2	multi.s|1-lcd_sync.s|2-causes.s|3-non_causes.s|4-scanline_timing.s|5-timing_bug.s|6-timing_no_bug.s|7-timing_effect.s|8-instr_effect.s	oam_bug/oam_bug.gb	0	size=65536
+mem_timing-2/source	shell2	multi.s|01-read_timing.s|02-write_timing.s|03-modify_timing.s	mem_timing-2/mem_timing.gb	0xFF	size=65536

@@ -1,6 +1,6 @@
 ; Calc = calculation of new frequency and check for > $7FF
 ; Update = modification of frequency with new calculated value
-DEF TEST_NAME EQUS "\"04-sweep\""
+DEF TEST_NAME EQUS "04-sweep"
 INCLUDE "shell.inc"
 INCLUDE "apu.s"
 

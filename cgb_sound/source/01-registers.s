@@ -4,7 +4,7 @@
 ; - While off, register writes are ignored, but not reads.
 ; - Wave RAM is always readable and writable, and unaffected by power.
 
-DEF TEST_NAME EQUS "\"01-registers\""
+DEF TEST_NAME EQUS "01-registers"
 INCLUDE "shell.inc"
 INCLUDE "apu.s"
 

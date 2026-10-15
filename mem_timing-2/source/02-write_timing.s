@@ -1,8 +1,8 @@
 ; Tests timing of accesses made by
 ; memory write instructions
 
-DEF TEST_NAME EQUS "\"02-write_timing\""
-DEF ROM_NAME EQUS "\"02-WRITE_TIMING\""
+DEF TEST_NAME EQUS "02-write_timing"
+DEF ROM_NAME EQUS "02-WRITE_TIMING"
 INCLUDE "shell.inc"
 INCLUDE "tima_64.s"
 

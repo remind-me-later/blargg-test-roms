@@ -3,7 +3,7 @@
 ; * Beginning of second scanline
 ; * End of last scanline
 
-DEF TEST_NAME EQUS "\"5-timing_bug\""
+DEF TEST_NAME EQUS "5-timing_bug"
 INCLUDE "oam_bug.inc"
 
 main:

@@ -3,7 +3,7 @@
 
 ;DEF REQUIRE_DMG = 1
 ;DEF REQUIRE_CGB = 1
-DEF TEST_NAME EQUS "\"09-wave read while on\""
+DEF TEST_NAME EQUS "09-wave read while on"
 INCLUDE "shell.inc"
 INCLUDE "apu.s"
 

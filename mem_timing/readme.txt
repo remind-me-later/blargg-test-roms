@@ -91,7 +91,8 @@ execute
 	wla -o "source_filename.s" test.o
 	wlalink linkfile test.gb
 
-Test code uses a common shell framework contained in common/.
+Test code uses a common shell framework contained in common/shell1/ and
+common/ (see readme.txt there).
 
 
 Internal framework operation

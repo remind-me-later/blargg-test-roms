@@ -1,7 +1,7 @@
 ; Tests immediate instructions
 
 ;DEF PRINT_CHECKSUMS = 1
-DEF TEST_NAME EQUS "\"04-op r,imm\""
+DEF TEST_NAME EQUS "04-op r,imm"
 INCLUDE "shell.inc"
 INCLUDE "instr_test.s"
 

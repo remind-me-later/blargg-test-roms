@@ -1,7 +1,7 @@
 ; Tests wave channel timer reload and phase rest on trigger,
 ; and access to wave RAM while playing.
 DEF REQUIRE_CGB = 1
-DEF TEST_NAME EQUS "\"12-wave\""
+DEF TEST_NAME EQUS "12-wave"
 INCLUDE "shell.inc"
 INCLUDE "apu.s"
 

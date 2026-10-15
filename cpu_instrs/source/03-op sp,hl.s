@@ -1,7 +1,7 @@
 ; Tests SP/HL instructions
 
 ;DEF PRINT_CHECKSUMS = 1
-DEF TEST_NAME EQUS "\"03-op sp,hl\""
+DEF TEST_NAME EQUS "03-op sp,hl"
 INCLUDE "shell.inc"
 INCLUDE "instr_test.s"
 

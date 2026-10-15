@@ -1,6 +1,6 @@
 ; Verifies corruption for each timing
 
-DEF TEST_NAME EQUS "\"7-timing_effect\""
+DEF TEST_NAME EQUS "7-timing_effect"
 INCLUDE "oam_bug.inc"
 
 main:

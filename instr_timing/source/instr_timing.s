@@ -1,8 +1,8 @@
 ; Tests number of cycles taken by instructions
 ; except STOP, HALT, and illegals.
 
-DEF TEST_NAME EQUS "\"instr_timing\""
-DEF ROM_NAME EQUS "\"INSTR_TIMING\""
+DEF TEST_NAME EQUS "instr_timing"
+DEF ROM_NAME EQUS "INSTR_TIMING"
 ; The tables have to follow the shell code, in the block of the program
 DEF KEEP_PROGRAM_OPEN = 1
 INCLUDE "shell.inc"

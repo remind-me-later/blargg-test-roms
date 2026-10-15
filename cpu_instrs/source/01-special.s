@@ -1,6 +1,6 @@
 ; Tests instructions that don't fit template
 
-DEF TEST_NAME EQUS "\"01-special\""
+DEF TEST_NAME EQUS "01-special"
 INCLUDE "shell.inc"
 
 main:

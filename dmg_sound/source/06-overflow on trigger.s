@@ -1,7 +1,7 @@
 ; Finds highest and lowest frequencies that don't overflow
 ; immediately on trigger, for NR10 values of $00-$07
 
-DEF TEST_NAME EQUS "\"06-overflow on trigger\""
+DEF TEST_NAME EQUS "06-overflow on trigger"
 INCLUDE "shell.inc"
 INCLUDE "apu.s"
 

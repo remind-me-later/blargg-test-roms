@@ -1,6 +1,6 @@
 ; Tests DI, EI, and HALT (STOP proved untestable)
 
-DEF TEST_NAME EQUS "\"02-interrupts\""
+DEF TEST_NAME EQUS "02-interrupts"
 INCLUDE "shell.inc"
 
 main:

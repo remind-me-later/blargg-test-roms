@@ -1,6 +1,6 @@
 ; Verifies no corruption when done at "safe" times
 
-DEF TEST_NAME EQUS "\"6-timing_no_bug\""
+DEF TEST_NAME EQUS "6-timing_no_bug"
 INCLUDE "oam_bug.inc"
 
 main:

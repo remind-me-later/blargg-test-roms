@@ -3,7 +3,7 @@
 ; second is number of cycles taken by interrupt.
 ; Should take 13 cycles at either speed.
 DEF REQUIRE_CGB = 1
-DEF TEST_NAME EQUS "\"interrupt time\""
+DEF TEST_NAME EQUS "interrupt time"
 
 INCLUDE "shell.inc"
 INCLUDE "cpu_speed.s"

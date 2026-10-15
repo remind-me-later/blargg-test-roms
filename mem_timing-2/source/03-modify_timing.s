@@ -1,8 +1,8 @@
 ; Tests timing of accesses made by
 ; memory read-modify-write instructions
 
-DEF TEST_NAME EQUS "\"03-modify_timing\""
-DEF ROM_NAME EQUS "\"03-MODIFY_TIMIN\""
+DEF TEST_NAME EQUS "03-modify_timing"
+DEF ROM_NAME EQUS "03-MODIFY_TIMIN"
 INCLUDE "shell.inc"
 INCLUDE "tima_64.s"
 

@@ -1,6 +1,6 @@
 ; Verifies corruption pattern for each instruction
 
-DEF TEST_NAME EQUS "\"8-instr_effect\""
+DEF TEST_NAME EQUS "8-instr_effect"
 INCLUDE "oam_bug.inc"
 
 main:

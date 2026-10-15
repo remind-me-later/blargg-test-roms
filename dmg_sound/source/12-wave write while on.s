@@ -2,7 +2,7 @@
 
 DEF REQUIRE_DMG = 1
 ;DEF REQUIRE_CGB = 1
-DEF TEST_NAME EQUS "\"12-wave write while on\""
+DEF TEST_NAME EQUS "12-wave write while on"
 INCLUDE "shell.inc"
 INCLUDE "apu.s"
 

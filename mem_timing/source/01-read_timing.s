@@ -1,7 +1,7 @@
 ; Tests timing of accesses made by
 ; memory read instructions
 
-DEF TEST_NAME EQUS "\"01-read_timing\""
+DEF TEST_NAME EQUS "01-read_timing"
 INCLUDE "shell.inc"
 INCLUDE "tima_64.s"
 

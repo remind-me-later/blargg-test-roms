@@ -2,7 +2,7 @@
 ; Takes 20 seconds.
 
 ;DEF PRINT_CHECKSUMS = 1
-DEF TEST_NAME EQUS "\"11-op a,(hl)\""
+DEF TEST_NAME EQUS "11-op a,(hl)"
 INCLUDE "shell.inc"
 INCLUDE "instr_test.s"
 

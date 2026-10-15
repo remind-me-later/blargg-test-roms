@@ -1,5 +1,5 @@
 ; Tests length and sweep periods, and synchronization between the two
-DEF TEST_NAME EQUS "\"07-len sweep period sync\""
+DEF TEST_NAME EQUS "07-len sweep period sync"
 INCLUDE "shell.inc"
 INCLUDE "apu.s"
 

@@ -1,6 +1,6 @@
 ; Things that cause corruption
 
-DEF TEST_NAME EQUS "\"2-causes\""
+DEF TEST_NAME EQUS "2-causes"
 INCLUDE "oam_bug.inc"
 
 main:

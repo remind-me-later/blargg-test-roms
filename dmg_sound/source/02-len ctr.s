@@ -1,6 +1,6 @@
 ; Tests basic length counter operation
 
-DEF TEST_NAME EQUS "\"02-len ctr\""
+DEF TEST_NAME EQUS "02-len ctr"
 INCLUDE "shell.inc"
 INCLUDE "test_chan.s"
 

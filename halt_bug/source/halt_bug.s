@@ -5,7 +5,7 @@
 ; Reconstructed: no source of this test was published. It was written to
 ; assemble to the code of the released ROM, and the comments are guessed.
 
-DEF TEST_NAME EQUS "\"halt bug\""
+DEF TEST_NAME EQUS "halt bug"
 INCLUDE "shell.inc"
 INCLUDE "ppu.s"
 

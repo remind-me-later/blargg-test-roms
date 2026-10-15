@@ -3,7 +3,7 @@
 
 ;DEF REQUIRE_DMG = 1
 ;DEF REQUIRE_CGB = 1
-DEF TEST_NAME EQUS "\"08-len ctr during power\""
+DEF TEST_NAME EQUS "08-len ctr during power"
 INCLUDE "shell.inc"
 INCLUDE "apu.s"
 

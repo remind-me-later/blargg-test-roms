@@ -32,6 +32,24 @@ options, set RGBASMFLAGS, RGBLINKFLAGS or RGBFIXFLAGS (CI sets -Werror).
 The GBS and devcart builds that WLA-DX had are not supported.
 
 
+Layout
+------
+The sources of the tests are in source/ of each suite, with the files that
+only that suite has. The shell (the code that sets up the hardware, the
+console and the exit) and the libraries are shared, in common/:
+
+	common/shell1/   the first version of the shell, used by cpu_instrs,
+	                 mem_timing and instr_timing
+	common/shell2/   the second version, used by the other suites; each of
+	                 them has a suite.inc with its settings
+	common/          what both use: cpu_speed.s, timer.s, ppu.s, the font
+	                 of the console and the check of the RGBDS version
+
+A test is assembled from source/ of its suite, with the directories of its
+shell and of common/ on the include path (build.sh does it; roms.tsv says
+which shell each suite uses).
+
+
 What was not released
 ---------------------
 Some of the sources were never released, and some were out of date. The
@@ -40,21 +58,19 @@ ROMs, to assemble to the same bytes; their names and comments are guesses.
 Each says so at its beginning.
 
 	oam_bug/source/oam_bug.inc        included by the oam_bug tests
-	dmg_sound/source/apu.s            included by the sound tests (copies
-	cgb_sound/source/apu.s            are in the common/ of interrupt_time,
-	                                  oam_bug and mem_timing-2, for the
-	                                  multi-test ROMs)
-	dmg_sound/source/test_chan.s      included by the length counter and
-	cgb_sound/source/test_chan.s      trigger tests
+	common/shell2/apu.s               included by the sound tests and by
+	                                  the multi-test ROMs
+	common/shell2/test_chan.s         included by the length counter and
+	                                  trigger tests of the sound suites
 	halt_bug/source/halt_bug.s        halt_bug.gb had no source
-	*/source/multi.s                  the drivers of the multi-test ROMs
-	                                  (cpu_instrs, mem_timing, mem_timing-2,
-	                                  oam_bug, dmg_sound, cgb_sound)
+	common/shell1/multi_driver.s      the drivers of the multi-test ROMs
+	common/shell2/multi_driver.s      (one for the cpu_instrs and
+	                                  mem_timing ROMs, one for the others;
+	                                  */source/multi.s gives the names)
 
 interrupt_time/source/interrupt_time.s needed the libraries of the other
-suites and was built with the second version of the shell: it has copies of
-them in its common/. Its source expected another checksum than the ROM did;
-it has the ROM's. The released build commands also defined the name of
+suites and was built with the second version of the shell (common/shell2/).
+Its source expected another checksum than the ROM did; it has the ROM's. The released build commands also defined the name of
 the test (TEST_NAME), the name in the header (ROM_NAME) and, for the sound
 suites, the kind of hardware (REQUIRE_DMG, REQUIRE_CGB): the sources define
 them now.

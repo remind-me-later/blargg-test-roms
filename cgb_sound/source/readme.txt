@@ -6,7 +6,8 @@ Building with RGBDS
 The tests are assembled with RGBDS (rgbasm, rgblink and rgbfix), tested
 with version 1.0.4. To assemble a test ROM by hand, from this directory:
 
-	rgbasm -I common/ -I ../../hardware.inc/ -o test.o source_filename_here.s
+	rgbasm -I ../../common/shell2/ -I ../../common/ -I ../../hardware.inc/ \
+	       -o test.o source_filename_here.s
 	rgblink -o test.gb test.o
 	rgbfix -f hg test.gb
 
@@ -23,14 +24,15 @@ test (built with BUILD_MULTI and MULTI_TEST defined). Its source was not
 released: multi.s is a reconstruction, so build.sh does it.
 
 Tests include "shell.inc" at the beginning and "shell_end.inc" at the end.
-The code of the common/ libraries that WLA-DX put after the test is in
-shell_end.inc, and the definitions and macros of the libraries are in
-the .inc files.
+The code of the libraries that goes after the test is in shell_end.inc,
+and the definitions and macros of the libraries are in the .inc files.
+They are shared with the other suites, in common/shell2/ and common/
+(see readme.txt there); suite.inc has the settings of this suite.
 
 Framework
 ---------
 Each test is in a single source file, and makes use of several library
-source files from common/. This framework provides common services and
+source files from common/shell2/. This framework provides common services and
 reduces code to only that which performs the actual test. Virtually all
 tests include "shell.inc" at the beginning, which sets things up and
 includes all the appropriate library files.

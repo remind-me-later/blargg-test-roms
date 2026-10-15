@@ -77,7 +77,11 @@ option() {
     done
 }
 
-# build_rom SOURCE_DIR SOURCE_FILES OUTPUT PAD OPTIONS
+# build_rom SOURCE_DIR SHELL SOURCE_FILES OUTPUT PAD OPTIONS
+#
+# SHELL is the directory of common/ with the shell of the suite. Each test is
+# assembled from SOURCE_DIR, and finds the files of its suite there, and the
+# shared ones through the include path.
 #
 # A multi-test ROM has several source files separated by |: the driver, which
 # runs from bank 0, and the tests, each of which is assembled as one block of
@@ -88,19 +92,20 @@ option() {
 #   checksum=bank0   the global checksum of the released ROM covers bank 0
 #                    only: it was computed before the tests were added to it
 build_rom() {
-    local srcdir=$1 files=$2 out=$here/build/$3 pad=$4 options=${5:-}
+    local srcdir=$1 shell=$2 files=$3 out=$here/build/$4 pad=$5 options=${6:-}
     local -a sources objs=()
+    local -a inc_flags=(-I "$here/common/$shell/" -I "$here/common/" -I "$here/hardware.inc/")
     IFS='|' read -r -a sources <<< "$files"
     mkdir -p "$(dirname "$out")"
     if [ ${#sources[@]} -eq 1 ]; then
-        (cd "$here/$srcdir" && rgbasm "${asm_flags[@]}" -I common/ -I "$here/hardware.inc/" -o "$tmp/0.o" "${sources[0]}")
+        (cd "$here/$srcdir" && rgbasm "${asm_flags[@]}" "${inc_flags[@]}" -o "$tmp/0.o" "${sources[0]}")
         objs=("$tmp/0.o")
     else
         local i
-        (cd "$here/$srcdir" && rgbasm "${asm_flags[@]}" -I common/ -I "$here/hardware.inc/" -o "$tmp/driver.o" "${sources[0]}")
+        (cd "$here/$srcdir" && rgbasm "${asm_flags[@]}" "${inc_flags[@]}" -o "$tmp/driver.o" "${sources[0]}")
         objs=("$tmp/driver.o")
         for ((i = 1; i < ${#sources[@]}; i++)); do
-            (cd "$here/$srcdir" && rgbasm "${asm_flags[@]}" -I common/ -I "$here/hardware.inc/" -D BUILD_MULTI=1 -D MULTI_TEST=$((i - 1)) \
+            (cd "$here/$srcdir" && rgbasm "${asm_flags[@]}" "${inc_flags[@]}" -D BUILD_MULTI=1 -D MULTI_TEST=$((i - 1)) \
                 -o "$tmp/test$i.o" "${sources[i]}")
             objs+=("$tmp/test$i.o")
         done
@@ -131,10 +136,10 @@ build_rom() {
 
 built=0
 failed=0
-while IFS=$'\t' read -r srcdir file out pad options; do
+while IFS=$'\t' read -r srcdir shell file out pad options; do
     [[ -z $srcdir || $srcdir == \#* ]] && continue
     wanted "$out" || continue
-    if ! build_rom "$srcdir" "$file" "$out" "$pad" "$options"; then
+    if ! build_rom "$srcdir" "$shell" "$file" "$out" "$pad" "$options"; then
         echo "FAILED     $out"
         failed=$((failed + 1))
         continue

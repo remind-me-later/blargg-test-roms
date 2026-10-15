@@ -4,7 +4,7 @@
 ; With LCD off, turning it on synchronizes to beginning
 ; of first visible scanline
 
-DEF TEST_NAME EQUS "\"1-lcd_sync\""
+DEF TEST_NAME EQUS "1-lcd_sync"
 INCLUDE "oam_bug.inc"
 
 main:

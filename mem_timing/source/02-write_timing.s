@@ -1,7 +1,7 @@
 ; Tests timing of accesses made by
 ; memory write instructions
 
-DEF TEST_NAME EQUS "\"02-write_timing\""
+DEF TEST_NAME EQUS "02-write_timing"
 INCLUDE "shell.inc"
 INCLUDE "tima_64.s"
 

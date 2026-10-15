@@ -1,6 +1,6 @@
 ; Things that don't cause corruption
 
-DEF TEST_NAME EQUS "\"3-non_causes\""
+DEF TEST_NAME EQUS "3-non_causes"
 INCLUDE "oam_bug.inc"
 
 main:
