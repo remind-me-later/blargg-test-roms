@@ -37,7 +37,7 @@ Test:
 	wreg rAUD3ENA, 0
 	ld c, $30
 .read:
-	ld a, [$FF00+c]
+	ldh a, [c]
 	call PrintA
 	inc c
 	bit 6, c

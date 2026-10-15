@@ -112,7 +112,7 @@ LoadWave:
 	ld c, $30
 .copy:
 	ld a, [hli]
-	ld [$FF00+c], a
+	ldh [c], a
 	inc c
 	bit 6, c
 	jr z, .copy
@@ -126,7 +126,7 @@ FillWave:
 	push bc
 	ld bc, $1030
 .fill:
-	ld [$FF00+c], a
+	ldh [c], a
 	inc c
 	dec b
 	jr nz, .fill
@@ -140,7 +140,7 @@ FillAPURegs:
 	push bc
 	ld bc, $2010
 .fill:
-	ld [$FF00+c], a
+	ldh [c], a
 	inc c
 	dec b
 	jr nz, .fill

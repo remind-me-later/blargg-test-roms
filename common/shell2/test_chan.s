@@ -27,7 +27,7 @@ MACRO wchn ; reg, data
 	add \1
 	ld c, a
 	ld a, \2
-	ld [$FF00+c], a
+	ldh [c], a
 ENDM
 
 

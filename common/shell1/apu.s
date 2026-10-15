@@ -54,7 +54,7 @@ LoadWave:
 	ld c, $30
 .copy:
 	ld a, [hli]
-	ld [$FF00+c], a
+	ldh [c], a
 	inc c
 	bit 6, c
 	jr z, .copy
@@ -109,7 +109,7 @@ FillWave:
 	push bc
 	ld c, $30
 .fill:
-	ld [$FF00+c], a
+	ldh [c], a
 	inc c
 	bit 6, c
 	jr z, .fill

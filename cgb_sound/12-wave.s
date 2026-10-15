@@ -87,10 +87,10 @@ Main:
 
 TestWave:
 .wait:
-	inc de          ; 8
-	ld a, [$FF00+c] ; 8
-	or a            ; 4
-	jr z, .wait     ; 12
+	inc de      ; 8
+	ldh a, [c]  ; 8
+	or a        ; 4
+	jr z, .wait ; 12
 
 	;call     PrintA
 	;call     PrintDE
