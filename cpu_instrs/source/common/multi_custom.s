@@ -1,38 +1,12 @@
-; RST handlers
-.bank 0 slot 0
-.org 0
+; RST and interrupt handlers: INC A, RET at every vector from $00 to $58
+
+PUSHS
+SECTION "vector handlers", ROM0[$00]
+REPT 11
      inc  a
      ret
-     .ds 6,0
+     ds   6,0
+ENDR
      inc  a
      ret
-     .ds 6,0
-     inc  a
-     ret
-     .ds 6,0
-     inc  a
-     ret
-     .ds 6,0
-     inc  a
-     ret
-     .ds 6,0
-     inc  a
-     ret
-     .ds 6,0
-     inc  a
-     ret
-     .ds 6,0
-     inc  a
-     ret
-     .ds 6,0
-     inc  a
-     ret
-     .ds 6,0
-     inc  a
-     ret
-     .ds 6,0
-     inc  a
-     ret
-     .ds 6,0
-     inc  a
-     ret
+POPS

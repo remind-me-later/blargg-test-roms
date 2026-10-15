@@ -4,7 +4,7 @@
 ; Preserved: BC, DE, HL
 cpu_norm:
      ; Do nothing if not CGB
-     ld   a,(gb_id)
+     ld   a,[gb_id]
      and  gb_id_cgb
      ret  z
      
@@ -18,7 +18,7 @@ cpu_norm:
 ; Preserved: BC, DE, HL
 cpu_fast:
      ; Do nothing if not CGB
-     ld   a,(gb_id)
+     ld   a,[gb_id]
      and  gb_id_cgb
      ret  z
      
@@ -31,11 +31,10 @@ cpu_speed_toggle:
      push af
      xor  a
      sta  IE
-     sta  IF
+     sta  rIF
      wreg P1,$30
      wreg KEY1,1
-     stop
-     nop
+     stop    ; RGBDS assembles this as $10 $00, the old stop + nop
      pop  af
      sta  IE
      ret
@@ -52,13 +51,13 @@ get_cpu_speed:
      wreg NR12,8
      wreg NR14,$C0
      ld   bc,-$262
--    inc  bc
+:    inc  bc
      lda  NR52
      and  1
-     jr   nz,-
+     jr   nz,:-
      ld   a,0
      bit  7,b
-     jr   nz,+
+     jr   nz,:+
      inc  a
-+    pop  bc
+:    pop  bc
      ret

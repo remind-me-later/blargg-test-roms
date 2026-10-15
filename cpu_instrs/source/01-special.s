@@ -1,37 +1,38 @@
 ; Tests instructions that don't fit template
 
-.include "shell.inc"
+DEF TEST_NAME EQUS "\"01-special\""
+INCLUDE "shell.inc"
 
 main:
      set_test 2,"JR negative"
      ld   a,0
      jp   jr_neg
      inc  a
--    inc  a
+:    inc  a
      inc  a
      cp   2
      jp   nz,test_failed
-     jp   +
+     jp   :+
 jr_neg:
-     jr   -
-+
+     jr   :-
+:
      
      set_test 3,"JR positive"
      ld   a,0
-     jr   +
+     jr   :+
      inc  a
-+    inc  a
+:    inc  a
      inc  a
      cp   2
      jp   nz,test_failed
      
      
      set_test 4,"LD PC,HL"
-     ld   hl,+
+     ld   hl,:+
      ld   a,0
-     ld   pc,hl
+     jp   hl
      inc  a
-+    inc  a
+:    inc  a
      inc  a
      cp   2
      jp   nz,test_failed
@@ -39,7 +40,7 @@ jr_neg:
 
      set_test 5,"POP AF"
      ld   bc,$1200
--    push bc
+:    push bc
      pop  af
      push af
      pop  de
@@ -49,13 +50,13 @@ jr_neg:
      jp   nz,test_failed
      inc  b
      inc  c
-     jr   nz,-
+     jr   nz,:-
      
      
      set_test 6,"DAA"
      ; Test all combinations of A and flags (256*16 total)
      ld   de,0
--    push de
+:    push de
      pop  af
      daa
      
@@ -66,13 +67,15 @@ jr_neg:
      call update_crc
      
      inc  d
-     jr   nz,-
+     jr   nz,:-
      
      ld   a,e
      add  $10
      ld   e,a
-     jr   nz,-
+     jr   nz,:-
      
      check_crc $6A9F8D8A
      
      jp   tests_passed
+
+INCLUDE "shell_end.inc"

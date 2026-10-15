@@ -24,9 +24,9 @@ sync_apu:
      wreg NR21,$3E  ; length = 2 (in case of extra len clk)
      wreg NR22,$08  ; silent without disabling channel
      wreg NR24,$C0  ; start length
--    lda  NR52      ; wait for length to reach zero
+:    lda  NR52      ; wait for length to reach zero
      and  $02
-     jr   nz,-
+     jr   nz,:-
      ret
 
 
@@ -38,9 +38,9 @@ sync_sweep:
      wreg NR12,$08  ; silent without disabling channel
      wreg NR13,$FF  ; freq = $3FF
      wreg NR14,$83  ; start
--    lda  NR52
+:    lda  NR52
      and  $01
-     jr   nz,-
+     jr   nz,:-
      ret
 
 
@@ -50,11 +50,11 @@ load_wave:
      push bc
      wreg NR30,$00  ; disable while writing
      ld   c,$30
--    ld   a,(hl+)
-     ld   ($FF00+c),a
+:    ld   a,[hli]
+     ld   [$FF00+c],a
      inc  c
      bit  6,c
-     jr   z,-
+     jr   z,:-
      pop  bc
      ret
 
@@ -83,17 +83,17 @@ mark_sound:
      wreg NR10,0
      wreg NR11,$80
      wreg NR13,$F8
--    ld   a,$60
+:    ld   a,$60
      rl   c
-     jr   nc,+
+     jr   nc,:+
      ld   a,$A0
-+    sta  NR12
+:    sta  NR12
      wreg NR14,$87
      delay_usec 300
      wreg NR12,0
      delay_usec 100
      dec  b
-     jr   nz,-
+     jr   nz,:--
      pop  bc
      ret
 
@@ -103,10 +103,10 @@ mark_sound:
 fill_wave:
      push bc
      ld   c,$30
--    ld   ($FF00+c),a
+:    ld   [$FF00+c],a
      inc  c
      bit  6,c
-     jr   z,-
+     jr   z,:-
      pop  bc
      ret
 
@@ -119,13 +119,13 @@ get_len_a:
      push bc
      ld   c,a
      ld   b,0
--    lda  NR52      ; 3
+:    lda  NR52      ; 3
      and  c         ; 1
-     jr   z,+       ; 2
+     jr   z,:+       ; 2
      delay 4096-10
      inc  b         ; 1
-     jr   nz,-      ; 3
-+    ld   a,b
+     jr   nz,:-      ; 3
+:    ld   a,b
      pop  bc
      ret
 
@@ -145,18 +145,18 @@ sync_length:
      
      ; Coarse sync
      ld   a,$02
--    and  (hl)
-     jr   nz,-
+:    and  [hl]
+     jr   nz,:-
      
      ; Fine sync. Slowly moves "forward" until
      ; length clock occurs just before reading NR52.
--    delay 4097-20
+:    delay 4097-20
      wreg NR21,-1   ; 5
      wreg NR24,$C0  ; 5
      lda  NR52      ; 3
      delay 2        ; 2
      and  $02       ; 2
-     jr   nz,-      ; 3
+     jr   nz,:-      ; 3
      
      pop  hl
      pop  af
@@ -165,51 +165,51 @@ sync_length:
 
 ; Delays n*4096 cycles
 ; Preserved: BC, DE, HL
-.macro delay_frames ; n
+MACRO delay_frames ; n
      ld   a,\1
      call delay_frames_
-.endm
+ENDM
 
 
 ; Delays A*4096+13 cycles (including CALL)
 ; Preserved: BC, DE, HL
 delay_a_frames:
      or   a              ; 1
-     jr   nz,+           ; 3
+     jr   nz,:+           ; 3
                          ; -1
      ret
 delay_frames_:           ; delays 4096*A-2 cycles (including CALL)
      push af             ; 4
      ld   a,256-13-20-12 ; 2
-     jr   ++             ; 3
-+
--    push af             ; 4
+     jr   :+++             ; 3
+:
+:    push af             ; 4
      ld   a,256-13-20    ; 2
-++   call delay_a_20_cycles
+:    call delay_a_20_cycles
      delay 4096-256
      pop  af             ; 3
      dec  a              ; 1
-     jr   nz,-           ; 3
+     jr   nz,:--           ; 3
                          ; -1
      ret
 
 
-.macro test_chan_timing ; chan, iter
+MACRO test_chan_timing ; chan, iter
      ld   a,\1
      call print_dec
      call print_space
      ld   a,\2
--    push af
+:    push af
      test_chan 1<<\1, \1*5+NR10
      pop  af
      dec  a
-     jr   nz,-
+     jr   nz,:-
      call print_newline
-.endm
+ENDM
 
-.macro test_chans ARGS iter
-     test_chan_timing 0,iter
-     test_chan_timing 1,iter
-     test_chan_timing 2,iter
-     test_chan_timing 3,iter
-.endm
+MACRO test_chans
+     test_chan_timing 0,\1
+     test_chan_timing 1,\1
+     test_chan_timing 2,\1
+     test_chan_timing 3,\1
+ENDM

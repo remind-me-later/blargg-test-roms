@@ -2,20 +2,20 @@
 ; prints to output device
 
 ; Character that does equivalent of print_newline
-.define newline 10
+DEF newline = 10
 
 ; Prints char without updating checksum
 ; Preserved: BC, DE, HL
-.define print_char_nocrc bss
-.redefine bss            bss+3
+DEF print_char_nocrc = bss
+DEF bss = bss+3
 
 
 ; Initializes printing. HL = print routine
 init_printing:
      ld   a,l
-     ld   (print_char_nocrc+1),a
+     ld   [print_char_nocrc+1],a
      ld   a,h
-     ld   (print_char_nocrc+2),a
+     ld   [print_char_nocrc+2],a
      jr   show_printing
 
 
@@ -23,10 +23,10 @@ init_printing:
 ; Preserved: BC, DE, HL
 hide_printing:
      ld   a,$C9     ; RET
-     jr   +
+     jr   :+
 show_printing:
      ld   a,$C3     ; JP (nn)
-+    ld   (print_char_nocrc),a
+:    ld   [print_char_nocrc],a
      ret
 
 
@@ -64,19 +64,19 @@ print_newline:
 
 ; Prints immediate string
 ; Preserved: AF, BC, DE, HL
-.macro print_str ; string,string2
+MACRO print_str ; string,string2
      push hl
      call print_str_
-     .byte \1
-     .if NARGS > 1
-          .byte \2
-     .endif
-     .if NARGS > 2
-          .byte \3
-     .endif
-     .byte 0
+     db \1
+     IF _NARG > 1
+          db \2
+     ENDC
+     IF _NARG > 2
+          db \3
+     ENDC
+     db 0
      pop  hl
-.endm
+ENDM
 
 print_str_:
      pop  hl
@@ -89,10 +89,10 @@ print_str_:
 ; Preserved: AF, BC, DE
 print_str_hl:
      push af
-     jr   +
--    call print_char
-+    ldi  a,(hl)
+     jr   :++
+:    call print_char
+:    ld   a,[hli]
      or   a
-     jr   nz,-
+     jr   nz,:--
      pop  af
      ret

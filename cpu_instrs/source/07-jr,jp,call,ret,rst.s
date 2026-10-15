@@ -1,52 +1,53 @@
 ; Tests branch instructions
 
 ;.define PRINT_CHECKSUMS 1
-.include "shell.inc"
-.include "instr_test.s"
+DEF TEST_NAME EQUS "\"07-jr,jp,call,ret,rst\""
+INCLUDE "shell.inc"
+INCLUDE "instr_test.s"
 
 instrs:
      ;       JR cond,skip
      ;       INC A
      ; skip:
-     .byte $18,$01,$3C ; JR   *+3
-     .byte $20,$01,$3C ; JR   NZ,*+3
-     .byte $28,$01,$3C ; JR   Z,*+3
-     .byte $30,$01,$3C ; JR   NC,*+3
-     .byte $38,$01,$3C ; JR   C,*+3
+     db $18, $01, $3C ; JR   *+3
+     db $20, $01, $3C ; JR   NZ,*+3
+     db $28, $01, $3C ; JR   Z,*+3
+     db $30, $01, $3C ; JR   NC,*+3
+     db $38, $01, $3C ; JR   C,*+3
      
-     .byte $C2,<taken,>taken ; JP   NZ,taken
-     .byte $C3,<taken,>taken ; JP   taken
-     .byte $CA,<taken,>taken ; JP   Z,taken
-     .byte $D2,<taken,>taken ; JP   NC,taken
-     .byte $DA,<taken,>taken ; JP   C,taken
+     db $C2, LOW(taken), HIGH(taken) ; JP   NZ,taken
+     db $C3, LOW(taken), HIGH(taken) ; JP   taken
+     db $CA, LOW(taken), HIGH(taken) ; JP   Z,taken
+     db $D2, LOW(taken), HIGH(taken) ; JP   NC,taken
+     db $DA, LOW(taken), HIGH(taken) ; JP   C,taken
 
-     .byte $C4,<taken,>taken ; CALL NZ,taken
-     .byte $CC,<taken,>taken ; CALL Z,taken
-     .byte $CD,<taken,>taken ; CALL taken
-     .byte $D4,<taken,>taken ; CALL NC,taken
-     .byte $DC,<taken,>taken ; CALL C,taken
+     db $C4, LOW(taken), HIGH(taken) ; CALL NZ,taken
+     db $CC, LOW(taken), HIGH(taken) ; CALL Z,taken
+     db $CD, LOW(taken), HIGH(taken) ; CALL taken
+     db $D4, LOW(taken), HIGH(taken) ; CALL NC,taken
+     db $DC, LOW(taken), HIGH(taken) ; CALL C,taken
      
      ; RET cond
      ; INC A
-     .byte $C0,$3C,0 ; RET  NZ
-     .byte $C8,$3C,0 ; RET  Z
-     .byte $C9,$3C,0 ; RET
-     .byte $D0,$3C,0 ; RET  NC
-     .byte $D8,$3C,0 ; RET  C
-     .byte $D9,$3C,0 ; RETI
+     db $C0, $3C, 0 ; RET  NZ
+     db $C8, $3C, 0 ; RET  Z
+     db $C9, $3C, 0 ; RET
+     db $D0, $3C, 0 ; RET  NC
+     db $D8, $3C, 0 ; RET  C
+     db $D9, $3C, 0 ; RETI
      
      ; RST
      ; can only easily test this one on devcart
-     .byte $C7,0,0 ; RST $00
-.ifndef BUILD_DEVCART
-     .byte $CF,0,0 ; RST $08
-     .byte $D7,0,0 ; RST $10
-     .byte $DF,0,0 ; RST $18
-     .byte $E7,0,0 ; RST $20
-     .byte $EF,0,0 ; RST $28
-     .byte $F7,0,0 ; RST $30
-     .byte $FF,0,0 ; RST $38
-.endif
+     db $C7, 0, 0 ; RST $00
+IF !DEF(BUILD_DEVCART)
+     db $CF, 0, 0 ; RST $08
+     db $D7, 0, 0 ; RST $10
+     db $DF, 0, 0 ; RST $18
+     db $E7, 0, 0 ; RST $20
+     db $EF, 0, 0 ; RST $28
+     db $F7, 0, 0 ; RST $30
+     db $FF, 0, 0 ; RST $38
+ENDC
 
 instrs_end:
 
@@ -55,23 +56,23 @@ test_instr:
      
      ; Go through all 16 combinations of flags
      ld   bc,$1200
--    
+:
      ; Fill 4 bytes of new stack
      ld   a,$12
-     ld   ($DF80-2),a
+     ld   [$DF80-2],a
      ld   a,$34
-     ld   ($DF80-3),a
+     ld   [$DF80-3],a
      ld   a,$56
-     ld   ($DF80-4),a
+     ld   [$DF80-4],a
      ld   a,$78
-     ld   ($DF80-5),a
+     ld   [$DF80-5],a
      
      ; Set AF
      push bc
      pop  af
      
      ; Switch to new stack
-     ld   (temp),sp
+     ld   [temp],sp
      ld   sp,$DF80
      
      ; Set return address
@@ -85,24 +86,24 @@ taken:
      di             ; RETI enables interrupts
      
      ; Save new SP and switch to yet another stack
-     ld   (temp+2),sp
+     ld   [temp+2],sp
      ld   sp,$DF70
      
      ; Checksum A and SP
      call update_crc_fast
-     ld   a,(temp+2)
+     ld   a,[temp+2]
      call update_crc_fast
-     ld   a,(temp+3)
+     ld   a,[temp+3]
      call update_crc_fast
      
      ; Checksum 4 bytes of stack
-     ld   a,($DF80-2)
+     ld   a,[$DF80-2]
      call update_crc_fast
-     ld   a,($DF80-3)
+     ld   a,[$DF80-3]
      call update_crc_fast
-     ld   a,($DF80-4)
+     ld   a,[$DF80-4]
      call update_crc_fast
-     ld   a,($DF80-5)
+     ld   a,[$DF80-5]
      call update_crc_fast
      
      ldsp temp
@@ -110,18 +111,20 @@ taken:
      ld   a,c
      add  $10
      ld   c,a
-     jr   nz,-
+     jr   nz,:-
      
      ret
 
 checksums:
-     .byte $EC,$A4,$94,$79,$C4,$00,$96,$2C,$C4,$64,$90,$33,$77,$C7,$0A,$D4
-     .byte $77,$A3,$0C,$CB,$79,$E7,$7E,$AE,$DA,$DC,$03,$F7,$4F,$9F,$E9,$20
-     .byte $72,$12,$DA,$01,$44,$6A,$4D,$8F,$D1,$79,$30,$4C,$AA,$37,$F2,$6A
-     .byte $97,$EA,$56,$5F,$32,$28,$C7,$D1,$49,$66,$05,$F7,$80,$0F,$BA,$8E
-     .byte $41,$E2,$A4,$9A,$2D,$2D,$8C,$72,$A5,$13,$76,$A8,$64,$FE,$68,$BC
-     .byte $2D,$2D,$8C,$72,$50,$96,$24,$27,$50,$96,$24,$27,$50,$96,$24,$27
-     .byte $50,$96,$24,$27,$50,$96,$24,$27,$50,$96,$24,$27,$50,$96,$24,$27
-     .byte $50,$96,$24,$27
+     db $EC, $A4, $94, $79, $C4, $00, $96, $2C, $C4, $64, $90, $33, $77, $C7, $0A, $D4
+     db $77, $A3, $0C, $CB, $79, $E7, $7E, $AE, $DA, $DC, $03, $F7, $4F, $9F, $E9, $20
+     db $72, $12, $DA, $01, $44, $6A, $4D, $8F, $D1, $79, $30, $4C, $AA, $37, $F2, $6A
+     db $97, $EA, $56, $5F, $32, $28, $C7, $D1, $49, $66, $05, $F7, $80, $0F, $BA, $8E
+     db $41, $E2, $A4, $9A, $2D, $2D, $8C, $72, $A5, $13, $76, $A8, $64, $FE, $68, $BC
+     db $2D, $2D, $8C, $72, $50, $96, $24, $27, $50, $96, $24, $27, $50, $96, $24, $27
+     db $50, $96, $24, $27, $50, $96, $24, $27, $50, $96, $24, $27, $50, $96, $24, $27
+     db $50, $96, $24, $27
 
-.include "multi_custom.s"
+INCLUDE "multi_custom.s"
+
+INCLUDE "shell_end.inc"

@@ -1,6 +1,7 @@
 ; Tests DI, EI, and HALT (STOP proved untestable)
 
-.include "shell.inc"
+DEF TEST_NAME EQUS "\"02-interrupts\""
+INCLUDE "shell.inc"
 
 main:
      wreg IE,$04
@@ -11,18 +12,18 @@ main:
      push bc
      pop  bc
      inc  b
-     wreg IF,$04
+     wreg rIF,$04
 interrupt_addr:
      dec  b
      jp   nz,test_failed
      ld   hl,sp-2
-     ldi  a,(hl)
-     cp   <interrupt_addr
+     ld   a,[hli]
+     cp   LOW(interrupt_addr)
      jp   nz,test_failed
-     ld   a,(hl)
-     cp   >interrupt_addr
+     ld   a,[hl]
+     cp   HIGH(interrupt_addr)
      jp   nz,test_failed
-     lda  IF
+     lda  rIF
      and  $04
      jp   nz,test_failed
      
@@ -31,26 +32,26 @@ interrupt_addr:
      ld   bc,0
      push bc
      pop  bc
-     wreg IF,$04
+     wreg rIF,$04
      ld   hl,sp-2
-     ldi  a,(hl)
-     or   (hl)
+     ld   a,[hli]
+     or   [hl]
      jp   nz,test_failed
-     lda  IF
+     lda  rIF
      and  $04
      jp   z,test_failed
      
      set_test 4,"Timer doesn't work"
      wreg TAC,$05
      wreg TIMA,0
-     wreg IF,0
+     wreg rIF,0
      delay 500
-     lda  IF
+     lda  rIF
      delay 500
      and  $04
      jp   nz,test_failed
      delay 500
-     lda  IF
+     lda  rIF
      and  $04
      jp   z,test_failed
      pop  af
@@ -58,16 +59,19 @@ interrupt_addr:
      set_test 5,"HALT"
      wreg TAC,$05
      wreg TIMA,0
-     wreg IF,0
+     wreg rIF,0
      halt      ; timer interrupt will exit halt
      nop       ; avoids DMG bug
-     lda  IF
+     lda  rIF
      and  $04
      jp   z,test_failed
      
      jp   tests_passed
 
-.bank 0 slot 0
-.org $50
+PUSHS
+SECTION "vector 1", ROM0[$50]
      inc a
      ret
+POPS
+
+INCLUDE "shell_end.inc"

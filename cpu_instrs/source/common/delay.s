@@ -6,57 +6,50 @@
 
 ; Delays n cycles, from 0 to 16777215
 ; Preserved: AF, BC, DE, HL
-.macro delay ARGS n
-     .if n < 0
-          .printt "Delay must be >= 0"
-          .fail
-     .endif
-     .if n > 16777215
-          .printt "Delay must be < 16777216"
-          .fail
-     .endif
-     delay_ n&$FFFF, n>>16
-.endm
+MACRO delay
+     IF (\1) < 0
+          FAIL "Delay must be >= 0"
+     ENDC
+     IF (\1) > 16777215
+          FAIL "Delay must be < 16777216"
+     ENDC
+     delay_ (\1)&$FFFF, (\1)>>16
+ENDM
 
 ; Delays n clocks, from 0 to 16777216*4. Must be multiple of 4.
 ; Preserved: AF, BC, DE, HL
-.macro delay_clocks ARGS n
-     .if n # 4 != 0
-          .printt "Delay must be a multiple of 4"
-          .fail
-     .endif
-     delay_ (n/4)&$FFFF,(n/4)>>16
-.endm
+MACRO delay_clocks
+     IF (\1) % 4 != 0
+          FAIL "Delay must be a multiple of 4"
+     ENDC
+     delay_ ((\1)/4)&$FFFF,((\1)/4)>>16
+ENDM
 
 ; Delays n microseconds (1/1000000 second)
 ; n can range from 0 to 4000 usec.
 ; Preserved: AF, BC, DE, HL
-.macro delay_usec ARGS n
-     .if n < 0
-          .printt "Delay must be >= 0"
-          .fail
-     .endif
-     .if n > 4000
-          .printt "Delay must be <= 4000 usec"
-          .fail
-     .endif
-     delay_ ((n * 1048576 + 500000) / 1000000)&$FFFF,((n * 1048576 + 500000) / 1000000)>>16
-.endm
+MACRO delay_usec
+     IF (\1) < 0
+          FAIL "Delay must be >= 0"
+     ENDC
+     IF (\1) > 4000
+          FAIL "Delay must be <= 4000 usec"
+     ENDC
+     delay_ (((\1) * 1048576 + 500000) / 1000000)&$FFFF,(((\1) * 1048576 + 500000) / 1000000)>>16
+ENDM
 
 ; Delays n milliseconds (1/1000 second)
 ; n can range from 0 to 10000 msec.
 ; Preserved: AF, BC, DE, HL
-.macro delay_msec ARGS n
-     .if n < 0
-          .printt "Delay must be >= 0"
-          .fail
-     .endif
-     .if n > 10000
-          .printt "Delay must be <= 10000 msec"
-          .fail
-     .endif
-     delay_ ((n * 1048576 + 500) / 1000)&$FFFF, ((n * 1048576 + 500) / 1000)>>16
-.endm
+MACRO delay_msec
+     IF (\1) < 0
+          FAIL "Delay must be >= 0"
+     ENDC
+     IF (\1) > 10000
+          FAIL "Delay must be <= 10000 msec"
+     ENDC
+     delay_ (((\1) * 1048576 + 500) / 1000)&$FFFF, (((\1) * 1048576 + 500) / 1000)>>16
+ENDM
 
      ; All the low/high quantities are to deal wla-dx's asinine
      ; restriction full expressions must evaluate to a 16-bit
@@ -66,62 +59,62 @@
      ; the sewer (this is one of too many bugs I've wasted
      ; hours working around).
 
-     .define max_short_delay 28
+     DEF max_short_delay = 28
      
-     .macro delay_long_ ARGS n, high
+     MACRO delay_long_
           ; 0+ to avoid assembler treating as memory read
-          ld   a,0+(((high<<16)+n) - 11) >> 16
+          ld   a,0+((((\2)<<16)+(\1)) - 11) >> 16
           call delay_65536a_9_cycles_
-          delay_nosave_ (((high<<16)+n) - 11)&$FFFF, 0
-     .endm
+          delay_nosave_ ((((\2)<<16)+(\1)) - 11)&$FFFF, 0
+     ENDM
      
      ; Doesn't save AF, allowing minimization of AF save/restore
-     .macro delay_nosave_ ARGS n, high
+     MACRO delay_nosave_
           ; 65536+11     = maximum delay using delay_256a_9_cycles_
           ; 255+22  = maximum delay using delay_a_20_cycles
           ; 22      = minimum delay using delay_a_20_cycles
-          .if high > 1
-               delay_long_ n, high
-          .else
-               .if high*n > 11
-                    delay_long_ n, high
-               .else
-                    .if (high*(255+22+1))|n > 255+22
-                         ld   a,>(((high<<16)+n) - 11)
+          IF (\2) > 1
+               delay_long_ \1, \2
+          ELSE
+               IF (\2)*(\1) > 11
+                    delay_long_ \1, \2
+               ELSE
+                    IF ((\2)*(255+22+1))|(\1) > 255+22
+                         ld   a,HIGH(((((\2)<<16)+(\1)) - 11))
                          call delay_256a_9_cycles_
-                         delay_nosave_ <(((high<<16)+n) - 11), 0
-                    .else
-                         .if n >= 22
-                              ld   a,n - 22
+                         delay_nosave_ LOW(((((\2)<<16)+(\1)) - 11)), 0
+                    ELSE
+                         IF (\1) >= 22
+                              ld   a,(\1) - 22
                               call delay_a_20_cycles
-                         .else
-                              delay_short_ n
-                         .endif
-                    .endif
-               .endif
-          .endif
-     .endm
+                         ELSE
+                              delay_short_ \1
+                         ENDC
+                    ENDC
+               ENDC
+          ENDC
+     ENDM
      
-     .macro delay_ ARGS low, high
-          .if (high*(max_short_delay+1))|low > max_short_delay
+     MACRO delay_
+          IF ((\2)*(max_short_delay+1))|(\1) > max_short_delay
                push af
-               delay_nosave_ ((high<<16)+low - 7)&$FFFF, ((high<<16)+low - 7)>>16
+               delay_nosave_ (((\2)<<16)+(\1) - 7)&$FFFF, (((\2)<<16)+(\1) - 7)>>16
                pop  af
-          .else
-               delay_short_ low
-          .endif
-     .endm
+          ELSE
+               delay_short_ \1
+          ENDC
+     ENDM
 
 
 ; Delays A cycles + overhead
 ; Preserved: BC, DE, HL
 ; Time: A+20 cycles (including CALL)
 delay_a_20_cycles:
--    sub  5    ; 2
-     jr   nc,- ;3/2 do multiples of 5
+:    sub  5    ; 2
+     jr   nc,:- ;3/2 do multiples of 5
      rra       ; 1
-     jr   nc,+ ;3/2 bit 0
-+    adc  1    ; 2
+     jr   nc,:+ ;3/2 bit 0
+:    adc  1    ; 2
      ret  nc   ;5/2 -1: 0 cycles
      ret  z    ;5/2  0: 2 cycles
      nop       ; 1   1: 4 cycles
@@ -134,9 +127,9 @@ delay_256a_12_cycles:
      or   a              ; 1
      ret  z              ; 5/2
 delay_256a_9_cycles_:
--    delay 256-4
+:    delay 256-4
      dec  a              ; 1
-     jr   nz,-           ;3/2
+     jr   nz,:-           ;3/2
      ret                 ; 4
 
 ; Delays A*65536 cycles + overhead
@@ -146,9 +139,9 @@ delay_65536a_12_cycles:
      or   a              ; 1
      ret  z              ;5/2
 delay_65536a_9_cycles_:
--    delay 65536-4
+:    delay 65536-4
      dec  a              ; 1
-     jr   nz,-           ;3/2
+     jr   nz,:-           ;3/2
      ret                 ; 4
 
 ; Delays H*256+L cycles + overhead
@@ -164,57 +157,57 @@ delay_hl_51_cycles:
      ret
 
      ; delay_short_ macro calls into these
-     .ds max_short_delay-10,$00 ; NOP repeated several times
+     ds max_short_delay-10, $00 ; NOP repeated several times
 delay_unrolled_:
      ret
 
-.macro delay_short_ ARGS n
-     .if n < 0
-          .fail
-     .endif
-     .if n > max_short_delay
-          .fail
-     .endif
+MACRO delay_short_
+     IF (\1) < 0
+          FAIL "assertion failed"
+     ENDC
+     IF (\1) > max_short_delay
+          FAIL "assertion failed"
+     ENDC
      
-     .if n == 1
+     IF (\1) == 1
           nop
-     .endif
-     .if n == 2
-          nop
-          nop
-     .endif
-     .if n == 3
-          .byte $18,$00 ; JR +0
-     .endif
-     .if n == 4
-          .byte $18,$00 ; JR +0
-          nop
-     .endif
-     .if n == 5
-          .byte $18,$00 ; JR +0
+     ENDC
+     IF (\1) == 2
           nop
           nop
-     .endif
-     .if n == 6
-          .byte $18,$00 ; JR +0
-          .byte $18,$00 ; JR +0
-     .endif
-     .if n == 7
+     ENDC
+     IF (\1) == 3
+          db $18, $00 ; JR +0
+     ENDC
+     IF (\1) == 4
+          db $18, $00 ; JR +0
+          nop
+     ENDC
+     IF (\1) == 5
+          db $18, $00 ; JR +0
+          nop
+          nop
+     ENDC
+     IF (\1) == 6
+          db $18, $00 ; JR +0
+          db $18, $00 ; JR +0
+     ENDC
+     IF (\1) == 7
           push af
           pop  af
-     .endif
-     .if n == 8
-          push af
-          pop  af
-          nop
-     .endif
-     .if n == 9
+     ENDC
+     IF (\1) == 8
           push af
           pop  af
           nop
+     ENDC
+     IF (\1) == 9
+          push af
+          pop  af
           nop
-     .endif
-     .if n >= 10
-          call delay_unrolled_ + 10 - n
-     .endif
-.endm
+          nop
+     ENDC
+     IF (\1) >= 10
+          call delay_unrolled_ + 10 - (\1)
+     ENDC
+ENDM

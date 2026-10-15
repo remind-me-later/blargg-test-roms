@@ -1,0 +1,16 @@
+# source directory	source file	output (relative path of the ROM)	pad byte
+cpu_instrs/source	01-special.s	cpu_instrs/individual/01-special.gb	0
+cpu_instrs/source	02-interrupts.s	cpu_instrs/individual/02-interrupts.gb	0
+cpu_instrs/source	03-op sp,hl.s	cpu_instrs/individual/03-op sp,hl.gb	0
+cpu_instrs/source	04-op r,imm.s	cpu_instrs/individual/04-op r,imm.gb	0
+cpu_instrs/source	05-op rp.s	cpu_instrs/individual/05-op rp.gb	0
+cpu_instrs/source	06-ld r,r.s	cpu_instrs/individual/06-ld r,r.gb	0
+cpu_instrs/source	07-jr,jp,call,ret,rst.s	cpu_instrs/individual/07-jr,jp,call,ret,rst.gb	0
+cpu_instrs/source	08-misc instrs.s	cpu_instrs/individual/08-misc instrs.gb	0
+cpu_instrs/source	09-op r,r.s	cpu_instrs/individual/09-op r,r.gb	0
+cpu_instrs/source	10-bit ops.s	cpu_instrs/individual/10-bit ops.gb	0
+cpu_instrs/source	11-op a,(hl).s	cpu_instrs/individual/11-op a,(hl).gb	0
+mem_timing/source	01-read_timing.s	mem_timing/individual/01-read_timing.gb	0
+mem_timing/source	02-write_timing.s	mem_timing/individual/02-write_timing.gb	0
+mem_timing/source	03-modify_timing.s	mem_timing/individual/03-modify_timing.gb	0
+instr_timing/source	instr_timing.s	instr_timing/instr_timing.gb	0

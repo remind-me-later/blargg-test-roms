@@ -1,64 +1,64 @@
 ; Game Boy hardware addresses
 
 ; Memory
-.define VRAM   $8000 ; video memory
-.define TILES  $8000 ; tile images
-.define BGMAP0 $9800 ; first 32x32 tilemap
-.define BGMAP1 $9C00 ; second 32x32 tilemap
-.define WRAM   $C000 ; internal memory
-.define OAM    $FE00 ; sprite memory
-.define HRAM   $FF80 ; fast memory for LDH
+DEF VRAM_START = $8000 ; video memory
+DEF TILES = $8000 ; tile images
+DEF BGMAP0 = $9800 ; first 32x32 tilemap
+DEF BGMAP1 = $9C00 ; second 32x32 tilemap
+DEF WRAM = $C000 ; internal memory
+DEF OAM_START = $FE00 ; sprite memory
+DEF HRAM_START = $FF80 ; fast memory for LDH
 
-.define P1     $FF00
+DEF P1 = $FF00
 
 ; Game link I/O
-.define SB     $FF01
-.define SC     $FF02
+DEF SB = $FF01
+DEF SC = $FF02
 
 ; Interrupts
-.define DIV    $FF04
-.define TIMA   $FF05
-.define TMA    $FF06
-.define TAC    $FF07
-.define IF     $FF0F
-.define IE     $FFFF
+DEF rDIV = $FF04
+DEF TIMA = $FF05
+DEF TMA = $FF06
+DEF TAC = $FF07
+DEF rIF = $FF0F
+DEF IE = $FFFF
 
 ; LCD registers
-.define LCDC   $FF40 ; control
-.define STAT   $FF41 ; status
-.define SCY    $FF42 ; scroll Y
-.define SCX    $FF43 ; scroll X
-.define LY     $FF44 ; current Y being rendered
-.define BGP    $FF47
+DEF LCDC = $FF40 ; control
+DEF STAT = $FF41 ; status
+DEF SCY = $FF42 ; scroll Y
+DEF SCX = $FF43 ; scroll X
+DEF LY = $FF44 ; current Y being rendered
+DEF BGP = $FF47
 
-.define KEY1   $FF4D ; for changing CPU speed
-.define VBK    $FF4F
+DEF KEY1 = $FF4D ; for changing CPU speed
+DEF VBK = $FF4F
 
 ; Sound registers
-.define NR10   $FF10
-.define NR11   $FF11
-.define NR12   $FF12
-.define NR13   $FF13
-.define NR14   $FF14
+DEF NR10 = $FF10
+DEF NR11 = $FF11
+DEF NR12 = $FF12
+DEF NR13 = $FF13
+DEF NR14 = $FF14
 
-.define NR21   $FF16
-.define NR22   $FF17
-.define NR23   $FF18
-.define NR24   $FF19
+DEF NR21 = $FF16
+DEF NR22 = $FF17
+DEF NR23 = $FF18
+DEF NR24 = $FF19
 
-.define NR30   $FF1A
-.define NR31   $FF1B
-.define NR32   $FF1C
-.define NR33   $FF1D
-.define NR34   $FF1E
+DEF NR30 = $FF1A
+DEF NR31 = $FF1B
+DEF NR32 = $FF1C
+DEF NR33 = $FF1D
+DEF NR34 = $FF1E
 
-.define NR41   $FF20
-.define NR42   $FF21
-.define NR43   $FF22
-.define NR44   $FF23
+DEF NR41 = $FF20
+DEF NR42 = $FF21
+DEF NR43 = $FF22
+DEF NR44 = $FF23
 
-.define NR50   $FF24
-.define NR51   $FF25
-.define NR52   $FF26
+DEF NR50 = $FF24
+DEF NR51 = $FF25
+DEF NR52 = $FF26
 
-.define WAVE   $FF30
+DEF WAVE = $FF30

@@ -7,66 +7,66 @@
 ; post_exit:        ; called at end of std_exit
 ; report_byte:      ; report A to user
 
-.define RUNTIME_INCLUDED 1
+DEF RUNTIME_INCLUDED = 1
 
-.ifndef bss
+IF !DEF(bss)
      ; address of next normal variable
-     .define bss    $D800
-.endif
+     DEF bss = $D800
+ENDC
 
-.ifndef dp
+IF !DEF(dp)
      ; address of next direct-page ($FFxx) variable
-     .define dp     $FF80
-.endif
+     DEF dp = $FF80
+ENDC
 
 ; DMG/CGB hardware identifier
-.define gb_id_cgb        $10  ; mask for testing CGB bit
-.define gb_id_devcart    $04 ; mask for testing "on devcart" bit
+DEF gb_id_cgb = $10  ; mask for testing CGB bit
+DEF gb_id_devcart = $04 ; mask for testing "on devcart" bit
 
-.define gb_id  bss
-.redefine bss  bss+1
+DEF gb_id = bss
+DEF bss = bss+1
 
 ; Stack is normally here
-.define std_stack $DFFF
+DEF std_stack = $DFFF
 
 ; Copies $1000 bytes from HL to $C000, then jumps to it.
 ; A is preserved for jumped-to code.
+SECTION "copy to WRAM", ROM0[$200]
 copy_to_wram_then_run:
      ld   b,a
-     
+
      ld   de,$C000
      ld   c,$10
--    ldi  a,(hl)
-     ld   (de),a
+:    ld   a,[hli]
+     ld   [de],a
      inc  e
-     jr   nz,-
+     jr   nz,:-
      inc  d
      dec  c
-     jr   nz,-
-     
+     jr   nz,:-
+
      ld   a,b
      jp   $C000
 
-.ifndef CUSTOM_RESET
-     reset:
-          ; Run code from $C000, as is done on devcart. This
-          ; ensures minimal difference in how it behaves.
-          ld   hl,$4000
-          jp   copy_to_wram_then_run
-     
-     .bank 1 slot 1
-     .org $0 ; otherwise wla pads with lots of zeroes
-          jp   std_reset
-.endif
+reset:
+     ; Run code from $C000, as is done on devcart. This
+     ; ensures minimal difference in how it behaves.
+     ld   hl,$4000
+     jp   copy_to_wram_then_run
+
+; The program: stored in bank 1, assembled for and run from $C000.
+SECTION "program", ROMX[$4000], BANK[1]
+LOAD "program in WRAM", WRAM0[$C000]
+     jp   std_reset
 
 ; Common routines
-.include "gb.inc"
-.include "macros.inc"
-.include "delay.s"
-.include "crc.s"
-.include "printing.s"
-.include "numbers.s"
-.include "testing.s"
+INCLUDE "gb.inc"
+INCLUDE "macros.inc"
+INCLUDE "delay.s"
+INCLUDE "crc.s"
+INCLUDE "printing.s"
+INCLUDE "numbers.s"
+INCLUDE "testing.s"
      
 ; Sets up hardware and runs main
 std_reset:
@@ -76,14 +76,12 @@ std_reset:
      ld   sp,std_stack
      
      ; Save DMG/CGB id
-     ld   (gb_id),a
+     ld   [gb_id],a
      
      ; Init hardware
-     .ifndef BUILD_GBS
-          wreg TAC,$00
-          wreg IF,$00
-          wreg IE,$00
-     .endif
+     wreg TAC,$00
+     wreg rIF,$00
+     wreg IE,$00
      
      wreg NR52,0    ; sound off
      wreg NR52,$80  ; sound on
@@ -112,11 +110,11 @@ std_reset:
 exit:
      ld   sp,std_stack
      push af
-     call +
+     call :+
      pop  af
      jp   post_exit
 
-+    push af   
+:    push af
      call print_newline
      call show_printing
      pop  af
@@ -128,15 +126,14 @@ exit:
      ret  c
      
      ; 1: "Failed"
-     jr   nz,+
+     jr   nz,:+
      print_str "Failed",newline
      ret
      
      ; n: "Failed #n"
-+    print_str "Failed #"
+:    print_str "Failed #"
      call print_dec
      call print_newline
      ret
 
-; returnOrg puts this code AFTER user code.
-.section "runtime" returnOrg
+; The rest of the shell is in shell_end.inc, after the user code.

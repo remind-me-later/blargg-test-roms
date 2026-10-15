@@ -1,13 +1,15 @@
 ; Tests number of cycles taken by instructions
 ; except STOP, HALT, and illegals.
 
-.include "shell.inc"
-.include "timer.s"
+DEF TEST_NAME EQUS "\"instr_timing\""
+DEF ROM_NAME EQUS "\"INSTR_TIMING\""
+INCLUDE "shell.inc"
+INCLUDE "timer.s"
 
-.define saved_sp    bss+0
-.define instr       bss+2 ; 3-byte instr + JP instr_end
-.define instr_addr  bss+8 ; JP instr_end
-.redefine bss       bss+11
+DEF saved_sp = bss+0
+DEF instr = bss+2 ; 3-byte instr + JP instr_end
+DEF instr_addr = bss+8 ; JP instr_end
+DEF bss = bss+11
 
 main:
      call init_timer
@@ -31,45 +33,45 @@ test_timer:
 ; Tests main opcodes
 test_main_ops:
      ld   l,0
--    ld   h,>op_times
-     ld   a,(hl)
+:    ld   h,HIGH(op_times)
+     ld   a,[hl]
      cp   0
-     call nz,@test_op
+     call nz,.test_op
      inc  l
-     jr   nz,-
+     jr   nz,:-
      ret
 
-@test_op:
+.test_op:
      ; Can't test the 8 RST instructions on devcart
      ld   a,l
      cpl
      and  $C7
-     jr   nz,+
-     ld   a,(gb_id)
+     jr   nz,:+
+     ld   a,[gb_id]
      and  gb_id_devcart
      ret  nz
-+
+:
      ; Test with flags set so that branches are
      ; not taken
      ld   a,l  ; e = (l & 0x08 ? 0 : 0xFF)
      and  $08
      add  $F8
      ld   e,a
-     call @copy_and_exec
+     call .copy_and_exec
      ld   d,0
-     cp   (hl)
-     jr   z,+
+     cp   [hl]
+     jr   z,:+
      ld   d,a
      call print_failed_opcode
-+
+:
 
      ; Time with branches not taken
      ld   a,e
      cpl
      ld   e,a
-     call @copy_and_exec
-     ld   h,>op_times_taken
-     cp   (hl)
+     call .copy_and_exec
+     ld   h,HIGH(op_times_taken)
+     cp   [hl]
      ret  z
      
      ; If opcode already failed and timed the
@@ -80,26 +82,26 @@ test_main_ops:
      call print_failed_opcode
      ret
 
-@copy_and_exec:
+.copy_and_exec:
      push de
      push hl
      
-     ld   h,>op_lens
-     ld   c,(hl)
+     ld   h,HIGH(op_lens)
+     ld   c,[hl]
      ld   a,l
      ld   hl,instr
-     ld   (hl+),a
+     ld   [hli],a
      dec  c
-     jr   z,@one_byte
+     jr   z,.one_byte
      ld   a,0
      dec  c
-     jr   z,@two_bytes
-     ld   a,<instr_addr
-     ld   (hl+),a
-     ld   a,>instr_addr
-@two_bytes:
-     ld   (hl+),a
-@one_byte:     
+     jr   z,.two_bytes
+     ld   a,LOW(instr_addr)
+     ld   [hli],a
+     ld   a,HIGH(instr_addr)
+.two_bytes:
+     ld   [hli],a
+.one_byte:
      ld   a,e
      call time_instruction
      
@@ -111,40 +113,40 @@ test_main_ops:
 ; Tests CB opcodes
 test_cb_ops:
      ld   hl,cb_op_times
--    ld   a,(hl)
+:    ld   a,[hl]
      cp   0
-     call nz,@test_op_cb
+     call nz,.test_op_cb
      inc  l
-     jr   nz,-
+     jr   nz,:-
      ret
 
-@test_op_cb:
+.test_op_cb:
      ; Test with flags clear
      ld   e,$00
-     call @copy_and_exec_cb
-     cp   (hl)
-     jr   nz,+
+     call .copy_and_exec_cb
+     cp   [hl]
+     jr   nz,:+
      
      ; Test with flags set
      ld   e,$FF
-     call @copy_and_exec_cb
-     cp   (hl)
-     jr   nz,+
+     call .copy_and_exec_cb
+     cp   [hl]
+     jr   nz,:+
      
      ret
-+    print_str "CB "
+:    print_str "CB "
      call print_failed_opcode
      ret
 
-@copy_and_exec_cb:
+.copy_and_exec_cb:
      push hl
      
      ; Copy instr to exec space
      ld   a,l
      ld   hl,instr+1
-     ld   (hl+),a
+     ld   [hli],a
      ld   a,$CB
-     ld   (instr),a
+     ld   [instr],a
      call time_instruction
      
      pop  hl
@@ -169,7 +171,7 @@ print_failed_opcode:
      call print_dec
      ld   a,'-'
      call print_char
-     ld   a,(hl)
+     ld   a,[hl]
      call print_dec
      ld   a,' '
      call print_char
@@ -189,19 +191,19 @@ time_instruction:
      
      ; Write JP instr_end to HL and instr_addr
      ld   a,$C3     ; JP
-     ld   (hl+),a
-     ld   (instr_addr),a
+     ld   [hli],a
+     ld   [instr_addr],a
      
-     ld   a,<instr_end
-     ld   (instr_addr+1),a
-     ld   (hl+),a
+     ld   a,LOW(instr_end)
+     ld   [instr_addr+1],a
+     ld   [hli],a
      
-     ld   a,>instr_end
-     ld   (instr_addr+2),a
-     ld   (hl),a
+     ld   a,HIGH(instr_end)
+     ld   [instr_addr+2],a
+     ld   [hl],a
      
      ; Save sp
-     ld   (saved_sp),sp
+     ld   [saved_sp],sp
      
      ; Set regs and stack contents
      push bc
@@ -236,101 +238,104 @@ instr_end:     ; instruction jumps here when done
      sub  24
      ret
 
-.section "page_aligned" align 256
+; RST handlers
+PUSHS
+SECTION "vector 1", ROM0[$00]
+     jp   instr_end
+SECTION "vector 2", ROM0[$08]
+     jp   instr_end
+SECTION "vector 3", ROM0[$10]
+     jp   instr_end
+SECTION "vector 4", ROM0[$18]
+     jp   instr_end
+SECTION "vector 5", ROM0[$20]
+     jp   instr_end
+SECTION "vector 6", ROM0[$28]
+     jp   instr_end
+SECTION "vector 7", ROM0[$30]
+     jp   instr_end
+SECTION "vector 8", ROM0[$38]
+     jp   instr_end
+POPS
+
+INCLUDE "shell_end.inc"
+
+; Page-aligned tables (after the shell code, on the next 256-byte boundary)
+DS ALIGN[8]
 
 ; Instruction lengths of opcodes.
 ; 0 for instructions not timed.
 op_lens:
-     .byte 1,3,1,1,1,1,2,1,3,1,1,1,1,1,2,1 ; 0
-     .byte 0,3,1,1,1,1,2,1,2,1,1,1,1,1,2,1 ; 1
-     .byte 2,3,1,1,1,1,2,1,2,1,1,1,1,1,2,1 ; 2
-     .byte 2,3,1,1,1,1,2,1,2,1,1,1,1,1,2,1 ; 3
-     .byte 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 ; 4
-     .byte 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 ; 5
-     .byte 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 ; 6
-     .byte 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 ; 7
-     .byte 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 ; 8
-     .byte 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 ; 9
-     .byte 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 ; A
-     .byte 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 ; B
-     .byte 1,1,3,3,3,1,2,1,1,1,3,0,3,3,2,1 ; C
-     .byte 1,1,3,0,3,1,2,1,1,1,3,0,3,0,2,1 ; D
-     .byte 2,1,1,0,0,1,2,1,2,1,3,0,0,0,2,1 ; E
-     .byte 2,1,1,1,0,1,2,1,2,1,3,1,0,0,2,1 ; F
+     db 1, 3, 1, 1, 1, 1, 2, 1, 3, 1, 1, 1, 1, 1, 2, 1 ; 0
+     db 0, 3, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1 ; 1
+     db 2, 3, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1 ; 2
+     db 2, 3, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1 ; 3
+     db 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ; 4
+     db 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ; 5
+     db 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ; 6
+     db 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ; 7
+     db 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ; 8
+     db 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ; 9
+     db 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ; A
+     db 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ; B
+     db 1, 1, 3, 3, 3, 1, 2, 1, 1, 1, 3, 0, 3, 3, 2, 1 ; C
+     db 1, 1, 3, 0, 3, 1, 2, 1, 1, 1, 3, 0, 3, 0, 2, 1 ; D
+     db 2, 1, 1, 0, 0, 1, 2, 1, 2, 1, 3, 0, 0, 0, 2, 1 ; E
+     db 2, 1, 1, 1, 0, 1, 2, 1, 2, 1, 3, 1, 0, 0, 2, 1 ; F
 
 ; Timings for main opcodes
 op_times:
-     .byte 1,3,2,2,1,1,2,1,5,2,2,2,1,1,2,1
-     .byte 0,3,2,2,1,1,2,1,3,2,2,2,1,1,2,1
-     .byte 2,3,2,2,1,1,2,1,2,2,2,2,1,1,2,1
-     .byte 2,3,2,2,3,3,3,1,2,2,2,2,1,1,2,1
-     .byte 1,1,1,1,1,1,2,1,1,1,1,1,1,1,2,1
-     .byte 1,1,1,1,1,1,2,1,1,1,1,1,1,1,2,1
-     .byte 1,1,1,1,1,1,2,1,1,1,1,1,1,1,2,1
-     .byte 2,2,2,2,2,2,0,2,1,1,1,1,1,1,2,1
-     .byte 1,1,1,1,1,1,2,1,1,1,1,1,1,1,2,1
-     .byte 1,1,1,1,1,1,2,1,1,1,1,1,1,1,2,1
-     .byte 1,1,1,1,1,1,2,1,1,1,1,1,1,1,2,1
-     .byte 1,1,1,1,1,1,2,1,1,1,1,1,1,1,2,1
-     .byte 2,3,3,4,3,4,2,4,2,4,3,0,3,6,2,4
-     .byte 2,3,3,0,3,4,2,4,2,4,3,0,3,0,2,4
-     .byte 3,3,2,0,0,4,2,4,4,1,4,0,0,0,2,4
-     .byte 3,3,2,1,0,4,2,4,3,2,4,1,0,0,2,4
+     db 1, 3, 2, 2, 1, 1, 2, 1, 5, 2, 2, 2, 1, 1, 2, 1
+     db 0, 3, 2, 2, 1, 1, 2, 1, 3, 2, 2, 2, 1, 1, 2, 1
+     db 2, 3, 2, 2, 1, 1, 2, 1, 2, 2, 2, 2, 1, 1, 2, 1
+     db 2, 3, 2, 2, 3, 3, 3, 1, 2, 2, 2, 2, 1, 1, 2, 1
+     db 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1
+     db 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1
+     db 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1
+     db 2, 2, 2, 2, 2, 2, 0, 2, 1, 1, 1, 1, 1, 1, 2, 1
+     db 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1
+     db 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1
+     db 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1
+     db 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1
+     db 2, 3, 3, 4, 3, 4, 2, 4, 2, 4, 3, 0, 3, 6, 2, 4
+     db 2, 3, 3, 0, 3, 4, 2, 4, 2, 4, 3, 0, 3, 0, 2, 4
+     db 3, 3, 2, 0, 0, 4, 2, 4, 4, 1, 4, 0, 0, 0, 2, 4
+     db 3, 3, 2, 1, 0, 4, 2, 4, 3, 2, 4, 1, 0, 0, 2, 4
 
 ; Timings when conditionals are taken
 op_times_taken:
-     .byte 1,3,2,2,1,1,2,1,5,2,2,2,1,1,2,1
-     .byte 0,3,2,2,1,1,2,1,3,2,2,2,1,1,2,1
-     .byte 3,3,2,2,1,1,2,1,3,2,2,2,1,1,2,1
-     .byte 3,3,2,2,3,3,3,1,3,2,2,2,1,1,2,1
-     .byte 1,1,1,1,1,1,2,1,1,1,1,1,1,1,2,1
-     .byte 1,1,1,1,1,1,2,1,1,1,1,1,1,1,2,1
-     .byte 1,1,1,1,1,1,2,1,1,1,1,1,1,1,2,1
-     .byte 2,2,2,2,2,2,0,2,1,1,1,1,1,1,2,1
-     .byte 1,1,1,1,1,1,2,1,1,1,1,1,1,1,2,1
-     .byte 1,1,1,1,1,1,2,1,1,1,1,1,1,1,2,1
-     .byte 1,1,1,1,1,1,2,1,1,1,1,1,1,1,2,1
-     .byte 1,1,1,1,1,1,2,1,1,1,1,1,1,1,2,1
-     .byte 5,3,4,4,6,4,2,4,5,4,4,0,6,6,2,4
-     .byte 5,3,4,0,6,4,2,4,5,4,4,0,6,0,2,4
-     .byte 3,3,2,0,0,4,2,4,4,1,4,0,0,0,2,4
-     .byte 3,3,2,1,0,4,2,4,3,2,4,1,0,0,2,4
+     db 1, 3, 2, 2, 1, 1, 2, 1, 5, 2, 2, 2, 1, 1, 2, 1
+     db 0, 3, 2, 2, 1, 1, 2, 1, 3, 2, 2, 2, 1, 1, 2, 1
+     db 3, 3, 2, 2, 1, 1, 2, 1, 3, 2, 2, 2, 1, 1, 2, 1
+     db 3, 3, 2, 2, 3, 3, 3, 1, 3, 2, 2, 2, 1, 1, 2, 1
+     db 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1
+     db 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1
+     db 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1
+     db 2, 2, 2, 2, 2, 2, 0, 2, 1, 1, 1, 1, 1, 1, 2, 1
+     db 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1
+     db 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1
+     db 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1
+     db 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1
+     db 5, 3, 4, 4, 6, 4, 2, 4, 5, 4, 4, 0, 6, 6, 2, 4
+     db 5, 3, 4, 0, 6, 4, 2, 4, 5, 4, 4, 0, 6, 0, 2, 4
+     db 3, 3, 2, 0, 0, 4, 2, 4, 4, 1, 4, 0, 0, 0, 2, 4
+     db 3, 3, 2, 1, 0, 4, 2, 4, 3, 2, 4, 1, 0, 0, 2, 4
      
 ; Timings for CB-prefixed opcodes
 cb_op_times:
-     .byte 2,2,2,2,2,2,4,2,2,2,2,2,2,2,4,2
-     .byte 2,2,2,2,2,2,4,2,2,2,2,2,2,2,4,2
-     .byte 2,2,2,2,2,2,4,2,2,2,2,2,2,2,4,2
-     .byte 2,2,2,2,2,2,4,2,2,2,2,2,2,2,4,2
-     .byte 2,2,2,2,2,2,3,2,2,2,2,2,2,2,3,2
-     .byte 2,2,2,2,2,2,3,2,2,2,2,2,2,2,3,2
-     .byte 2,2,2,2,2,2,3,2,2,2,2,2,2,2,3,2
-     .byte 2,2,2,2,2,2,3,2,2,2,2,2,2,2,3,2
-     .byte 2,2,2,2,2,2,4,2,2,2,2,2,2,2,4,2
-     .byte 2,2,2,2,2,2,4,2,2,2,2,2,2,2,4,2
-     .byte 2,2,2,2,2,2,4,2,2,2,2,2,2,2,4,2
-     .byte 2,2,2,2,2,2,4,2,2,2,2,2,2,2,4,2
-     .byte 2,2,2,2,2,2,4,2,2,2,2,2,2,2,4,2
-     .byte 2,2,2,2,2,2,4,2,2,2,2,2,2,2,4,2
-     .byte 2,2,2,2,2,2,4,2,2,2,2,2,2,2,4,2
-     .byte 2,2,2,2,2,2,4,2,2,2,2,2,2,2,4,2
-.ends
-
-; RST handlers
-.bank 0 slot 0
-.org $00
-     jp   instr_end
-.org $08
-     jp   instr_end
-.org $10
-     jp   instr_end
-.org $18
-     jp   instr_end
-.org $20
-     jp   instr_end
-.org $28
-     jp   instr_end
-.org $30
-     jp   instr_end
-.org $38
-     jp   instr_end
+     db 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 4, 2
+     db 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 4, 2
+     db 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 4, 2
+     db 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 4, 2
+     db 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 3, 2
+     db 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 3, 2
+     db 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 3, 2
+     db 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 3, 2
+     db 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 4, 2
+     db 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 4, 2
+     db 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 4, 2
+     db 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 4, 2
+     db 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 4, 2
+     db 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 4, 2
+     db 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 4, 2
+     db 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 4, 2

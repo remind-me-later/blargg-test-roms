@@ -1,7 +1,7 @@
 ; Multiple checksum table handling
 
-.define next_checksum    bss+0
-.redefine bss            bss+2
+DEF next_checksum = bss+0
+DEF bss = bss+2
 
 ; If PRINT_CHECKSUMS is defined, checksums are printed
 ; rather than compared.
@@ -10,17 +10,17 @@
 ; table (defined by user).
 ; Preserved: BC, DE, HL
 checksums_init:
-     ld   a,<checksums
-     ld   (next_checksum),a
-     ld   a,>checksums
-     ld   (next_checksum+1),a
+     ld   a,LOW(checksums)
+     ld   [next_checksum],a
+     ld   a,HIGH(checksums)
+     ld   [next_checksum+1],a
      ret
 
 ; Compares current checksum with next checksum in
 ; list. Z if they match, NZ if not.
 ; Preserved: BC, DE, HL
 checksums_compare:
-.ifdef PRINT_CHECKSUMS
+IF DEF(PRINT_CHECKSUMS)
      lda  checksum+3
      push af
      lda  checksum+2
@@ -30,23 +30,23 @@ checksums_compare:
      lda  checksum+0
      push af
      
-     ld   a,(next_checksum)
+     ld   a,[next_checksum]
      inc  a
-     ld   (next_checksum),a
-     sub  <checksums+1
+     ld   [next_checksum],a
+     sub  LOW(checksums)+1
      and  $03
      ld   a,','
-     jr   nz,+
+     jr   nz,:+
      print_str newline,'.',"byte"
      ld   a,' '
-+    call print_char
+:    call print_char
 
      pop  af
-     call @print_byte
+     call .print_byte
      pop  af
-     call @print_byte
+     call .print_byte
      pop  af
-     call @print_byte
+     call .print_byte
      ld   a,'$'
      call print_char
      pop  af
@@ -55,7 +55,7 @@ checksums_compare:
      xor  a
      ret
      
-@print_byte:
+.print_byte:
      push af
      ld   a,'$'
      call print_char
@@ -64,30 +64,30 @@ checksums_compare:
      ld   a,','
      call print_char
      ret
-.else
+ELSE
      
      push bc
      push de
      push hl
-     ld   a,(next_checksum)
+     ld   a,[next_checksum]
      ld   l,a
-     ld   a,(next_checksum+1)
+     ld   a,[next_checksum+1]
      ld   h,a
      ld   de,checksum
      ld   b,0
--    ld   a,(de)
-     xor  (hl)
+:    ld   a,[de]
+     xor  [hl]
      or   b
      ld   b,a
      inc  hl
      inc  e
      ld   a,e
-     cp   <(checksum+4)
-     jr   nz,-
+     cp   LOW((checksum+4))
+     jr   nz,:-
      ld   a,l
-     ld   (next_checksum),a
+     ld   [next_checksum],a
      ld   a,h
-     ld   (next_checksum+1),a
+     ld   [next_checksum+1],a
      
      ld   a,b
      cp   0
@@ -95,4 +95,4 @@ checksums_compare:
      pop  de
      pop  bc
      ret
-.endif
+ENDC

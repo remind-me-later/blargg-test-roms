@@ -1,26 +1,27 @@
 ; Tests timing of accesses made by
 ; memory write instructions
 
-.include "shell.inc"
-.include "tima_64.s"
+DEF TEST_NAME EQUS "\"02-write_timing\""
+INCLUDE "shell.inc"
+INCLUDE "tima_64.s"
 
 instructions:
      ; last value is time of write
-     .byte $36,$FF,$00,3 ; LD   (HL),n
-     .byte $70,$00,$00,2 ; LD   (HL),B
-     .byte $71,$00,$00,2 ; LD   (HL),C
-     .byte $72,$00,$00,2 ; LD   (HL),D
-     .byte $73,$00,$00,2 ; LD   (HL),E
-     .byte $74,$00,$00,2 ; LD   (HL),H
-     .byte $75,$00,$00,2 ; LD   (HL),L
-     .byte $77,$00,$00,2 ; LD   (HL),A
-     .byte $02,$00,$00,2 ; LD   (BC),A
-     .byte $12,$00,$00,2 ; LD   (DE),A
-     .byte $22,$00,$00,2 ; LD   (HL+),A
-     .byte $32,$00,$00,2 ; LD   (HL-),A
-     .byte $E2,$00,$00,2 ; LDH  (C),A
-     .byte $E0,<tima_64,$00,3 ; LDH  (n),A
-     .byte $EA,<tima_64,>tima_64,4 ; LD   (nn),A
+     db $36, $FF, $00, 3 ; LD   (HL),n
+     db $70, $00, $00, 2 ; LD   (HL),B
+     db $71, $00, $00, 2 ; LD   (HL),C
+     db $72, $00, $00, 2 ; LD   (HL),D
+     db $73, $00, $00, 2 ; LD   (HL),E
+     db $74, $00, $00, 2 ; LD   (HL),H
+     db $75, $00, $00, 2 ; LD   (HL),L
+     db $77, $00, $00, 2 ; LD   (HL),A
+     db $02, $00, $00, 2 ; LD   (BC),A
+     db $12, $00, $00, 2 ; LD   (DE),A
+     db $22, $00, $00, 2 ; LD   (HL+),A
+     db $32, $00, $00, 2 ; LD   (HL-),A
+     db $E2, $00, $00, 2 ; LDH  (C),A
+     db $E0, LOW(tima_64), $00, 3 ; LDH  (n),A
+     db $EA, LOW(tima_64), HIGH(tima_64), 4 ; LD   (nn),A
 instructions_end:
 
 main:
@@ -29,24 +30,24 @@ main:
      
      ; Test instructions
      ld   hl,instructions
--    call @test_instr
-     cp   (hl)
-     call nz,@print_failed
+:    call .test_instr
+     cp   [hl]
+     call nz,.print_failed
      inc  hl
      ld   a,l
-     cp   <instructions_end
-     jr   nz,-
+     cp   LOW(instructions_end)
+     jr   nz,:-
      
      jp   tests_done
 
-@print_failed:
+.print_failed:
      push hl
      ld   b,a
-     ld   c,(hl)
+     ld   c,[hl]
      dec  hl
      dec  hl
      dec  hl
-     ld   a,(hl)
+     ld   a,[hl]
      call print_hex
      print_str ":"
      ld   a,b
@@ -62,34 +63,34 @@ main:
 ; Tests instruction
 ; HL -> 3-byte instruction
 ; HL <- HL + 3
-@test_instr:
+.test_instr:
      ; Copy instr
-     ld   a,(hl+)
-     ld   (instr+0),a
-     ld   a,(hl+)
-     ld   (instr+1),a
-     ld   a,(hl+)
-     ld   (instr+2),a
+     ld   a,[hli]
+     ld   [instr+0],a
+     ld   a,[hli]
+     ld   [instr+1],a
+     ld   a,[hli]
+     ld   [instr+2],a
      push hl
      
      ; Test for writes on each cycle
      ld   b,0
--    push bc
-     call @time_write
+:    push bc
+     call .time_write
      pop  bc
-     cp   <tima_64
-     jr   z,@no_write
-     cp   >tima_64
-     jr   z,@no_write
-     jr   @found
-@no_write:
+     cp   LOW(tima_64)
+     jr   z,.no_write
+     cp   HIGH(tima_64)
+     jr   z,.no_write
+     jr   .found
+.no_write:
      inc  b
      ld   a,b
      cp   10
-     jr   nz,-
+     jr   nz,:-
      ld   b,0
      
-@found:
+.found:
      ld   a,b
      pop  hl
      ret
@@ -97,7 +98,7 @@ main:
 ; Tests for write
 ; B -> which cycle to test
 ; A <- timer value after test
-@time_write:
+.time_write:
      call sync_tima_64
      ld   a,13
      sub  b
@@ -105,11 +106,13 @@ main:
      ld   hl,tima_64
      ld   bc,tima_64
      ld   de,tima_64
-     ld   a,<tima_64
+     ld   a,LOW(tima_64)
 instr:
      nop
      nop
      nop
      delay 32
-     ld   a,(tima_64)
+     ld   a,[tima_64]
      ret
+
+INCLUDE "shell_end.inc"

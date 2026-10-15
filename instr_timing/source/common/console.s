@@ -1,20 +1,4 @@
-; Scrolling text console
-
-; Console is 20x18 characters. Buffers lines, so
-; output doesn't appear until a newline or flush.
-; If scrolling isn't supported (i.e. SCY is treated
-; as if always zero), the first 18 lines will
-; still print properly). Also works properly if
-; LY isn't supported (always reads back as the same
-; value).
-
-.define console_width 20
-
-.define console_buf      bss+0
-.define console_pos      bss+console_width
-.define console_mode     bss+console_width+1
-.define console_scroll   bss+console_width+2
-.redefine bss            bss+console_width+3
+; Scrolling text console (code)
 
 
 ; Waits for start of LCD blanking period
@@ -26,14 +10,14 @@ console_wait_vbl:
      ; timeout in case LY doesn't work
      ; or LCD is disabled.
      ld   bc,-1250
--    inc  bc
+:    inc  bc
      ld   a,b
      or   c
-     jr   z,@timeout
+     jr   z,.timeout
      lda  LY
      cp   144
-     jr   nz,-
-@timeout:
+     jr   nz,:-
+.timeout:
      
      pop  bc
      ret
@@ -44,48 +28,48 @@ console_init:
      call console_hide
      
      ; CGB-specific inits
-     ld   a,(gb_id)
+     ld   a,[gb_id]
      and  gb_id_cgb
-     call nz,@init_cgb
+     call nz,.init_cgb
      
      ; Clear nametable
      ld   a,' '
-     call @fill_nametable
+     call .fill_nametable
      
      ; Load tiles
      ld   hl,TILES+$200
      ld   c,0
-     call @load_tiles
+     call .load_tiles
      ld   hl,TILES+$A00
      ld   c,$FF
-     call @load_tiles
+     call .load_tiles
      
      ; Init state
      ld   a,console_width
-     ld   (console_pos),a
+     ld   [console_pos],a
      ld   a,0
-     ld   (console_mode),a
+     ld   [console_mode],a
      ld   a,-8
-     ld   (console_scroll),a
+     ld   [console_scroll],a
      call console_scroll_up_
      jr   console_show
 
-@fill_nametable:
+.fill_nametable:
      ld   hl,BGMAP0
      ld   b,4
--    ld   (hl),a
+:    ld   [hl],a
      inc  l
-     jr   nz,-
+     jr   nz,:-
      inc  h
      dec  b
-     jr   nz,-
+     jr   nz,:-
      ret
 
-@init_cgb:
+.init_cgb:
      ; Clear palette
      wreg $FF68,$80
      ld   b,16
--    wreg $FF69,$FF
+:    wreg $FF69,$FF
      wreg $FF69,$7F
      wreg $FF69,$00
      wreg $FF69,$00
@@ -94,33 +78,33 @@ console_init:
      wreg $FF69,$00
      wreg $FF69,$00
      dec  b
-     jr   nz,-
+     jr   nz,:-
      
      ; Clear attributes
      ld   a,1
-     ld   (VBK),a
+     ld   [VBK],a
      ld   a,0
-     call @fill_nametable
+     call .fill_nametable
      
      ld   a,0
-     ld   (VBK),a
+     ld   [VBK],a
      ret
 
-@load_tiles:
+.load_tiles:
      ld   de,ASCII
      ld   b,96
---   push bc
+:    push bc
      ld   b,8
--    ld   a,(de)
+:    ld   a,[de]
      inc  de
      xor  c
-     ldi  (hl),a
-     ldi  (hl),a
+     ld   [hli],a
+     ld   [hli],a
      dec  b
-     jr   nz,-
+     jr   nz,:-
      pop  bc
      dec  b
-     jr   nz,--
+     jr   nz,:--
      ret
 
 
@@ -167,7 +151,7 @@ console_inverse:
 ; Preserved: BC, DE, HL
 console_set_mode:
      and  $80
-     ld   (console_mode),a
+     ld   [console_mode],a
      ret
 
 
@@ -183,9 +167,9 @@ console_print:
      push hl
      push af
      ld   hl,console_pos
-     ldi  a,(hl)
-     cp   <console_buf
-     jr   nz,@not_at_end
+     ld   a,[hli]
+     cp   LOW(console_buf)
+     jr   nz,.not_at_end
      
      ; Newline if at end of current line. If this
      ; were done after writing to buffer, calling
@@ -195,19 +179,19 @@ console_print:
      ; Ignore any spaces at end of line
      pop  af
      cp   ' '
-     jr   z,@ignore_space
+     jr   z,.ignore_space
      call console_newline
      push af
      
-@not_at_end:
+.not_at_end:
      pop  af
-     or   (hl)      ; apply current attributes
+     or   [hl]      ; apply current attributes
      dec  l         ; hl = console_pos
-     dec  (hl)      ; console_pos = console_pos - 1
-     ld   l,(hl)    ; hl = position in buffer
-     ld   (hl),a
+     dec  [hl]      ; console_pos = console_pos - 1
+     ld   l,[hl]    ; hl = position in buffer
+     ld   [hl],a
      
-@ignore_space
+.ignore_space:
      pop  hl
      pop  af
      ret
@@ -230,19 +214,19 @@ console_scroll_up_:
      push hl
      
      ; Scroll up 8 pixels
-     ld   a,(console_scroll)
+     ld   a,[console_scroll]
      add  8
-     ld   (console_scroll),a
+     ld   [console_scroll],a
      
      ; Start new clear line
      ld   a,' '
      ld   hl,console_buf + console_width - 1
      ld   b,console_width
--    ldd  (hl),a
+:    ld   [hld],a
      dec  b
-     jr   nz,-
-     ld   a,<(console_buf + console_width)
-     ld   (console_pos),a
+     jr   nz,:-
+     ld   a,LOW((console_buf + console_width))
+     ld   [console_pos],a
      
      pop  hl
      pop  bc
@@ -256,7 +240,7 @@ console_flush:
      call console_wait_vbl
      call console_flush_
 console_apply_scroll_:
-     ld   a,(console_scroll)
+     ld   a,[console_scroll]
      sub  136
      sta  SCY
      pop  af
@@ -267,20 +251,20 @@ console_flush_:
      push hl
      
      ; Address of row in nametable
-     ld   a,(console_scroll)
+     ld   a,[console_scroll]
      ld   l,a
-     ld   h,(>BGMAP0) >> 2
+     ld   h,(HIGH(BGMAP0)) >> 2
      add  hl,hl
      add  hl,hl
      
      ; Copy line
      ld   de,console_buf + console_width
--    dec  e
-     ld   a,(de)
-     ldi  (hl),a
+:    dec  e
+     ld   a,[de]
+     ld   [hli],a
      ld   a,e
-     cp   <console_buf
-     jr   nz,-
+     cp   LOW(console_buf)
+     jr   nz,:-
      
      pop  hl
      pop  de
@@ -288,4 +272,4 @@ console_flush_:
 
 
 ASCII:
-     .incbin "console.bin"
+     INCBIN "console.bin"
