@@ -1,0 +1,248 @@
+; Sound chip utilities
+;
+; Reconstructed: this file was not part of the released sources. It was
+; written to assemble to the code that precedes the tests in the released
+; ROMs, and the names and comments are guessed.
+
+; Delays n*4096 cycles, the period of the length counter.
+; Preserved: AF, BC, DE, HL
+MACRO delay_apu
+     delay (\1)*4096
+ENDM
+
+
+; Turns APU off
+; Preserved: BC, DE, HL
+sound_off:
+     wreg NR52,0
+     ret
+
+
+; Turns APU on
+; Preserved: BC, DE, HL
+sound_on:
+     wreg NR52,$80  ; power
+     wreg NR51,$FF  ; mono
+     wreg NR50,$77  ; volume
+     ret
+
+
+; Synchronizes to APU length counter within tens of clocks.
+; Uses square 2 channel.
+; Preserved: AF, BC, DE, HL
+sync_apu_coarse:
+     push af
+     push hl
+     wreg NR22,$08  ; silent without disabling channel
+     wreg NR21,-3   ; length = 3
+     wreg NR24,$C0  ; start length
+     ld   hl,NR52
+     wreg NR21,-1   ; length = 1
+     ld   a,$02
+:    and  [hl]      ; wait for length to reach zero
+     jr   nz,:-
+     pop  hl
+     pop  af
+     ret
+
+
+; Synchronizes to APU length counter exactly. Uses square 2 channel.
+; Preserved: AF, BC, DE, HL
+sync_apu:
+     call sync_apu_coarse
+     push af
+     push hl
+
+     wreg NR21,-1   ; length = 1
+     wreg NR24,$C0  ; start length
+     delay 4057
+     ld   hl,NR52
+     ld   a,[hl]    ; read status twice in a row
+     ld   h,[hl]
+     bit  1,a
+     jr   nz,:+
+:    ld   a,h
+     rra
+     rra
+
+     wreg NR21,-1   ; length = 1
+     wreg NR24,$C0  ; start length
+     delay 4072
+     ld   hl,NR52
+     ld   a,[hl]
+     ld   h,[hl]
+     jr   c,:+
+:    bit  1,h
+     jr   nz,:+
+:    rra
+     rra
+     jr   c,:+
+:    pop  hl
+     pop  af
+     ret
+
+
+; Synchronizes to first square sweep within
+; tens of clocks. Uses square 1 channel.
+; Preserved: BC, DE, HL
+sync_sweep:
+     wreg NR10,$11  ; sweep period = 1, shift = 1
+     wreg NR12,$08  ; silent without disabling channel
+     wreg NR13,$FF  ; freq = $3FF
+     wreg NR14,$83  ; start
+:    lda  NR52
+     and  $01
+     jr   nz,:-
+     ret
+
+
+; Copies 16-byte wave from (HL) to wave RAM
+; Preserved: BC, DE
+load_wave:
+     push bc
+     wreg NR30,$00  ; disable while writing
+     ld   c,$30
+:    ld   a,[hli]
+     ld   [$FF00+c],a
+     inc  c
+     bit  6,c
+     jr   z,:-
+     pop  bc
+     ret
+
+
+; Fills wave RAM with A
+; Preserved: BC, DE, HL
+fill_wave:
+     push bc
+     ld   bc,$1030
+:    ld   [$FF00+c],a
+     inc  c
+     dec  b
+     jr   nz,:-
+     pop  bc
+     ret
+
+
+; Fills NR10-NR2F with A
+; Preserved: BC, DE, HL
+fill_apu_regs:
+     push bc
+     ld   bc,$2010
+:    ld   [$FF00+c],a
+     inc  c
+     dec  b
+     jr   nz,:-
+     pop  bc
+     ret
+
+
+; Gets current length counter value for
+; channel with mask A into A. Length counter
+; must be enabled for that channel.
+; Preserved: BC, DE, HL
+get_len_a:
+     push bc
+     ld   c,a
+     ld   b,0
+:    lda  NR52      ; 3
+     and  c         ; 1
+     jr   z,:+      ; 2
+     delay 4096-10
+     inc  b         ; 1
+     jr   nz,:-     ; 3
+:    ld   a,b
+     pop  bc
+     ret
+
+
+; Delays A*4096 cycles
+; Preserved: BC, DE, HL
+delay_apu_cycles:
+     or   a
+     ret  z
+:    delay 4096-4
+     dec  a         ; 1
+     jr   nz,:-     ; 3
+     ret
+
+
+; Counts into B the length clocks that channel A (0 to 3) takes to turn off,
+; timing them with the length counter of the wave channel, or of square 2
+; for the wave channel. Carry is set if the channel was on.
+; Preserved: DE
+get_len_clocks:
+     push bc
+     push hl
+
+     ; HL = NRx4 of the channel, C = its status mask
+     ld   h,a
+     ld   a,$0F
+     ld   c,$80
+     inc  h
+:    add  5
+     rlc  c
+     dec  h
+     jr   nz,:-
+     ld   l,a
+     ld   h,$FF
+
+     ; Disable length
+     ld   b,0
+     bit  6,[hl]
+     jr   z,.disabled
+     ld   [hl],$00
+.disabled:
+
+     ; Done if the channel is off
+     lda  NR52
+     and  c
+     jr   z,.done
+     cp   $04
+     jp   z,.wave
+
+     ; Time with the wave channel: length = 4
+     wreg NR30,$80
+     wreg NR31,-4
+     wreg NR34,$C0
+     wreg NR31,-1
+:    lda  NR52
+     and  $04
+     jr   nz,:-
+
+     ; Clock length until the channel turns off
+.count:
+     ld   [hl],$40  ; enable length, causing an extra clock
+     ld   [hl],$00
+     inc  b
+     lda  NR52
+     and  c
+     jr   nz,.count
+.finished:
+     scf
+.done:
+     ld   a,b
+     pop  hl
+     pop  bc
+     ret
+
+     ; Time with square 2
+.wave:
+     wreg NR22,$08
+     wreg NR21,-4
+     wreg NR24,$C0
+     wreg NR21,-1
+:    lda  NR52
+     and  $02
+     jr   nz,:-
+     ld   c,$40
+.wave_count:
+     dec  c
+     jr   z,.wave
+     ld   [hl],$40
+     ld   [hl],$00
+     inc  b
+     lda  NR52
+     and  $04
+     jr   nz,.wave_count
+     jr   .finished

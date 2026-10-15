@@ -29,13 +29,14 @@ DEF nv_ram = nv_ram+1
 
 ; The program is stored in ROM bank 1 and run from $C000, as is done on devcart.
 ; Bank 0 holds the header, the vectors and this routine, which copies it.
+IF !DEF(BUILD_MULTI)
 
 ; Copies C*$100 bytes from HL to $C000, then jumps to it.
 ; A is preserved for jumped-to code.
 SECTION "copy to WRAM", ROM0[$2150]
 copy_to_wram_then_run:
      ld   b,a
-
+     
      ld   de,$C000
 :    ld   a,[hli]
      ld   [de],a
@@ -44,13 +45,15 @@ copy_to_wram_then_run:
      inc  d
      dec  c
      jr   nz,:-
-
+     
      ld   a,b
      jp   $C000
 
+IF !DEF(MULTI_DRIVER)
+
 reset:
      di
-
+     
      ; Run code from $C000, as is done on devcart. This
      ; ensures minimal difference in how it behaves.
      ld   hl,$4000
@@ -62,6 +65,17 @@ reset:
 SECTION "program", ROMX[$4000], BANK[1]
 LOAD "program in WRAM", WRAM0[$C000]
      jp   std_reset
+
+ENDC
+
+ELSE
+
+; One of the tests of the multi-test ROM, stored in its own block.
+SECTION "multi test {MULTI_TEST}", ROMX[$4000 + (MULTI_TEST % 4) * $1000], BANK[1 + MULTI_TEST / 4]
+LOAD UNION "multi test in WRAM", WRAM0[$C000]
+     jp   std_reset
+
+ENDC
 
 ; Definitions and macros of the libraries
 INCLUDE "gb.inc"

@@ -53,3 +53,7 @@ interrupt_time/source	interrupt_time.s	interrupt_time/interrupt_time.gb	0
 halt_bug/source	halt_bug.s	halt_bug.gb	0
 cpu_instrs/source	multi.s|01-special.s|02-interrupts.s|03-op sp,hl.s|04-op r,imm.s|05-op rp.s|06-ld r,r.s|07-jr,jp,call,ret,rst.s|08-misc instrs.s|09-op r,r.s|10-bit ops.s|11-op a,(hl).s	cpu_instrs/cpu_instrs.gb	0	size=65536,checksum=bank0
 mem_timing/source	multi.s|01-read_timing.s|02-write_timing.s|03-modify_timing.s	mem_timing/mem_timing.gb	0	size=65536,checksum=bank0
+dmg_sound/source	multi.s|01-registers.s|02-len ctr.s|03-trigger.s|04-sweep.s|05-sweep details.s|06-overflow on trigger.s|07-len sweep period sync.s|08-len ctr during power.s|09-wave read while on.s|10-wave trigger while on.s|11-regs after power.s|12-wave write while on.s	dmg_sound/dmg_sound.gb	0	size=65536
+cgb_sound/source	multi.s|01-registers.s|02-len ctr.s|03-trigger.s|04-sweep.s|05-sweep details.s|06-overflow on trigger.s|07-len sweep period sync.s|08-len ctr during power.s|09-wave read while on.s|10-wave trigger while on.s|11-regs after power.s|12-wave.s	cgb_sound/cgb_sound.gb	0	size=65536
+oam_bug/source	multi.s|1-lcd_sync.s|2-causes.s|3-non_causes.s|4-scanline_timing.s|5-timing_bug.s|6-timing_no_bug.s|7-timing_effect.s|8-instr_effect.s	oam_bug/oam_bug.gb	0	size=65536
+mem_timing-2/source	multi.s|01-read_timing.s|02-write_timing.s|03-modify_timing.s	mem_timing-2/mem_timing.gb	0xFF	size=65536

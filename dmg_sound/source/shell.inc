@@ -4,8 +4,15 @@
 ;
 ; Assemble with the common/ directory on the include path:
 ;   rgbasm -I common/ -o test.o test.s
+;
+; With BUILD_MULTI (and MULTI_TEST, the number of the test) defined, the test
+; is built as a block of the multi-test ROM instead of as a ROM of its own.
 
 ; The released ROMs were built for one kind of hardware.
 DEF REQUIRE_DMG = 1
 
+IF DEF(BUILD_MULTI)
+INCLUDE "build_multi.s"
+ELSE
 INCLUDE "build_rom.s"
+ENDC

@@ -38,7 +38,11 @@ ENDC
      ds $147 - @, 0
 
      db 3    ; cartridge type
+IF DEF(MULTI_DRIVER)
+     db 1    ; 64K ROM
+ELSE
      db 0    ; 32K ROM
+ENDC
      db 2    ; RAM size
      ds $150 - @, 0    ; rgbfix sets the checksums
 

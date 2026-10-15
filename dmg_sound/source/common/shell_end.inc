@@ -158,8 +158,19 @@ IF !DEF(CUSTOM_PRINT)
 ENDC
 
 
-; Console
-INCLUDE "console.s"
+; only build_rom uses console
+IF DEF(NEED_CONSOLE)
+     INCLUDE "console.s"
+ELSE
+     console_init:
+     console_print:
+     console_flush:
+     console_normal:
+     console_inverse:
+     console_show:
+     console_set_mode:
+          ret
+ENDC
 
 
 ; build_devcart and build_multi need to customize this
@@ -171,8 +182,30 @@ IF !DEF(CUSTOM_EXIT)
 :         jr   :-
 ENDC
 
+IF DEF(BUILD_MULTI)
+
+; A test of the multi-test ROM prints nothing and returns to the driver
+init_runtime:
+     ret
+
+init_text_out:
+     ret
+
+print_char_nocrc:
+     ret
+
+play_byte:
+     ret
+
+post_exit:
+     jp   MULTI_RETURN
+
+ELSE
+
 init_runtime:
      ret
 
 play_byte:
      ret
+
+ENDC
