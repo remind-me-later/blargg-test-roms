@@ -1,9 +1,5 @@
 # Blargg's Game Boy hardware test ROMs
 
-Blargg's Gameboy hardware test ROMs. Originally hosted at
-<http://blargg.parodius.com/gb-tests/> before parodius.com went down.
-New official location: <http://blargg.8bitalley.com/parodius/gb-tests/>
-
 ## Credits
 
 The tests, their sources and the text of the readmes of the suites are by
@@ -78,8 +74,10 @@ ones of the release). The Wayback Machine archived the zip in 2016:
 The file is `source/common/oam_bug.inc` there. Here it is ported to RGBDS, with
 its names changed to the ones of this repository, and assembles to the code
 of the released ROMs. The Wayback Machine also has the other zips of
-`gb-tests/` (from either address above); the sources in them are the ones this
-repository started from, and none has the files below.
+`gb-tests/`, from both places where Blargg hosted them: the original,
+<http://blargg.parodius.com/gb-tests/>, which went down, and its successor,
+<http://blargg.8bitalley.com/parodius/gb-tests/>. The sources in them are the
+ones this repository started from, and none has the files below.
 
 The files below were written for this repository from the code of the
 released ROMs, to assemble to the same bytes; their names and comments are
