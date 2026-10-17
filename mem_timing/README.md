@@ -11,13 +11,13 @@ TIMA, TMA).
 
 The read and write tests list failing instructions as
 
-```
+```text
 [CB] opcode:tested-correct
 ```
 
 The read-modify-write test lists failing instructions as
 
-```
+```text
 [CB] opcode:tested read/tested write-correct read/correct write
 ```
 

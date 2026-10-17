@@ -112,3 +112,16 @@ cannot take: the test that the release has as `03-op sp,hl.gb` is
 `cpu_instrs/03-op_sp_hl.s` here, and builds
 `build/cpu_instrs/individual/03-op_sp_hl.gb`. `make check` finds the ROM of
 the release for each of them.
+
+## Markdown
+
+The Markdown is linted and formatted with [rumdl](https://github.com/rvben/rumdl)
+(tested with version 0.2.78; the settings are in `.rumdl.toml`):
+
+```sh
+rumdl check .
+rumdl fmt .
+```
+
+CI (`.github/workflows/markdown.yml`) runs `rumdl check .` and
+`rumdl fmt --check .`.

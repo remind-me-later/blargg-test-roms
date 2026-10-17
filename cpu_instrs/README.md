@@ -14,7 +14,7 @@ minute to complete.
 
 Failed instructions are listed as
 
-```
+```text
 [CB] opcode
 ```
 

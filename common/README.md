@@ -22,38 +22,40 @@ The tests are assembled from the directory of their suite, which has the
 files only that suite has (and, for shell2, `suite.inc`, with the cartridge
 type, RAM size and so on). Include paths, in this order:
 
-```
+```text
 -I ../common/shellN/ -I ../common/ -I ../hardware.inc/
 ```
 
 ## Layout of the code
 
-Labels are at the beginning of the line and everything
-else is indented with tabs, one for each level (the body of a macro, of an
-`IF`); spaces are only for alignment. An instruction is written `ld a, [hl]`,
-with one space after the mnemonic and after each comma, as in pokecrystal.
-The comments that follow the code of several lines in a row are aligned with
-spaces, one space after the longest line, and start with `; `. `.editorconfig`
-has the settings.
+Labels are at the beginning of the line and everything else is indented with
+tabs, one for each level (the body of a macro, of an `IF`); spaces are only
+for alignment. An instruction is written `ld a, [hl]`, with one space after
+the mnemonic and after each comma, as in pokecrystal. The comments that
+follow the code of several lines in a row are aligned with spaces, one space
+after the longest line, and start with `; `. `.editorconfig` has the
+settings.
 
 ## Names
 
-They follow the style guide of gbdev.io: labels are PascalCase
-(`StdReset`, `PrintCRC`), local labels camelCase (`.nextInstr`), RAM labels have a
-prefix for the kind of RAM (`wTestCode`, `hChecksum`, `sFinalResult`), constants are
-CAPS_SNAKE (`CONSOLE_WIDTH`) and macros snake_case (`set_test`, `delay_msec`). The
-names are Blargg's, written that way. A trailing underscore (`SetTest_`,
-`PrintStr_`) is a helper of the routine or macro that has the name without it.
+They follow the style guide of gbdev.io: labels are PascalCase (`StdReset`,
+`PrintCRC`), local labels camelCase (`.nextInstr`), RAM labels have a prefix
+for the kind of RAM (`wTestCode`, `hChecksum`, `sFinalResult`), constants
+are CAPS_SNAKE (`CONSOLE_WIDTH`) and macros snake_case (`set_test`,
+`delay_msec`). The names are Blargg's, written that way. A trailing
+underscore (`SetTest_`, `PrintStr_`) is a helper of the routine or macro
+that has the name without it.
 
 ## RAM
 
-The variables of the shell are listed in `variables.inc` of each shell,
-as labels in sections with fixed addresses (the ROMs have to be the released
-ones), named as the style guide of gbdev.io says: `w` for WRAM, `h` for HRAM, `s`
-for cartridge RAM (`wTestCode`, `hChecksum`, `sFinalResult`). A test that has
-variables of its own declares a section that starts at `wShellVariablesEnd` or
-`hShellVariablesEnd`. The sections are unionized, so that the tests of a
-multi-test ROM, each assembled on its own, use the same RAM.
+The variables of the shell are listed in `variables.inc` of each shell, as
+labels in sections with fixed addresses (the ROMs have to be the released
+ones), named as the style guide of gbdev.io says: `w` for WRAM, `h` for
+HRAM, `s` for cartridge RAM (`wTestCode`, `hChecksum`, `sFinalResult`). A
+test that has variables of its own declares a section that starts at
+`wShellVariablesEnd` or `hShellVariablesEnd`. The sections are unionized, so
+that the tests of a multi-test ROM, each assembled on its own, use the same
+RAM.
 
 ## Reconstructed files
 

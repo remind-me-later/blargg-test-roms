@@ -1,0 +1,12 @@
+# Settings of rumdl, which lints and formats the Markdown of the repository:
+#
+#   rumdl check .       lint
+#   rumdl fmt .         format
+#   rumdl fmt --check   what CI runs, together with rumdl check
+#
+# https://github.com/rvben/rumdl
+
+[global]
+# hardware.inc is a submodule, with files of its own. build/ and reference/ are
+# in .gitignore, which rumdl follows.
+exclude = ["hardware.inc"]

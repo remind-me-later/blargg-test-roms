@@ -1,0 +1,29 @@
+name: Markdown
+
+# Lints and checks the format of the Markdown with rumdl, as `rumdl check .`
+# and `rumdl fmt --check .` do (settings in .rumdl.toml). To fix what it
+# reports, run `rumdl fmt .` and `rumdl check .`.
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  rumdl:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # The version of the action and the one of rumdl are pinned together:
+      # change both to update.
+      - name: Lint
+        uses: rvben/rumdl@v0.2.78
+        with:
+          version: "0.2.78"
+          command: check
+
+      - name: Check the format
+        uses: rvben/rumdl@v0.2.78
+        with:
+          version: "0.2.78"
+          command: fmt-check

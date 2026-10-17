@@ -14,7 +14,7 @@
 
 * Occurs with instructions that do increment:
 
-  ```
+  ```text
   INC rp (including SP)
   DEC rp
   POP rp      counts as two increments
@@ -25,7 +25,7 @@
 
 * Doesn't occur with instructions that do 16-bit add:
 
-  ```
+  ```text
   LD HL,SP+n
   ADD HL,rp
   ADD SP,n

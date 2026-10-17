@@ -69,7 +69,7 @@ and paste the correct checksum into your code.
 Some macros are used to make common operations more convenient. The left
 is equivalent to the right:
 
-```
+```text
 Macro               Equivalent
 -------------------------------------
 lda addr            ldh a,(addr-$FF00)

@@ -11,7 +11,7 @@ TIMA, TMA).
 
 Failed instructions are listed as
 
-```
+```text
 [CB] opcode:measured time-correct time
 ```
 
@@ -28,7 +28,7 @@ of the source code.
 
 Normal instructions:
 
-```
+```text
 1,3,2,2,1,1,2,1,5,2,2,2,1,1,2,1,
 0,3,2,2,1,1,2,1,3,2,2,2,1,1,2,1,
 2,3,2,2,1,1,2,1,2,2,2,2,1,1,2,1,
@@ -49,7 +49,7 @@ Normal instructions:
 
 CB-prefixed instructions:
 
-```
+```text
 2,2,2,2,2,2,4,2,2,2,2,2,2,2,4,2,
 2,2,2,2,2,2,4,2,2,2,2,2,2,2,4,2,
 2,2,2,2,2,2,4,2,2,2,2,2,2,2,4,2,
