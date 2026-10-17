@@ -1,29 +1,28 @@
 ; Included at the beginning of all the OAM bug tests.
 ;
-; Reconstructed: the file was not part of the released sources. It was
-; written to assemble to the code that precedes the tests in the released
-; ROMs, and the names are guessed.
+; Ported from source/common/oam_bug.inc of oam_bug-2.zip, which is Blargg's:
+; http://blargg.8bitalley.com/parodius/gb-tests/oam_bug-2.zip, as the Wayback
+; Machine archived it on 2016-07-31. The zip of the ROMs of this suite
+; (oam_bug.zip) did not have it. The names are this repository's and the
+; comments Blargg's, except the one on the variable. It assembles to the
+; code that precedes the tests in the released ROMs.
 
 INCLUDE "shell.inc"
 INCLUDE "ppu.s"
 
-; Object attribute memory
+DEF OAM_FILL EQU $0C
 DEF OAM_START EQU $FE00
 
-; Stack pointer saved by save_sp
 ; The variables of the tests, and of the driver of a multi-test ROM, share
 ; this section (and so, this RAM): the driver saves its own while a test runs.
 PUSHS UNION "Test HRAM variables", HRAM[hShellVariablesEnd]
 hSavedSp:       dw
 POPS
 
-; Saves SP, for tests that change it
 MACRO save_sp
 	ld [hSavedSp], sp
 ENDM
 
-; Restores SP saved by save_sp
-; Preserved: AF, BC, DE
 MACRO restore_sp
 	lda hSavedSp
 	ld l, a
@@ -33,14 +32,14 @@ MACRO restore_sp
 ENDM
 
 
-; Turns LCD on
+; Enables LCD rendering. If it was disabled, this
+; results in being synchronized to refresh.
 EnableLCD:
 	wreg rLCDC, LCDC_ON | LCDC_BG_ON
 	ret
 
 
-; Turns LCD off, in vblank, and waits for it to settle
-; Preserved: AF
+; Disables LCD rendering
 DisableLCD:
 	call WaitVBL
 	wreg rLCDC, 0
@@ -48,10 +47,10 @@ DisableLCD:
 	ret
 
 
-; Fills OAM with the sequence $0C, $0D, ...
+; Fills OAM with A,A+1...A+$9E
 ; Preserved: BC, DE, HL
 FillOAM:
-	ld a, $0C
+	ld a, OAM_FILL
 	push hl
 	ld hl, OAM_START
 .fill:
@@ -66,11 +65,11 @@ FillOAM:
 	ret
 
 
-; Compares OAM with the sequence written by FillOAM.
-; Returns Z set if it's unchanged.
-; Preserved: BC, DE
+; Compares OAM with A,A+1...A+$9E.
+; Z if same, NZ if different
+; Preserved: BC, DE, HL
 CpOAM:
-	ld a, $0C
+	ld a, OAM_FILL
 	ld hl, OAM_START
 .compare:
 	cp [hl]
@@ -85,12 +84,11 @@ CpOAM:
 	ret
 
 
-; Prints OAM, 16 bytes per line with the address at the beginning, as the
-; difference from the sequence written by FillOAM, or -- if unchanged.
+; Prints contents of OAM
 PrintOAM:
-	ld a, $0C
+	ld a, OAM_FILL
 	ld hl, OAM_START
-.next:
+.loop:
 	push af
 	ld a, l
 	and $0F
@@ -103,24 +101,26 @@ PrintOAM:
 	call PrintA
 .value:
 	pop af
+
 	push af
 	cp [hl]
 	jr z, .unchanged
 	ld a, [hl]
-	sub $0C
+	sub OAM_FILL
 	call PrintA
-	jr .step
+	jr .skip
 .unchanged:
 	push hl
 	print_str "-- "
 	pop hl
-.step:
+.skip:
 	pop af
 	inc a
+
 	inc l
 	bit 7, l
-	jr z, .next
+	jr z, .loop
 	bit 5, l
-	jr z, .next
+	jr z, .loop
 	call PrintNewline
 	ret

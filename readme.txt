@@ -60,12 +60,24 @@ of each suite say how to do it by hand.
 
 What was not released
 ---------------------
-Some of the sources were never released, and some were out of date. The
-files below were written for this repository from the code of the released
-ROMs, to assemble to the same bytes; their names and comments are guesses.
-Each says so at its beginning.
+Some of the sources were never released, and some were out of date.
 
-	oam_bug/oam_bug.inc               included by the oam_bug tests
+oam_bug/oam_bug.inc was not in the zip of the oam_bug ROMs, but Blargg's own
+is in oam_bug-2.zip, a later revision of that suite (its ROMs are not the
+ones of the release). The Wayback Machine archived the zip in 2016:
+
+	https://web.archive.org/web/20160731144356/http://blargg.8bitalley.com/parodius/gb-tests/oam_bug-2.zip
+
+The file is source/common/oam_bug.inc there. Here it is ported to RGBDS, with
+its names changed to the ones of this repository, and assembles to the code
+of the released ROMs. The Wayback Machine also has the other zips of
+gb-tests/ (from either address above); the sources in them are the ones this
+repository started from, and none has the files below.
+
+The files below were written for this repository from the code of the
+released ROMs, to assemble to the same bytes; their names and comments are
+guesses. Each says so at its beginning.
+
 	common/shell2/apu.s               included by the sound tests and by
 	                                  the multi-test ROMs
 	common/shell2/test_chan.s         included by the length counter and
