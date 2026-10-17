@@ -76,8 +76,9 @@ its names changed to the ones of this repository, and assembles to the code
 of the released ROMs. The Wayback Machine also has the other zips of
 `gb-tests/`, from both places where Blargg hosted them: the original,
 <http://blargg.parodius.com/gb-tests/>, which went down, and its successor,
-<http://blargg.8bitalley.com/parodius/gb-tests/>. The sources in them are the
-ones this repository started from, and none has the files below.
+<http://blargg.8bitalley.com/parodius/gb-tests/>, which went down too (both
+now answer 404). The sources in them are the ones this repository started
+from, and none has the files below.
 
 The files below were written for this repository from the code of the
 released ROMs, to assemble to the same bytes; their names and comments are
